@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetinaSafe — Your Risk Report</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+</head>
+<body class="page-report">
+
+  <!-- NAV -->
+  <nav class="nav nav-print-hide">
+    <div class="nav-brand">
+      <a href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.5rem;">
+        <span class="brand-icon">◉</span>
+        <span class="brand-name">RetinaSafe</span>
+      </a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print Report</button>
+      <a href="index.html" class="btn btn-ghost btn-sm">New Screening</a>
+    </div>
+  </nav>
+
+  <main class="report-main">
+    <div class="container report-container">
+
+      <!-- ── Report Header ── -->
+      <div class="report-header">
+        <p class="eyebrow">Step 3 of 3 — Your Risk Report</p>
+        <h1>RetinaSafe Screening Report</h1>
+        <p class="report-date" id="report-date">Generated: —</p>
+        <p class="report-disclaimer-inline">
+          This is a screening report, not a clinical diagnosis.
+          It must be reviewed by a qualified ophthalmologist.
+        </p>
+      </div>
+
+      <!-- ── Overall Risk Score ── -->
+      <section class="report-section overall-risk">
+        <h2 class="rs-title">Overall Risk Score</h2>
+        <div class="overall-risk-display">
+          <div class="ors-score-wrap">
+            <div class="ors-score" id="ors-score">—</div>
+            <div class="ors-max">/100</div>
+          </div>
+          <div class="ors-classification" id="ors-class">
+            <span class="risk-badge" id="ors-badge">—</span>
+          </div>
+          <div class="ors-bar-wrap">
+            <div class="ors-bar">
+              <div class="ors-bar-fill" id="ors-bar-fill"></div>
+              <div class="ors-bar-labels">
+                <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Per-Disease Risk Panel ── -->
+      <section class="report-section disease-panel">
+        <h2 class="rs-title">Per-Disease Risk Panel</h2>
+        <p class="rs-sub">Each disease risk is computed from the adjusted CNN model probability for that class.</p>
+
+        <div class="disease-risks" id="disease-risks">
+
+          <!-- DR -->
+          <div class="dr-row" id="dr-row-dr">
+            <div class="dr-label">
+              <span class="dr-dot dr"></span>
+              <div>
+                <strong>Diabetic Retinopathy</strong>
+                <span class="dr-game-note">Contrast Challenge score applied</span>
+              </div>
+            </div>
+            <div class="dr-bar-wrap">
+              <div class="dr-bar"><div class="dr-bar-fill dr" id="bar-dr"></div></div>
+              <span class="dr-pct" id="pct-dr">—%</span>
+            </div>
+            <span class="risk-badge sm" id="badge-dr">—</span>
+          </div>
+
+          <!-- AMD -->
+          <div class="dr-row" id="dr-row-amd">
+            <div class="dr-label">
+              <span class="dr-dot amd"></span>
+              <div>
+                <strong>Age-Related Macular Degeneration</strong>
+                <span class="dr-game-note">Amsler Grid score applied</span>
+              </div>
+            </div>
+            <div class="dr-bar-wrap">
+              <div class="dr-bar"><div class="dr-bar-fill amd" id="bar-amd"></div></div>
+              <span class="dr-pct" id="pct-amd">—%</span>
+            </div>
+            <span class="risk-badge sm" id="badge-amd">—</span>
+          </div>
+
+          <!-- Glaucoma -->
+          <div class="dr-row" id="dr-row-glaucoma">
+            <div class="dr-label">
+              <span class="dr-dot glaucoma"></span>
+              <div>
+                <strong>Glaucoma</strong>
+                <span class="dr-game-note">Peripheral Tester score applied</span>
+              </div>
+            </div>
+            <div class="dr-bar-wrap">
+              <div class="dr-bar"><div class="dr-bar-fill glaucoma" id="bar-glaucoma"></div></div>
+              <span class="dr-pct" id="pct-glaucoma">—%</span>
+            </div>
+            <span class="risk-badge sm" id="badge-glaucoma">—</span>
+          </div>
+
+          <!-- Cataract -->
+          <div class="dr-row" id="dr-row-cataract">
+            <div class="dr-label">
+              <span class="dr-dot cataract"></span>
+              <div>
+                <strong>Cataract</strong>
+                <span class="dr-game-note">Hue Sorting score applied</span>
+              </div>
+            </div>
+            <div class="dr-bar-wrap">
+              <div class="dr-bar"><div class="dr-bar-fill cataract" id="bar-cataract"></div></div>
+              <span class="dr-pct" id="pct-cataract">—%</span>
+            </div>
+            <span class="risk-badge sm" id="badge-cataract">—</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ── Game Score Summary ── -->
+      <section class="report-section game-summary">
+        <h2 class="rs-title">Game Score Summary</h2>
+        <p class="rs-sub">Each game contributes a modifier that adjusts the CNN model confidence for its associated disease.</p>
+
+        <table class="game-table" id="game-table">
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Score (0–100)</th>
+              <th>Interpretation</th>
+              <th>Influenced Risk?</th>
+            </tr>
+          </thead>
+          <tbody id="game-table-body">
+            <!-- Populated by report.js -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ── Recommended Action ── -->
+      <section class="report-section recommended-action">
+        <h2 class="rs-title">Recommended Action</h2>
+        <p class="rs-sub">
+          Determined by a deterministic rule engine evaluated in priority order.
+          Not generated by an AI language model — this recommendation is reproducible and auditable.
+        </p>
+        <div class="action-box" id="action-box">
+          <div class="action-icon" id="action-icon">—</div>
+          <div class="action-content">
+            <div class="action-level" id="action-level">—</div>
+            <div class="action-text" id="action-text">Calculating…</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Doctor Summary Card ── -->
+      <section class="report-section doctor-card" id="doctor-card">
+        <h2 class="rs-title">Doctor-Facing Summary Card</h2>
+        <p class="rs-sub">
+          Present this compact card to your ophthalmologist. It contains only what a
+          clinician needs to triage your case — designed to be read in under 60 seconds.
+        </p>
+        <div class="doc-card">
+          <div class="doc-card-header">
+            <span class="brand-icon">◉</span> RetinaSafe — Clinical Summary
+            <span class="doc-date" id="doc-date">—</span>
+          </div>
+          <div class="doc-card-body">
+            <div class="doc-row">
+              <span class="doc-key">Overall Risk</span>
+              <span class="doc-val" id="doc-overall">—</span>
+            </div>
+            <div class="doc-row">
+              <span class="doc-key">DR (Diabetes)</span>
+              <span class="doc-val" id="doc-dr">—</span>
+            </div>
+            <div class="doc-row">
+              <span class="doc-key">AMD</span>
+              <span class="doc-val" id="doc-amd">—</span>
+            </div>
+            <div class="doc-row">
+              <span class="doc-key">Glaucoma</span>
+              <span class="doc-val" id="doc-glaucoma">—</span>
+            </div>
+            <div class="doc-row">
+              <span class="doc-key">Cataract</span>
+              <span class="doc-val" id="doc-cataract">—</span>
+            </div>
+            <div class="doc-divider"></div>
+            <div class="doc-row">
+              <span class="doc-key">Low game scores (&lt;45)</span>
+              <span class="doc-val" id="doc-low-games">None</span>
+            </div>
+            <div class="doc-row">
+              <span class="doc-key">Critical flags</span>
+              <span class="doc-val" id="doc-flags">None</span>
+            </div>
+            <div class="doc-divider"></div>
+            <div class="doc-row doc-action-row">
+              <span class="doc-key">Recommended Action</span>
+              <span class="doc-val bold" id="doc-action">—</span>
+            </div>
+          </div>
+          <div class="doc-card-footer">
+            RetinaSafe is a screening tool only. Clinical diagnosis by ophthalmologist required.
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Disclaimer ── -->
+      <section class="report-section report-disclaimer">
+        <h2 class="rs-title">Disclaimer</h2>
+        <div class="disclaimer-text">
+          <p>RetinaSafe provides risk stratification scores based on retinal image analysis and
+          vision-based functional assessments. It is not a substitute for professional medical
+          examination or diagnosis by a qualified ophthalmologist.</p>
+          <p>Screen luminance is not calibrated — contrast scores are relative indicators,
+          not absolute clinical thresholds. The Amsler grid requires monocular testing; incomplete
+          eye coverage may suppress monocular scotomas. The peripheral test requires maintained
+          central fixation. Monitor colour gamut affects hue sorting accuracy.</p>
+          <p>All data is processed locally in your browser. No personal data, images, or results
+          are transmitted or stored by RetinaSafe.</p>
+        </div>
+      </section>
+
+      <!-- ── Actions ── -->
+      <div class="report-actions nav-print-hide">
+        <button class="btn btn-primary" onclick="window.print()">🖨 Print / Save as PDF</button>
+        <a href="index.html" class="btn btn-secondary">Start New Screening</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/scoring.js"></script>
+  <script src="js/report.js"></script>
+</body>
+</html>

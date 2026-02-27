@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetinaSafe — Vision Assessment Games</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="games.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+</head>
+<body class="page-games">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <a href="index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.5rem;">
+        <span class="brand-icon">◉</span>
+        <span class="brand-name">RetinaSafe</span>
+      </a>
+    </div>
+    <!-- Progress indicator (4 steps) -->
+    <div class="game-progress" id="gameProgress">
+      <span class="gp-step active" data-game="1" title="Contrast Challenge">1</span>
+      <span class="gp-line"></span>
+      <span class="gp-step" data-game="2" title="Amsler Grid">2</span>
+      <span class="gp-line"></span>
+      <span class="gp-step" data-game="3" title="Peripheral Tester">3</span>
+      <span class="gp-line"></span>
+      <span class="gp-step" data-game="4" title="Hue Sorting">4</span>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════════
+       INTRO SCREEN (shown before any game starts)
+  ═════════════════════════════════════════════ -->
+  <div id="screen-intro" class="game-screen active">
+    <div class="screen-inner">
+      <p class="eyebrow">Step 1 of 3 — Vision Games</p>
+      <h1>Before your retinal scan,<br /><em>let's assess your vision.</em></h1>
+      <p class="screen-desc">
+        You will play <strong>4 short games</strong> (2–3 minutes each) that measure
+        functional aspects of your vision our AI cannot detect from an image alone.
+        Each game is clinically grounded and contributes directly to your risk report.
+      </p>
+      <div class="intro-game-list">
+        <div class="intro-game-item">
+          <span class="igi-num">1</span>
+          <div>
+            <strong>Contrast Discrimination Challenge</strong>
+            <span>~3 min · Diabetic Retinopathy signal</span>
+          </div>
+        </div>
+        <div class="intro-game-item">
+          <span class="igi-num">2</span>
+          <div>
+            <strong>Dynamic Amsler Grid</strong>
+            <span>~2 min · AMD / Macular signal</span>
+          </div>
+        </div>
+        <div class="intro-game-item">
+          <span class="igi-num">3</span>
+          <div>
+            <strong>Peripheral Reaction Tester</strong>
+            <span>~2 min · Glaucoma signal</span>
+          </div>
+        </div>
+        <div class="intro-game-item">
+          <span class="igi-num">4</span>
+          <div>
+            <strong>Colour Hue Sorting</strong>
+            <span>~1 min · Cataract signal</span>
+          </div>
+        </div>
+      </div>
+      <p class="screen-note">Sit in a well-lit room. Use this device at a comfortable reading distance.</p>
+      <button class="btn btn-primary" onclick="GameController.startGame(1)">Begin Game 1 →</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       GAME 1 — CONTRAST DISCRIMINATION CHALLENGE
+       Clinical basis: Pelli-Robson contrast sensitivity
+       Protocol: 10 levels × 3 attempts, early exit on 3 consecutive fails
+  ═════════════════════════════════════════════ -->
+  <div id="screen-game1" class="game-screen">
+    <div class="game-header">
+      <div class="game-label">Game 1 of 4 &nbsp;·&nbsp; Contrast Discrimination Challenge</div>
+      <div class="game-meta">
+        <span>Level: <strong id="g1-level">1</strong>/10</span>
+        <span>Attempts: <strong id="g1-attempts">3</strong> remaining</span>
+        <span>Consecutive fails: <strong id="g1-fails">0</strong>/3</span>
+      </div>
+    </div>
+
+    <div class="game-body">
+      <div class="game-instructions" id="g1-instructions">
+        <h2>Find the shape</h2>
+        <p>A shape is hidden on the background. Click or tap it before the timer runs out.<br />
+        The contrast decreases with each level — making it harder to distinguish the shape.</p>
+        <p class="inst-note">10 levels · 3 attempts per level · Game ends on 3 consecutive failures</p>
+        <button class="btn btn-primary" id="g1-start-btn">Start Game 1</button>
+      </div>
+
+      <!-- Game canvas area -->
+      <div class="g1-arena" id="g1-arena" style="display:none;">
+        <div class="g1-timer-bar"><div class="g1-timer-fill" id="g1-timer-fill"></div></div>
+        <canvas id="g1-canvas" width="600" height="400"></canvas>
+        <div class="g1-feedback" id="g1-feedback"></div>
+      </div>
+
+      <!-- Level result overlay -->
+      <div class="game-level-result" id="g1-result" style="display:none;">
+        <div class="result-icon" id="g1-result-icon"></div>
+        <div class="result-msg" id="g1-result-msg"></div>
+        <button class="btn btn-secondary" id="g1-next-btn">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       GAME 2 — DYNAMIC AMSLER GRID
+       Clinical basis: Amsler grid metamorphopsia test
+       Protocol: Single session, both eyes separately, centre-weighted scoring
+  ═════════════════════════════════════════════ -->
+  <div id="screen-game2" class="game-screen">
+    <div class="game-header">
+      <div class="game-label">Game 2 of 4 &nbsp;·&nbsp; Dynamic Amsler Grid</div>
+      <div class="game-meta">
+        <span>Eye: <strong id="g2-eye-label">Right Eye</strong></span>
+        <span id="g2-phase-label">Phase 1 of 2</span>
+      </div>
+    </div>
+
+    <div class="game-body">
+      <div class="game-instructions" id="g2-instructions">
+        <h2>Mark what looks distorted</h2>
+        <p>Stare at the <strong>central dot</strong> on the grid. Without moving your eyes,
+        paint over any areas that look <em>wavy, blurry, dark, or missing</em>.</p>
+        <p>You will do this <strong>once per eye</strong>. Cover the other eye with your hand.</p>
+        <div class="eye-cover-prompt" id="g2-cover-prompt">
+          <span class="eye-icon">👁</span>
+          <span>Cover your <strong>LEFT</strong> eye. Test your RIGHT eye first.</span>
+        </div>
+        <button class="btn btn-primary" id="g2-start-btn">Start Right Eye Test</button>
+      </div>
+
+      <div class="g2-arena" id="g2-arena" style="display:none;">
+        <p class="g2-remind" id="g2-remind">Keep your gaze on the central dot. Paint distorted areas.</p>
+        <canvas id="g2-canvas" width="500" height="500"></canvas>
+        <div class="g2-controls">
+          <button class="btn btn-secondary" id="g2-clear-btn">Clear</button>
+          <button class="btn btn-primary" id="g2-done-btn">Done →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       GAME 3 — PERIPHERAL REACTION TESTER
+       Clinical basis: Standard Automated Perimetry (Humphrey 24-2)
+       Protocol: 8 zones × 4 flashes = 32 total, ~64 seconds
+  ═════════════════════════════════════════════ -->
+  <div id="screen-game3" class="game-screen">
+    <div class="game-header">
+      <div class="game-label">Game 3 of 4 &nbsp;·&nbsp; Peripheral Reaction Tester</div>
+      <div class="game-meta">
+        <span>Flash: <strong id="g3-flash-count">0</strong>/32</span>
+        <span>Detected: <strong id="g3-detected">0</strong></span>
+        <span>Missed: <strong id="g3-missed">0</strong></span>
+      </div>
+    </div>
+
+    <div class="game-body">
+      <div class="game-instructions" id="g3-instructions">
+        <h2>Track the centre. React to the edges.</h2>
+        <p>Keep your cursor (or finger) on the <strong>moving circle</strong> at the centre of the
+        screen at all times. Randomly, small dots will flash at the edges of your vision.</p>
+        <p>Press <kbd>Space</kbd> (or tap the screen) the moment you notice a peripheral dot.
+        Do <em>not</em> move your eyes to look for the dots — let them come to you.</p>
+        <p class="inst-note">32 flashes across 8 zones · ~64 seconds total</p>
+        <button class="btn btn-primary" id="g3-start-btn">Start Game 3</button>
+      </div>
+
+      <div class="g3-arena" id="g3-arena" style="display:none;" tabindex="0">
+        <div class="g3-field" id="g3-field">
+          <!-- Central tracking target -->
+          <div class="g3-target" id="g3-target"></div>
+          <!-- Peripheral flash dots injected by JS -->
+        </div>
+        <div class="g3-tap-hint" id="g3-tap-hint">Tap anywhere to respond to a dot</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       GAME 4 — COLOUR HUE SORTING
+       Clinical basis: Farnsworth-Munsell 100 Hue Test (tritan axis)
+       Protocol: 10 rounds in 30 seconds, HSL hue-axis discrimination
+  ═════════════════════════════════════════════ -->
+  <div id="screen-game4" class="game-screen">
+    <div class="game-header">
+      <div class="game-label">Game 4 of 4 &nbsp;·&nbsp; Colour Hue Sorting</div>
+      <div class="game-meta">
+        <span>Round: <strong id="g4-round">1</strong>/10</span>
+        <span>Score: <strong id="g4-score">0</strong></span>
+        <span>Time: <strong id="g4-timer">30</strong>s</span>
+      </div>
+    </div>
+
+    <div class="game-body">
+      <div class="game-instructions" id="g4-instructions">
+        <h2>Find the different tile</h2>
+        <p>You will see a grid of coloured tiles. All tiles are the <em>same colour</em>
+        except for one "imposter" that has drifted slightly on the blue-yellow hue axis.</p>
+        <p>Click the imposter tile as quickly as you can. The difference shrinks with
+        each round. You have <strong>30 seconds</strong> for all 10 rounds.</p>
+        <p class="inst-note">10 rounds · 30 seconds total · Hue difference reduces each round</p>
+        <button class="btn btn-primary" id="g4-start-btn">Start Game 4</button>
+      </div>
+
+      <div class="g4-arena" id="g4-arena" style="display:none;">
+        <div class="g4-timer-bar"><div class="g4-timer-fill" id="g4-timer-fill"></div></div>
+        <p class="g4-prompt">Find and click the different tile</p>
+        <div class="g4-grid" id="g4-grid"></div>
+        <div class="g4-feedback" id="g4-feedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       GAMES COMPLETE — TRANSITION TO SCAN
+  ═════════════════════════════════════════════ -->
+  <div id="screen-complete" class="game-screen">
+    <div class="screen-inner complete-screen">
+      <div class="complete-icon">✓</div>
+      <h1>All 4 games complete.</h1>
+      <p class="screen-desc">
+        Your functional vision scores have been recorded. The next step is to
+        submit your retinal image for AI analysis. Both sets of data will be combined
+        to generate your risk report.
+      </p>
+      <div class="score-preview" id="score-preview">
+        <!-- Populated by JS after games complete -->
+      </div>
+      <a href="scan.html" class="btn btn-primary">Proceed to Image Upload →</a>
+    </div>
+  </div>
+
+  <script src="js/scoring.js"></script>
+  <script src="js/games.js"></script>
+</body>
+</html>
