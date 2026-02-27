@@ -4,10 +4,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Retina Safe — AI-Powered Retinal Disease Detection</title>
+    <meta name="description"
+        content="Upload or scan your retina image and get instant AI-powered analysis for AMD, Cataract, Diabetes, Glaucoma, Hypertensive Retinopathy, and more.">
+    <link rel="stylesheet" href="styles.css">
+    <!-- jsPDF CDN for PDF report generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 </head>
 
 <body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <div class="brand-icon">👁️</div>
+            <h1>Retina Safe</h1>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#scan">Scan</a></li>
+            <li><a href="#diseases">Diseases</a></li>
+            <li><a href="#scan" class="nav-cta">Start Scan</a></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="home">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    AI-Powered Retinal Analysis
+                </div>
+                <h2>
+                    Detect Eye Diseases<br>
+                    <span class="gradient-text">Before It's Too Late</span>
+                </h2>
+                <p>
+                    Upload a retinal fundus image and our deep learning models will analyze it across 6 disease
+                    categories — delivering accurate results with confidence scores, all in seconds.
+                </p>
+                <div class="hero-actions">
+                    <a href="#scan" class="btn btn-primary btn-lg">
+                        🔬 Start Analysis
+                    </a>
+                    <a href="#how-it-works" class="btn btn-secondary btn-lg">
+                        Learn More →
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="retina-visual">
+                    <div class="retina-ring"></div>
+                    <div class="retina-ring"></div>
+                    <div class="retina-ring"></div>
+                    <div class="retina-core"></div>
+                    <div class="float-stat">
+                        <div class="stat-value">6</div>
+                        Disease Models
+                    </div>
+                    <div class="float-stat">
+                        <div class="stat-value">95%+</div>
+                        Accuracy
+                    </div>
+                    <div class="float-stat">
+                        <div class="stat-value">&lt;5s</div>
+                        Analysis Time
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== HOW IT WORKS ========== -->
+    <section class="section" id="how-it-works">
+        <div class="section-header fade-up">
+            <div class="section-label">⚡ Simple Process</div>
+            <h2>How It Works</h2>
+            <p>Three simple steps to detect retinal diseases with AI precision</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card fade-up">
+                <div class="step-number">📤</div>
+                <h3>Upload or Capture</h3>
+                <p>Upload a retinal fundus image from your device or use your camera to capture one in real-time. We
+                    accept JPG, PNG, and JPEG formats.</p>
+            </div>
+            <div class="step-card fade-up">
+                <div class="step-number">🧠</div>
+                <h3>AI Analysis</h3>
+                <p>Our 6 MobileNetV2-based deep learning models simultaneously analyze your image for AMD, Cataract,
+                    Diabetes, Glaucoma, Hypertensive Retinopathy, and Normal eye health.</p>
+            </div>
+            <div class="step-card fade-up">
+                <div class="step-number">📋</div>
+                <h3>Get Report</h3>
+                <p>View detailed results with confidence scores for each condition. Download a comprehensive PDF report
+                    to share with your ophthalmologist.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== STATS ========== -->
+    <section class="section" style="padding-top: 0;">
+        <div class="stats-row">
+            <div class="stat-card fade-up">
+                <div class="stat-icon">🧬</div>
+                <div class="stat-num">6</div>
+                <div class="stat-label">Disease Models</div>
+            </div>
+            <div class="stat-card fade-up">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-num">&lt;5s</div>
+                <div class="stat-label">Analysis Speed</div>
+            </div>
+            <div class="stat-card fade-up">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-num">95%+</div>
+                <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-card fade-up">
+                <div class="stat-icon">📄</div>
+                <div class="stat-num">PDF</div>
+                <div class="stat-label">Report Export</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SCAN / ANALYSIS SECTION ========== -->
+    <section class="section" id="scan">
+        <div class="section-header fade-up">
+            <div class="section-label">🔬 Retinal Analysis</div>
+            <h2>Scan Your Retina</h2>
+            <p>Upload a fundus image or capture one using your camera for instant AI analysis</p>
+        </div>
+        <div class="scan-container fade-up">
+            <!-- Left: Upload -->
+            <div class="upload-area">
+                <h3>📷 Upload Image</h3>
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-icon">📁</div>
+                    <div class="drop-text">
+                        <p>Drag & drop your retinal image here</p>
+                        <p>or <span>browse files</span></p>
+                        <small>Supports: JPG, PNG, JPEG • Max 10MB</small>
+                    </div>
+                    <div class="preview-wrapper" id="previewWrapper">
+                        <img id="previewImage" src="" alt="Retina preview">
+                        <div class="preview-overlay">
+                            <button class="btn btn-sm btn-secondary btn-icon" id="removeImageBtn"
+                                title="Remove image">✕</button>
+                        </div>
+                    </div>
+                    <!-- Camera -->
+                    <div class="camera-section" id="cameraSection">
+                        <video id="cameraFeed" autoplay playsinline></video>
+                        <div class="camera-controls">
+                            <button class="btn btn-primary btn-sm" id="captureBtn">📸 Capture</button>
+                            <button class="btn btn-danger btn-sm" id="stopCameraBtn">✕ Close</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/jpg" hidden>
+                <canvas id="captureCanvas" style="display:none;"></canvas>
+                <div class="upload-controls">
+                    <button class="btn btn-secondary" id="openCameraBtn">📹 Use Camera</button>
+                    <button class="btn btn-primary" id="analyzeBtn" disabled>🔬 Analyze</button>
+                </div>
+            </div>
+
+            <!-- Right: Results -->
+            <div class="results-area">
+                <h3>📊 Analysis Results</h3>
+
+                <!-- Empty state -->
+                <div class="results-empty" id="resultsEmpty">
+                    <div class="empty-icon">🔍</div>
+                    <p>Upload a retinal image and click<br><strong>"Analyze"</strong> to see results here</p>
+                </div>
+
+                <!-- Loading / Analyzing state -->
+                <div class="results-loading" id="resultsLoading">
+                    <div class="scan-animation">
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="ring"></div>
+                        <div class="center-icon">👁️</div>
+                    </div>
+                    <div class="analyzing-text" id="analyzingText">Analyzing Retina...</div>
+                    <div class="analyzing-sub" id="analyzingSub">Running AMD model...</div>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="progressBar"></div>
+                    </div>
+                </div>
+
+                <!-- Results panel -->
+                <div class="results-panel" id="resultsPanel">
+                    <div class="result-summary" id="resultSummary">
+                        <!-- Filled by JS -->
+                    </div>
+                    <div class="disease-cards" id="diseaseCards">
+                        <!-- Filled by JS -->
+                    </div>
+                    <div class="results-actions">
+                        <button class="btn btn-primary" id="downloadPdfBtn">📥 Download PDF Report</button>
+                        <button class="btn btn-secondary" id="newScanBtn">🔄 New Scan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== DISEASES INFO ========== -->
+    <section class="section" id="diseases">
+        <div class="section-header fade-up">
+            <div class="section-label">🩺 Disease Library</div>
+            <h2>Conditions We Detect</h2>
+            <p>Our AI models are trained to identify these retinal conditions with high accuracy</p>
+        </div>
+        <div class="diseases-grid">
+            <div class="disease-info-card fade-up">
+                <div class="card-icon">🔴</div>
+                <h3>Age-Related Macular Degeneration</h3>
+                <p>AMD affects the macula, the central part of the retina. It causes blurred or reduced central vision
+                    and is a leading cause of vision loss in older adults.</p>
+            </div>
+            <div class="disease-info-card fade-up">
+                <div class="card-icon">🔵</div>
+                <h3>Cataract</h3>
+                <p>A cataract is a clouding of the eye's natural lens. It can cause blurry vision, faded colors, and
+                    difficulty seeing at night. Usually develops slowly over time.</p>
+            </div>
+            <div class="disease-info-card fade-up">
+                <div class="card-icon">🟣</div>
+                <h3>Diabetic Retinopathy</h3>
+                <p>Caused by damage to blood vessels in the retina due to diabetes. It can lead to blindness if
+                    untreated. Early detection through screening is critical.</p>
+            </div>
+            <div class="disease-info-card fade-up">
+                <div class="card-icon">🔴</div>
+                <h3>Glaucoma</h3>
+                <p>A group of conditions that damage the optic nerve, often due to high intraocular pressure. Known as
+                    the "silent thief of sight" because it progresses without symptoms.</p>
+            </div>
+            <div class="disease-info-card fade-up">
+                <div class="card-icon">🟡</div>
+                <h3>Hypertensive Retinopathy</h3>
+                <p>Damage to retinal blood vessels caused by high blood pressure. Symptoms include narrowing of vessels,
+                    retinal hemorrhages, and cotton wool spots.</p>
+            </div>
+            <div class="disease-info-card fade-up">
+                <div class="card-icon">🟢</div>
+                <h3>Normal (Healthy)</h3>
+                <p>A healthy retina with no detectable abnormalities. Regular eye exams are still recommended to
+                    maintain eye health and catch any changes early.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>👁️ <strong>Retina Safe</strong> — AI-Powered Retinal Disease Detection</p>
+            <p style="margin-top: 6px;">⚠️ This tool is for screening purposes only. Always consult a qualified
+                ophthalmologist for diagnosis and treatment.</p>
+            <ul class="footer-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#scan">Scan</a></li>
+                <li><a href="#diseases">Diseases</a></li>
+            </ul>
+            <p style="margin-top: 1rem;">© 2026 Retina Safe. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ========== DOWNLOAD REPORT MODAL ========== -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">✕</button>
+            <h3>📥 Download Report</h3>
+            <p>Enter patient details to include in the PDF report</p>
+            <div class="modal-form">
+                <div class="form-group">
+                    <label for="patientName">Patient Name</label>
+                    <input type="text" id="patientName" placeholder="Enter patient name">
+                </div>
+                <div class="form-group">
+                    <label for="patientAge">Age</label>
+                    <input type="number" id="patientAge" placeholder="Enter age" min="1" max="120">
+                </div>
+                <div class="form-group">
+                    <label for="patientGender">Gender</label>
+                    <select id="patientGender">
+                        <option value="">Select gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+                    <button class="btn btn-primary" id="generatePdfBtn">📄 Generate PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TOAST CONTAINER ========== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ========== MAIN JAVASCRIPT ========== -->
+    <script src="app.js"></script>
 
 </body>
 
