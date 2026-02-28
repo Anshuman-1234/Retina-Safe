@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Dynamic Amsler Grid — an interactive metamorphopsia screening tool by RetinaSafe. Identify areas of visual distortion associated with Age-Related Macular Degeneration.">
+    <title>Dynamic Amsler Grid — RetinaSafe</title>
+
+    <!-- Google Fonts preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Skip Link -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <main id="main">
+        <div class="app-container">
+
+            <!-- Header -->
+            <header class="header">
+                <h1 id="page-title">Dynamic Amsler Grid</h1>
+                <p class="description">
+                    Interactive metamorphopsia assessment for Age-Related Macular Degeneration (AMD).
+                </p>
+            </header>
+
+            <!-- Instructions -->
+            <section class="instructions" aria-labelledby="instructions-label">
+                <strong id="instructions-label">Instructions:</strong> Fixate directly on the central dot. Do not move
+                your eyes. Use your pointer to "paint" over any areas where the lines appear wavy, blurry, dark, or
+                distorted.
+            </section>
+
+            <!-- Settings Panel -->
+            <section class="settings-panel" aria-label="Grid settings">
+                <!-- Grid Density -->
+                <div class="setting-group">
+                    <div class="setting-label" id="density-label">Grid Density</div>
+                    <div class="density-selector" role="group" aria-labelledby="density-label">
+                        <button class="density-btn" data-size="10" id="density-coarse">
+                            <span class="density-icon" aria-hidden="true">▦</span>
+                            Coarse
+                            <span class="density-sub">10×10</span>
+                        </button>
+                        <button class="density-btn active" data-size="20" id="density-standard">
+                            <span class="density-icon" aria-hidden="true">▩</span>
+                            Standard
+                            <span class="density-sub">20×20</span>
+                        </button>
+                        <button class="density-btn" data-size="40" id="density-fine">
+                            <span class="density-icon" aria-hidden="true">▣</span>
+                            Fine
+                            <span class="density-sub">40×40</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dark Mode + Timer Row -->
+                <div class="setting-row">
+                    <!-- Dark Mode Toggle -->
+                    <div class="setting-group compact">
+                        <div class="setting-label">Grid Theme</div>
+                        <div class="mode-toggle-container">
+                            <span class="mode-label" id="lightLabel">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path
+                                        d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z" />
+                                </svg>
+                                Light
+                            </span>
+                            <label class="toggle-switch" for="darkModeToggle">
+                                <input type="checkbox" id="darkModeToggle">
+                                <span class="toggle-slider"><span class="toggle-thumb"></span></span>
+                            </label>
+                            <span class="mode-label" id="darkLabel">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path
+                                        d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+                                </svg>
+                                Dark
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Timed Mode Toggle -->
+                    <div class="setting-group compact">
+                        <div class="setting-label">Timed Mode</div>
+                        <div class="timer-toggle-container">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            <span class="timer-text">30s Countdown</span>
+                            <label class="toggle-switch small" for="timedModeToggle">
+                                <input type="checkbox" id="timedModeToggle">
+                                <span class="toggle-slider"><span class="toggle-thumb"></span></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Timer Display -->
+            <div class="timer-display" id="timerDisplay" aria-live="polite">
+                <div class="timer-ring">
+                    <svg viewBox="0 0 100 100" aria-hidden="true">
+                        <circle class="timer-bg" cx="50" cy="50" r="44" />
+                        <circle class="timer-progress" id="timerProgress" cx="50" cy="50" r="44" />
+                    </svg>
+                    <span class="timer-value" id="timerValue">30</span>
+                </div>
+                <button class="btn-timer-start" id="timerStartBtn">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Start
+                </button>
+            </div>
+
+            <!-- Canvas -->
+            <div class="canvas-wrapper" id="canvasWrapper" role="img"
+                aria-label="Amsler Grid — draw on areas where lines appear distorted">
+                <canvas id="amslerCanvas"></canvas>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button class="btn-secondary" id="clearBtn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Clear Grid
+                </button>
+                <button class="btn-primary" id="analyzeBtn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Calculate Risk Score
+                </button>
+            </div>
+
+            <!-- Results -->
+            <section id="results" aria-labelledby="results-heading">
+                <!-- Risk Classification Badge -->
+                <div class="risk-badge-container" id="riskBadgeContainer">
+                    <div class="risk-badge" id="riskBadge">
+                        <span class="risk-icon" id="riskIcon" aria-hidden="true"></span>
+                        <span class="risk-tier" id="riskTier">LOW</span>
+                    </div>
+                    <div class="risk-description" id="riskDescription">No significant distortion detected.</div>
+                </div>
+
+                <!-- Severity Gauge -->
+                <div class="severity-gauge-container" aria-label="Risk severity gauge">
+                    <div class="gauge-labels">
+                        <span>Low</span><span>Moderate</span><span>High</span><span>Critical</span>
+                    </div>
+                    <div class="severity-gauge">
+                        <div class="gauge-track">
+                            <div class="gauge-fill" id="gaugeFill"></div>
+                            <div class="gauge-marker" id="gaugeMarker"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-header" id="results-heading">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Analysis Complete
+                </div>
+
+                <div class="results-grid">
+                    <div class="score-card">
+                        <div class="score-label">Distorted Area</div>
+                        <div class="score-value" id="distAreaVal">0.0<span>%</span></div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-label">Foveal Proximity Risk</div>
+                        <div class="score-value" id="proxScoreVal">0.0<span>%</span></div>
+                    </div>
+                    <div class="score-card" id="compositeCard">
+                        <div class="score-label">Composite AMD Score</div>
+                        <div class="score-value" id="compositeVal">0.0<span>/100</span></div>
+                    </div>
+                    <div class="score-card" id="timeCard" style="display:none;">
+                        <div class="score-label">Response Time</div>
+                        <div class="score-value" id="timeVal">0.0<span>s</span></div>
+                    </div>
+                </div>
+
+                <div class="results-header" style="margin-top: 1.5rem;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                        aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    JSON Payload
+                </div>
+                <pre id="jsonOutput"></pre>
+            </section>
+
+            <!-- Medical Disclaimer -->
+            <div class="disclaimer-banner" role="note">
+                <p>
+                    <strong>⚠ Medical Disclaimer:</strong> RetinaSafe is a screening and risk stratification tool only.
+                    It is not a substitute for clinical examination or professional diagnosis. All results should be
+                    reviewed with a qualified medical professional before acting on them. No personal data or retinal
+                    images are stored or transmitted.
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <p>RetinaSafe — Accessible retinal screening. Built with care.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
