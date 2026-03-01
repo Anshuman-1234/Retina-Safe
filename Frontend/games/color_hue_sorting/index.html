@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetinaSafe — Color Hue Sorting Cataract Test</title>
+  <meta name="description" content="RetinaSafe Color Hue Sorting Cataract Test: A clinical screening game to assess blue-light perception and detect early cataract risk." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ========== CSS RESET & VARIABLES ========== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --white: #FFFFFF;
+      --bg: #F4F7FA;
+      --surface: #FFFFFF;
+      --blue-50: #EBF2FF;
+      --blue-100: #D0E2FF;
+      --blue-200: #A6C8FF;
+      --blue-400: #5B9BF4;
+      --blue-500: #3B82F6;
+      --blue-600: #2563EB;
+      --blue-700: #1D4ED8;
+      --blue-800: #1E3A6E;
+      --blue-900: #0F1D3D;
+      --red-500: #EF4444;
+      --red-100: #FEE2E2;
+      --green-500: #22C55E;
+      --green-100: #DCFCE7;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+      --shadow-xl: 0 20px 50px rgba(0,0,0,0.16);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --transition: 200ms ease;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--gray-900);
+    }
+
+    /* ========== GAME CONTAINER ========== */
+    #game-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      position: relative;
+    }
+
+    /* ========== TOP BAR ========== */
+    #top-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    #brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #brand-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: var(--white);
+    }
+
+    #brand-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--blue-800);
+      letter-spacing: -0.02em;
+    }
+
+    #brand-name span {
+      color: var(--blue-500);
+    }
+
+    #stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--gray-800);
+      line-height: 1;
+    }
+
+    /* ========== TIMER ========== */
+    #timer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    #timer-value {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--blue-600);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      transition: color 0.3s ease;
+    }
+
+    #timer-value.warning {
+      color: #F59E0B;
+    }
+
+    #timer-value.critical {
+      color: var(--red-500);
+      animation: timer-pulse 0.6s ease infinite;
+    }
+
+    @keyframes timer-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    #timer-bar-track {
+      width: 200px;
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    #timer-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue-500), var(--blue-400));
+      border-radius: 3px;
+      transition: width 0.1s linear, background 0.3s ease;
+      width: 100%;
+    }
+
+    #timer-bar-fill.warning {
+      background: linear-gradient(90deg, #F59E0B, #FBBF24);
+    }
+
+    #timer-bar-fill.critical {
+      background: linear-gradient(90deg, var(--red-500), #F87171);
+    }
+
+    /* ========== GAME AREA ========== */
+    #game-area {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    #grid-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #level-indicator {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      background: var(--white);
+      padding: 6px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--gray-200);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    #tile-grid {
+      display: grid;
+      gap: 12px;
+      transition: all 0.25s ease;
+    }
+
+    .tile {
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      outline: none;
+    }
+
+    .tile:hover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tile:focus-visible {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 0 4px var(--blue-200);
+    }
+
+    .tile.correct-flash {
+      border-color: var(--green-500);
+      box-shadow: 0 0 0 4px var(--green-100);
+      animation: correct-pop 0.35s ease;
+    }
+
+    .tile.wrong-flash {
+      border-color: var(--red-500);
+      box-shadow: 0 0 0 4px var(--red-100);
+      animation: wrong-shake 0.4s ease;
+    }
+
+    @keyframes correct-pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrong-shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    /* ========== INSTRUCTION HINT ========== */
+    #instruction-hint {
+      font-size: 0.85rem;
+      color: var(--gray-400);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    /* ========== PENALTY TOAST ========== */
+    .penalty-toast {
+      position: fixed;
+      top: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--red-500);
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 999px;
+      box-shadow: var(--shadow-md);
+      z-index: 200;
+      pointer-events: none;
+      animation: toast-in-out 1.2s ease forwards;
+    }
+
+    @keyframes toast-in-out {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      75% { opacity: 1; }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    }
+
+    /* ========== MODAL OVERLAY ========== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 29, 61, 0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: overlay-fade 0.3s ease;
+    }
+
+    .modal-overlay[aria-hidden="true"] {
+      display: none;
+    }
+
+    @keyframes overlay-fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-box {
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      max-width: 560px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 40px 36px;
+      animation: modal-slide-up 0.35s ease;
+    }
+
+    @keyframes modal-slide-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--blue-800);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .modal-subtitle {
+      font-size: 0.95rem;
+      color: var(--gray-500);
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .modal-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-400);
+      margin-bottom: 10px;
+    }
+
+    .modal-instructions {
+      background: var(--blue-50);
+      border: 1px solid var(--blue-100);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+
+    .modal-instructions ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .modal-instructions li {
+      font-size: 0.9rem;
+      color: var(--gray-700);
+      line-height: 1.6;
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 6px;
+    }
+
+    .modal-instructions li::before {
+      content: '•';
+      position: absolute;
+      left: 4px;
+      color: var(--blue-500);
+      font-weight: 700;
+    }
+
+    .disclaimer-box {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+
+    .disclaimer-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--red-500);
+      margin-bottom: 10px;
+    }
+
+    .disclaimer-label svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--red-500);
+    }
+
+    .disclaimer-text {
+      font-size: 0.78rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+    }
+
+    /* ========== BUTTONS ========== */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      font-family: var(--font);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-primary:focus-visible {
+      outline: 3px solid var(--blue-200);
+      outline-offset: 2px;
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      font-family: var(--font);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--blue-700);
+      background: var(--blue-50);
+      border: 2px solid var(--blue-200);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: var(--blue-100);
+      border-color: var(--blue-400);
+    }
+
+    .btn-secondary:focus-visible {
+      outline: 3px solid var(--blue-200);
+      outline-offset: 2px;
+    }
+
+    /* ========== RESULTS MODAL ========== */
+    .result-score-ring {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .result-score-ring svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .result-score-ring .track {
+      fill: none;
+      stroke: var(--gray-200);
+      stroke-width: 8;
+    }
+
+    .result-score-ring .progress {
+      fill: none;
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.2s ease;
+    }
+
+    .result-score-number {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .result-score-number .value {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .result-score-number .label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .result-stat-card {
+      background: var(--gray-100);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .result-stat-card .rsc-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+      margin-bottom: 4px;
+    }
+
+    .result-stat-card .rsc-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--gray-800);
+    }
+
+    .flag-banner {
+      background: #FEF3C7;
+      border: 1px solid #F59E0B;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .flag-banner .flag-icon {
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .flag-banner .flag-text {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #92400E;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* ========== VISUALLY HIDDEN (SR-only) ========== */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+      white-space: nowrap;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 600px) {
+      #top-bar {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .stat-value {
+        font-size: 1.2rem;
+      }
+
+      #timer-value {
+        font-size: 1.6rem;
+      }
+
+      .tile {
+        width: 80px;
+        height: 80px;
+      }
+
+      .modal-box {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== GAME CONTAINER ===== -->
+  <div id="game-container">
+    <!-- Top Bar -->
+    <header id="top-bar" role="banner">
+      <div id="brand">
+        <div id="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </div>
+        <div id="brand-name">Retina<span>Safe</span></div>
+      </div>
+
+      <div id="timer-container" role="timer" aria-live="polite" aria-label="Time remaining">
+        <span class="stat-label">TIME</span>
+        <span id="timer-value">30s</span>
+        <div id="timer-bar-track" aria-hidden="true">
+          <div id="timer-bar-fill"></div>
+        </div>
+      </div>
+
+      <div id="stats-bar">
+        <div class="stat-item" aria-label="Current level">
+          <span class="stat-label">Level</span>
+          <span class="stat-value" id="stat-level">1</span>
+        </div>
+        <div class="stat-item" aria-label="Current score">
+          <span class="stat-label">Score</span>
+          <span class="stat-value" id="stat-score">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Game Area -->
+    <main id="game-area" role="main">
+      <div id="grid-wrapper">
+        <div id="level-indicator" aria-live="polite">Level 1 — Find the odd tile</div>
+        <div id="tile-grid" role="group" aria-label="Color tile grid. Click the tile that looks different."></div>
+        <div id="instruction-hint">Click the tile that looks slightly different</div>
+      </div>
+    </main>
+
+    <!-- Live Region for screen readers -->
+    <div id="live-feedback" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+  </div>
+
+  <!-- ===== START MODAL ===== -->
+  <div id="start-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="start-title">
+    <div class="modal-box">
+      <div class="modal-title" id="start-title">Color Hue Sorting Test</div>
+      <div class="modal-subtitle">Identify the subtly different tile in each grid to assess your color perception.</div>
+
+      <div class="modal-section-title">How to Play</div>
+      <div class="modal-instructions">
+        <ul>
+          <li>A grid of colored tiles will appear. One tile has a slightly different hue.</li>
+          <li>Click the odd tile as fast as you can to advance to the next level.</li>
+          <li>Each level gets harder — the color difference becomes smaller.</li>
+          <li>Wrong clicks deduct <strong>2 seconds</strong> from the timer.</li>
+          <li>You have <strong>30 seconds</strong> to clear as many levels as possible.</li>
+        </ul>
+      </div>
+
+      <div class="disclaimer-box">
+        <div class="disclaimer-label">
+          <svg viewBox="0 0 20 20"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg>
+          Disclaimer
+        </div>
+        <p class="disclaimer-text">
+          DISCLAIMER: RetinaSafe is an AI-assisted screening and risk stratification tool intended for informational purposes only. It is not a medical device, not a licensed diagnostic instrument, and the results it produces do not constitute a medical diagnosis. RetinaSafe results must not be used as the sole basis for any clinical decision, treatment, or management plan. All individuals with a Moderate, High, or Critical risk classification should consult a qualified ophthalmologist promptly. RetinaSafe does not replace annual dilated eye examinations performed by a licensed eye care professional.
+        </p>
+      </div>
+
+      <button id="btn-start" class="btn-primary" autofocus>Begin Screening Test</button>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS MODAL ===== -->
+  <div id="results-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="results-title" aria-hidden="true">
+    <div class="modal-box">
+      <div class="modal-title" id="results-title">Screening Complete</div>
+      <div class="modal-subtitle">Here are your color perception results.</div>
+
+      <!-- Score Ring -->
+      <div class="result-score-ring" aria-label="Score display">
+        <svg viewBox="0 0 140 140">
+          <circle class="track" cx="70" cy="70" r="58" />
+          <circle class="progress" id="score-ring-progress" cx="70" cy="70" r="58"
+                  stroke-dasharray="364.42"
+                  stroke-dashoffset="364.42" />
+        </svg>
+        <div class="result-score-number">
+          <span class="value" id="result-score-value">0</span>
+          <span class="label">Score</span>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="result-stats">
+        <div class="result-stat-card">
+          <div class="rsc-label">Levels Cleared</div>
+          <div class="rsc-value" id="result-levels">0</div>
+        </div>
+        <div class="result-stat-card">
+          <div class="rsc-label">Last Level</div>
+          <div class="rsc-value" id="result-last-level">0</div>
+        </div>
+        <div class="result-stat-card">
+          <div class="rsc-label">Wrong Clicks</div>
+          <div class="rsc-value" id="result-wrong">0</div>
+        </div>
+        <div class="result-stat-card">
+          <div class="rsc-label">Game Flag</div>
+          <div class="rsc-value" id="result-flag" style="font-size: 0.85rem;">—</div>
+        </div>
+      </div>
+
+      <!-- Flag Banner (shown conditionally) -->
+      <div id="flag-banner" class="flag-banner" style="display:none;">
+        <div class="flag-icon">⚠️</div>
+        <div class="flag-text" id="flag-text"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="result-actions">
+        <button id="btn-log-payload" class="btn-primary">Export JSON Payload to Console</button>
+        <button id="btn-restart" class="btn-secondary" style="width:100%;justify-content:center;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          Play Again
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ===== DOM Elements =====
+      const startModal       = document.getElementById('start-modal');
+      const resultsModal     = document.getElementById('results-modal');
+      const btnStart         = document.getElementById('btn-start');
+      const btnLogPayload    = document.getElementById('btn-log-payload');
+      const btnRestart       = document.getElementById('btn-restart');
+      const tileGrid         = document.getElementById('tile-grid');
+      const timerValue       = document.getElementById('timer-value');
+      const timerBarFill     = document.getElementById('timer-bar-fill');
+      const statLevel        = document.getElementById('stat-level');
+      const statScore        = document.getElementById('stat-score');
+      const levelIndicator   = document.getElementById('level-indicator');
+      const liveFeedback     = document.getElementById('live-feedback');
+      const scoreRingProgress = document.getElementById('score-ring-progress');
+      const resultScoreValue  = document.getElementById('result-score-value');
+      const resultLevels      = document.getElementById('result-levels');
+      const resultLastLevel   = document.getElementById('result-last-level');
+      const resultWrong       = document.getElementById('result-wrong');
+      const resultFlag        = document.getElementById('result-flag');
+      const flagBanner        = document.getElementById('flag-banner');
+      const flagText          = document.getElementById('flag-text');
+
+      // ===== Game State =====
+      const TOTAL_TIME       = 30;
+      const PENALTY          = 2;
+      const MAX_LEVELS_FOR_SCORE = 20; // baseline: clearing 20 levels = 100 score
+      const CIRCUMFERENCE    = 2 * Math.PI * 58; // for the SVG ring
+
+      let currentLevel       = 1;
+      let levelsCleared      = 0;
+      let wrongClicks        = 0;
+      let timeRemaining      = TOTAL_TIME;
+      let timerInterval      = null;
+      let isRunning          = false;
+      let imposterIndex      = -1;
+      let finalPayload       = null;
+
+      // ===== Utility Functions =====
+
+      /** Returns grid dimensions based on level */
+      function getGridSize(level) {
+        if (level <= 3) return 2;
+        if (level <= 8) return 3;
+        return 4;
+      }
+
+      /** Returns the hue shift delta for the imposter, decreasing with level */
+      function getHueDelta(level) {
+        // Start with a noticeable shift of 25, decrease as levels go up
+        const maxDelta = 25;
+        const minDelta = 2;
+        const delta = maxDelta - (level - 1) * 1.8;
+        return Math.max(delta, minDelta);
+      }
+
+      /** Returns saturation shift for imposter */
+      function getSatDelta(level) {
+        const maxDelta = 15;
+        const minDelta = 2;
+        const delta = maxDelta - (level - 1) * 1.0;
+        return Math.max(delta, minDelta);
+      }
+
+      /** Generate a random base color in blue/purple range */
+      function generateBaseColor() {
+        const h = 240 + Math.random() * 50; // 240..290
+        const s = 50 + Math.random() * 20;  // 50..70
+        const l = 50 + Math.random() * 20;  // 50..70
+        return { h, s, l };
+      }
+
+      /** Convert HSL values to CSS string */
+      function hslStr(h, s, l) {
+        return `hsl(${h.toFixed(1)}, ${s.toFixed(1)}%, ${l.toFixed(1)}%)`;
+      }
+
+      /** Announce something to screen readers */
+      function announce(msg) {
+        liveFeedback.textContent = '';
+        requestAnimationFrame(() => {
+          liveFeedback.textContent = msg;
+        });
+      }
+
+      /** Show a floating penalty toast */
+      function showPenaltyToast() {
+        const toast = document.createElement('div');
+        toast.className = 'penalty-toast';
+        toast.textContent = `−${PENALTY}s penalty`;
+        toast.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 1300);
+      }
+
+      // ===== Grid Generation =====
+
+      function generateGrid() {
+        const size = getGridSize(currentLevel);
+        const totalTiles = size * size;
+
+        tileGrid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        tileGrid.innerHTML = '';
+
+        const base   = generateBaseColor();
+        const hueDelta = getHueDelta(currentLevel);
+        const satDelta = getSatDelta(currentLevel);
+
+        // Pick a random imposter index
+        imposterIndex = Math.floor(Math.random() * totalTiles);
+
+        for (let i = 0; i < totalTiles; i++) {
+          const tile = document.createElement('button');
+          tile.className = 'tile';
+          tile.setAttribute('role', 'gridcell');
+          tile.setAttribute('aria-label', `Tile ${i + 1} of ${totalTiles}`);
+          tile.dataset.index = i;
+          tile.tabIndex = 0;
+
+          if (i === imposterIndex) {
+            // Imposter: shift hue toward yellow (lower hue) and reduce saturation
+            const impH = base.h - hueDelta;
+            const impS = base.s - satDelta;
+            tile.style.backgroundColor = hslStr(impH, impS, base.l);
+          } else {
+            tile.style.backgroundColor = hslStr(base.h, base.s, base.l);
+          }
+
+          tile.addEventListener('click', onTileClick);
+          tileGrid.appendChild(tile);
+        }
+
+        // Update level indicators
+        statLevel.textContent = currentLevel;
+        levelIndicator.textContent = `Level ${currentLevel} — ${size}×${size} grid`;
+        announce(`Level ${currentLevel}. ${size} by ${size} grid. Find the odd tile.`);
+      }
+
+      // ===== Tile Click Handler =====
+
+      function onTileClick(e) {
+        if (!isRunning) return;
+
+        const tile  = e.currentTarget;
+        const index = parseInt(tile.dataset.index, 10);
+
+        if (index === imposterIndex) {
+          // Correct
+          tile.classList.add('correct-flash');
+          levelsCleared++;
+          currentLevel++;
+          announce(`Correct! Advancing to level ${currentLevel}.`);
+
+          // Brief delay before next grid
+          setTimeout(() => {
+            generateGrid();
+          }, 300);
+        } else {
+          // Wrong
+          wrongClicks++;
+          timeRemaining = Math.max(0, timeRemaining - PENALTY);
+          tile.classList.add('wrong-flash');
+          showPenaltyToast();
+          announce(`Wrong tile. ${PENALTY} seconds deducted.`);
+          updateTimerDisplay();
+
+          // Remove flash after animation
+          setTimeout(() => {
+            tile.classList.remove('wrong-flash');
+          }, 450);
+
+          if (timeRemaining <= 0) {
+            endGame();
+          }
+        }
+      }
+
+      // ===== Timer =====
+
+      function updateTimerDisplay() {
+        const t = Math.max(0, timeRemaining);
+        timerValue.textContent = `${t.toFixed(1)}s`;
+
+        const pct = (t / TOTAL_TIME) * 100;
+        timerBarFill.style.width = `${pct}%`;
+
+        // Color classes
+        timerValue.classList.remove('warning', 'critical');
+        timerBarFill.classList.remove('warning', 'critical');
+
+        if (t <= 5) {
+          timerValue.classList.add('critical');
+          timerBarFill.classList.add('critical');
+        } else if (t <= 10) {
+          timerValue.classList.add('warning');
+          timerBarFill.classList.add('warning');
+        }
+      }
+
+      function startTimer() {
+        const startTime = performance.now();
+        const startTimeRemaining = timeRemaining;
+
+        timerInterval = setInterval(() => {
+          const elapsed = (performance.now() - startTime) / 1000;
+          // Account for any penalties that were applied
+          const penaltyAdjustment = startTimeRemaining - timeRemaining;
+          const actualRemaining = startTimeRemaining - elapsed;
+
+          if (penaltyAdjustment > 0) {
+            // Penalties were applied; recalibrate
+            timeRemaining = Math.max(0, timeRemaining - 0.1);
+          } else {
+            timeRemaining = Math.max(0, actualRemaining);
+          }
+
+          updateTimerDisplay();
+
+          if (timeRemaining <= 0) {
+            endGame();
+          }
+        }, 100);
+      }
+
+      function stopTimer() {
+        if (timerInterval) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+        }
+      }
+
+      // ===== Timer (Refined) =====
+      // Using a simpler decrement approach for better penalty handling
+
+      function startTimerSimple() {
+        timerInterval = setInterval(() => {
+          timeRemaining = Math.max(0, timeRemaining - 0.1);
+          updateTimerDisplay();
+          if (timeRemaining <= 0) {
+            endGame();
+          }
+        }, 100);
+      }
+
+      // ===== Score Calculation =====
+
+      function calculateScore() {
+        // Linear scaling: 20 levels = 100 score
+        const raw = (levelsCleared / MAX_LEVELS_FOR_SCORE) * 100;
+        return Math.min(100, Math.round(raw));
+      }
+
+      // ===== Game Lifecycle =====
+
+      function startGame() {
+        // Reset state
+        currentLevel  = 1;
+        levelsCleared = 0;
+        wrongClicks   = 0;
+        timeRemaining = TOTAL_TIME;
+        isRunning     = true;
+        finalPayload  = null;
+
+        // Reset display
+        statScore.textContent  = '0';
+        updateTimerDisplay();
+
+        // Hide modals
+        startModal.setAttribute('aria-hidden', 'true');
+        resultsModal.setAttribute('aria-hidden', 'true');
+
+        // Generate first grid
+        generateGrid();
+
+        // Start the countdown
+        startTimerSimple();
+      }
+
+      function endGame() {
+        isRunning = false;
+        stopTimer();
+
+        const score   = calculateScore();
+        const lastLvl = currentLevel; // The level they were on when time ran out
+        const flag    = score <= 45 ? 'Tritan Deficiency Noted' : null;
+
+        finalPayload = {
+          game_name:  'Hue Sorting',
+          score:      score,
+          last_level: lastLvl,
+          game_flag:  flag
+        };
+
+        // Update stat bar
+        statScore.textContent = score;
+
+        // Show results modal
+        showResults(score, levelsCleared, lastLvl, wrongClicks, flag);
+      }
+
+      function showResults(score, cleared, lastLvl, wrong, flag) {
+        // Score ring animation
+        const offset = CIRCUMFERENCE - (score / 100) * CIRCUMFERENCE;
+        let ringColor;
+        if (score >= 70)      ringColor = '#22C55E';
+        else if (score >= 45) ringColor = '#F59E0B';
+        else                  ringColor = '#EF4444';
+
+        scoreRingProgress.style.stroke = ringColor;
+        scoreRingProgress.style.strokeDashoffset = CIRCUMFERENCE; // reset
+        resultScoreValue.textContent = score;
+        resultScoreValue.style.color = ringColor;
+
+        resultLevels.textContent    = cleared;
+        resultLastLevel.textContent = lastLvl;
+        resultWrong.textContent     = wrong;
+
+        if (flag) {
+          flagBanner.style.display = 'block';
+          flagText.textContent     = flag;
+          resultFlag.textContent   = '⚠️';
+          resultFlag.style.color   = '#F59E0B';
+        } else {
+          flagBanner.style.display = 'none';
+          resultFlag.textContent   = 'None';
+          resultFlag.style.color   = '#22C55E';
+        }
+
+        resultsModal.setAttribute('aria-hidden', 'false');
+
+        // Trigger ring animation
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            scoreRingProgress.style.strokeDashoffset = offset;
+          });
+        });
+
+        // Focus the modal for accessibility
+        btnLogPayload.focus();
+        announce(`Game over. Your score is ${score} out of 100. ${cleared} levels cleared.${flag ? ' Flag: ' + flag : ''}`);
+      }
+
+      // ===== Event Listeners =====
+
+      btnStart.addEventListener('click', () => {
+        startGame();
+      });
+
+      btnLogPayload.addEventListener('click', () => {
+        if (finalPayload) {
+          console.log('===== RetinaSafe Color Hue Sorting Test — JSON Payload =====');
+          console.log(JSON.stringify(finalPayload, null, 2));
+          console.log(finalPayload);
+          btnLogPayload.textContent = '✓ Payload Logged to Console';
+          setTimeout(() => {
+            btnLogPayload.textContent = 'Export JSON Payload to Console';
+          }, 2500);
+        }
+      });
+
+      btnRestart.addEventListener('click', () => {
+        resultsModal.setAttribute('aria-hidden', 'true');
+        startGame();
+      });
+
+      // Keyboard navigation for tile grid
+      tileGrid.addEventListener('keydown', (e) => {
+        if (!isRunning) return;
+        const tiles = Array.from(tileGrid.querySelectorAll('.tile'));
+        const idx = tiles.indexOf(document.activeElement);
+        if (idx < 0) return;
+
+        const size = getGridSize(currentLevel);
+        let next = -1;
+
+        switch (e.key) {
+          case 'ArrowRight':
+            next = idx + 1 < tiles.length ? idx + 1 : idx;
+            break;
+          case 'ArrowLeft':
+            next = idx - 1 >= 0 ? idx - 1 : idx;
+            break;
+          case 'ArrowDown':
+            next = idx + size < tiles.length ? idx + size : idx;
+            break;
+          case 'ArrowUp':
+            next = idx - size >= 0 ? idx - size : idx;
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            tiles[idx].click();
+            return;
+          default:
+            return;
+        }
+
+        e.preventDefault();
+        if (next >= 0 && next < tiles.length) {
+          tiles[next].focus();
+        }
+      });
+
+      // Trap focus in modals
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+          const activeModal = document.querySelector('.modal-overlay:not([aria-hidden="true"])');
+          if (!activeModal) return;
+
+          const focusable = activeModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (focusable.length === 0) return;
+
+          const first = focusable[0];
+          const last  = focusable[focusable.length - 1];
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      // Initial focus
+      btnStart.focus();
+
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RetinaSafe — Peripheral Reaction Tester</title>
+    <meta name="description" content="Clinical peripheral reaction screening tool for glaucoma risk evaluation." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        /* ── Reset & Base ─────────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-200: #bfdbfe;
+            --blue-400: #60a5fa;
+            --blue-500: #3b82f6;
+            --blue-600: #2563eb;
+            --blue-700: #1d4ed8;
+            --blue-800: #1e40af;
+            --blue-900: #1e3a8a;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --amber-500: #f59e0b;
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow-modal: 0 25px 60px rgba(0, 0, 0, .25), 0 0 0 1px rgba(0, 0, 0, .05);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, .08);
+            --transition: .25s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font);
+            background: var(--white);
+            color: var(--gray-900);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Full-viewport Game Area ──────────────────────────────── */
+        #game-area {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background:
+                radial-gradient(ellipse at 50% 0%, var(--blue-50) 0%, transparent 60%),
+                linear-gradient(180deg, var(--white) 0%, var(--gray-50) 100%);
+            overflow: hidden;
+        }
+
+        /* Subtle grid pattern */
+        #game-area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--gray-200) 1px, transparent 1px),
+                linear-gradient(90deg, var(--gray-200) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: .25;
+            pointer-events: none;
+        }
+
+        /* ── HUD ──────────────────────────────────────────────────── */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            background: rgba(255, 255, 255, .85);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--gray-200);
+            border-radius: 60px;
+            padding: 10px 32px;
+            z-index: 10;
+            box-shadow: var(--shadow-card);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-700);
+            user-select: none;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        #hud.visible {
+            opacity: 1;
+        }
+
+        #hud .hud-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        #hud .hud-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-blue {
+            background: var(--blue-500);
+        }
+
+        .dot-green {
+            background: var(--green-500);
+        }
+
+        .dot-red {
+            background: var(--red-500);
+        }
+
+        .dot-amber {
+            background: var(--amber-500);
+        }
+
+        #hud .hud-val {
+            color: var(--gray-900);
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ── Central Fixation Target ──────────────────────────────── */
+        #fixation-target {
+            position: absolute;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--blue-600);
+            border: 4px solid var(--white);
+            box-shadow:
+                0 0 0 3px var(--blue-600),
+                0 0 30px rgba(37, 99, 235, .35),
+                0 4px 16px rgba(0, 0, 0, .15);
+            z-index: 20;
+            transform: translate(-50%, -50%);
+            display: none;
+            transition: box-shadow .2s ease;
+        }
+
+        #fixation-target::after {
+            content: '+';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        #fixation-target.warn {
+            background: var(--red-500);
+            box-shadow:
+                0 0 0 3px var(--red-500),
+                0 0 40px rgba(239, 68, 68, .5),
+                0 4px 16px rgba(0, 0, 0, .15);
+        }
+
+        /* ── Peripheral Dot ───────────────────────────────────────── */
+        .peripheral-dot {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--blue-600);
+            box-shadow: 0 0 12px rgba(37, 99, 235, .6);
+            z-index: 15;
+            pointer-events: none;
+            animation: dotPulse .3s ease-out;
+        }
+
+        @keyframes dotPulse {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.4);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ── Warning Overlay ──────────────────────────────────────── */
+        #warn-overlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(239, 68, 68, .06);
+            z-index: 25;
+            backdrop-filter: blur(2px);
+        }
+
+        #warn-overlay.active {
+            display: flex;
+        }
+
+        #warn-overlay .warn-box {
+            background: var(--white);
+            border: 2px solid var(--red-500);
+            border-radius: var(--radius);
+            padding: 32px 44px;
+            text-align: center;
+            box-shadow: 0 12px 40px rgba(239, 68, 68, .2);
+            animation: shakeIn .35s ease;
+        }
+
+        @keyframes shakeIn {
+            0% {
+                transform: scale(.9) translateX(-6px);
+                opacity: 0;
+            }
+
+            40% {
+                transform: scale(1.02) translateX(4px);
+            }
+
+            100% {
+                transform: scale(1) translateX(0);
+                opacity: 1;
+            }
+        }
+
+        #warn-overlay .warn-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        #warn-overlay .warn-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--red-600);
+            margin-bottom: 6px;
+        }
+
+        #warn-overlay .warn-text {
+            font-size: 16px;
+            color: var(--gray-700);
+            max-width: 380px;
+            line-height: 1.5;
+        }
+
+        /* ── Modal Backdrop ───────────────────────────────────────── */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .45);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: fadeIn .3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-backdrop.hidden {
+            display: none;
+        }
+
+        /* ── Modal Box ────────────────────────────────────────────── */
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-modal);
+            width: min(560px, 92vw);
+            max-height: 88vh;
+            overflow-y: auto;
+            animation: modalSlide .35s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            padding: 28px 32px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .modal-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, .3);
+        }
+
+        .modal-logo svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--white);
+        }
+
+        .modal-header h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--gray-900);
+            letter-spacing: -.02em;
+        }
+
+        .modal-header .subtitle {
+            font-size: 15px;
+            color: var(--gray-500);
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .modal-body {
+            padding: 24px 32px 28px;
+        }
+
+        .disclaimer-box {
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: var(--radius-sm);
+            padding: 18px 20px;
+            margin-bottom: 20px;
+        }
+
+        .disclaimer-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: var(--blue-700);
+            margin-bottom: 8px;
+        }
+
+        .disclaimer-text {
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--gray-700);
+        }
+
+        .instructions {
+            margin-bottom: 22px;
+        }
+
+        .instructions h3 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instructions li {
+            position: relative;
+            padding-left: 24px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .instructions li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--blue-400);
+        }
+
+        /* ── Buttons ───────────────────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 14px 32px;
+            transition: all var(--transition);
+            outline: none;
+        }
+
+        .btn:focus-visible {
+            box-shadow: 0 0 0 3px var(--blue-200);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue-500), var(--blue-700));
+            color: var(--white);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, .35);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(37, 99, 235, .45);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--green-500), var(--green-600));
+            color: var(--white);
+            box-shadow: 0 4px 16px rgba(34, 197, 94, .35);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(34, 197, 94, .45);
+        }
+
+        /* ── Results Modal ─────────────────────────────────────────── */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .result-card .rc-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--gray-500);
+            margin-bottom: 6px;
+        }
+
+        .result-card .rc-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        .result-card .rc-value.score-good {
+            color: var(--green-600);
+        }
+
+        .result-card .rc-value.score-warn {
+            color: var(--amber-500);
+        }
+
+        .result-card .rc-value.score-bad {
+            color: var(--red-600);
+        }
+
+        .flag-box {
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .flag-box.flag-warn {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: #92400e;
+        }
+
+        .flag-box.flag-critical {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        .flag-box.flag-ok {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .flag-icon {
+            font-size: 20px;
+        }
+
+        .result-zones {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin-bottom: 20px;
+        }
+
+        .result-zones h4 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+        }
+
+        .zone-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .zone-tag {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: var(--red-500);
+            color: var(--white);
+        }
+
+        .zone-tag.ok {
+            background: var(--green-500);
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .results-actions .btn {
+            flex: 1;
+        }
+
+        /* ── Progress Ring ─────────────────────────────────────────── */
+        #progress-bar {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        #progress-bar.visible {
+            opacity: 1;
+        }
+
+        #progress-bar .pb-inner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, .85);
+            backdrop-filter: blur(14px);
+            border: 1px solid var(--gray-200);
+            border-radius: 60px;
+            padding: 10px 24px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .pb-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .pb-text span {
+            color: var(--blue-600);
+            font-weight: 800;
+        }
+
+        .pb-track {
+            width: 160px;
+            height: 6px;
+            background: var(--gray-200);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .pb-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue-500), var(--blue-600));
+            border-radius: 3px;
+            transition: width .3s ease;
+        }
+
+        /* ── Spacebar Flash Feedback ───────────────────────────────── */
+        #flash-feedback {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--green-500);
+            transform: scaleX(0);
+            transform-origin: center;
+            z-index: 50;
+            transition: transform .15s ease-out;
+        }
+
+        #flash-feedback.hit {
+            background: var(--green-500);
+            transform: scaleX(1);
+        }
+
+        #flash-feedback.miss {
+            background: var(--red-500);
+            transform: scaleX(1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Game Area -->
+    <div id="game-area">
+        <!-- HUD -->
+        <div id="hud" role="status" aria-live="polite">
+            <div class="hud-item"><span class="hud-dot dot-blue"></span>Trial: <span class="hud-val"
+                    id="hud-trial">0/10</span></div>
+            <div class="hud-item"><span class="hud-dot dot-green"></span>Hits: <span class="hud-val"
+                    id="hud-hits">0</span></div>
+            <div class="hud-item"><span class="hud-dot dot-red"></span>Misses: <span class="hud-val"
+                    id="hud-misses">0</span></div>
+            <div class="hud-item"><span class="hud-dot dot-amber"></span>Avg RT: <span class="hud-val"
+                    id="hud-rt">—</span></div>
+        </div>
+
+        <!-- Central Fixation Target -->
+        <div id="fixation-target" role="img"
+            aria-label="Central fixation target. Keep your cursor on this moving cross."></div>
+
+        <!-- Warning Overlay -->
+        <div id="warn-overlay" role="alert">
+            <div class="warn-box">
+                <div class="warn-icon">⚠️</div>
+                <div class="warn-title">Test Paused</div>
+                <div class="warn-text">Please keep your cursor on the central target to continue.</div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progress-bar">
+            <div class="pb-inner">
+                <div class="pb-text"><span id="pb-pct">0</span>% complete</div>
+                <div class="pb-track">
+                    <div class="pb-fill" id="pb-fill" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spacebar Flash -->
+        <div id="flash-feedback"></div>
+    </div>
+
+    <!-- ── START MODAL ──────────────────────────────────────────── -->
+    <div class="modal-backdrop" id="start-modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="start-title">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                    </svg>
+                </div>
+                <h1 id="start-title">RetinaSafe</h1>
+                <p class="subtitle">Peripheral Reaction Tester</p>
+            </div>
+            <div class="modal-body">
+                <div class="disclaimer-box">
+                    <div class="disclaimer-label">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        Disclaimer
+                    </div>
+                    <p class="disclaimer-text">
+                        DISCLAIMER: RetinaSafe is an AI-assisted screening and risk stratification tool intended for
+                        informational purposes only. It is not a medical device, not a licensed diagnostic instrument,
+                        and the results it produces do not constitute a medical diagnosis. RetinaSafe results must not
+                        be used as the sole basis for any clinical decision, treatment, or management plan. All
+                        individuals with a Moderate, High, or Critical risk classification should consult a qualified
+                        ophthalmologist promptly. RetinaSafe does not replace annual dilated eye examinations performed
+                        by a licensed eye care professional.
+                    </p>
+                </div>
+
+                <div class="instructions">
+                    <h3>How to Take This Test</h3>
+                    <ul>
+                        <li>A blue cross will appear and drift at the center of the screen. Keep your mouse cursor on it
+                            at all times.</li>
+                        <li>Small dots will briefly flash at the edges of your screen.</li>
+                        <li>Press the <strong>Spacebar</strong> as fast as you can when you notice a dot.</li>
+                        <li>The test consists of <strong>10 trials</strong> and takes about 30–60 seconds.</li>
+                        <li>If your cursor leaves the target, the test will pause until you return.</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary" id="btn-start" aria-label="Begin the peripheral reaction test">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                    Begin Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── RESULTS MODAL ────────────────────────────────────────── -->
+    <div class="modal-backdrop hidden" id="results-modal">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="results-title">
+            <div class="modal-header">
+                <div class="modal-logo">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                    </svg>
+                </div>
+                <h1 id="results-title">Test Complete</h1>
+                <p class="subtitle">Your peripheral vision screening results</p>
+            </div>
+            <div class="modal-body">
+                <div class="results-grid" id="results-grid"></div>
+                <div id="flags-container"></div>
+                <div class="result-zones" id="zones-container" style="display:none">
+                    <h4>Zones with Deficits</h4>
+                    <div class="zone-tags" id="zone-tags"></div>
+                </div>
+                <div class="results-actions">
+                    <button class="btn btn-success" id="btn-log"
+                        aria-label="Export results as JSON to the browser console">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6" />
+                            <polyline points="8 6 2 12 8 18" />
+                        </svg>
+                        Export JSON
+                    </button>
+                    <button class="btn btn-secondary" id="btn-restart" aria-label="Restart the test">↻ Retry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            'use strict';
+
+            /* ── Constants ──────────────────────────────────────────────── */
+            const TOTAL_TRIALS = 10;
+            const DOT_MIN_INTERVAL = 2000;   // ms
+            const DOT_MAX_INTERVAL = 5000;
+            const DOT_LIFESPAN = 400;    // ms
+            const GRACE_PERIOD = 200;    // ms after dot disappears
+            const FIXATION_RADIUS = 38;     // px movement radius
+            const TARGET_SIZE = 56;     // px, matches CSS
+            const HIT_RADIUS = TARGET_SIZE / 2 + 14; // generous hover zone
+
+            /* ── Zone definitions (edge of screen) ──────────────────────── */
+            const ZONES = [
+                { name: 'North', xMin: .3, xMax: .7, yMin: 0, yMax: .05 },
+                { name: 'South', xMin: .3, xMax: .7, yMin: .95, yMax: 1 },
+                { name: 'East', xMin: .95, xMax: 1, yMin: .3, yMax: .7 },
+                { name: 'West', xMin: 0, xMax: .05, yMin: .3, yMax: .7 },
+                { name: 'NE', xMin: .95, xMax: 1, yMin: 0, yMax: .05 },
+                { name: 'NW', xMin: 0, xMax: .05, yMin: 0, yMax: .05 },
+                { name: 'SE', xMin: .95, xMax: 1, yMin: .95, yMax: 1 },
+                { name: 'SW', xMin: 0, xMax: .05, yMin: .95, yMax: 1 },
+            ];
+
+            /* ── DOM refs ───────────────────────────────────────────────── */
+            const gameArea = document.getElementById('game-area');
+            const fixation = document.getElementById('fixation-target');
+            const warnOverlay = document.getElementById('warn-overlay');
+            const hud = document.getElementById('hud');
+            const hudTrial = document.getElementById('hud-trial');
+            const hudHits = document.getElementById('hud-hits');
+            const hudMisses = document.getElementById('hud-misses');
+            const hudRT = document.getElementById('hud-rt');
+            const progressBar = document.getElementById('progress-bar');
+            const pbFill = document.getElementById('pb-fill');
+            const pbPct = document.getElementById('pb-pct');
+            const flashFeedback = document.getElementById('flash-feedback');
+            const startModal = document.getElementById('start-modal');
+            const resultsModal = document.getElementById('results-modal');
+            const resultsGrid = document.getElementById('results-grid');
+            const flagsContainer = document.getElementById('flags-container');
+            const zonesContainer = document.getElementById('zones-container');
+            const zoneTags = document.getElementById('zone-tags');
+            const btnStart = document.getElementById('btn-start');
+            const btnLog = document.getElementById('btn-log');
+            const btnRestart = document.getElementById('btn-restart');
+
+            /* ── State ──────────────────────────────────────────────────── */
+            let running = false;
+            let paused = false;
+            let trialIndex = 0;
+            let hits = 0;
+            let misses = 0;
+            let reactionTimes = [];
+            let zoneMisses = {};   // zone name → miss count
+            let zoneTrials = {};   // zone name → total trials in that zone
+
+            // Mouse tracking
+            let mouseX = 0, mouseY = 0;
+
+            // Fixation animation
+            let fixX, fixY;
+            let fixAngle = 0;
+            let fixSpeed = 0.008;
+            let fixAnimId = null;
+
+            // Current dot state
+            let dotVisible = false;
+            let dotSpawnTime = 0;
+            let dotZone = '';
+            let dotTimeout = null;
+            let dotRemoveTimeout = null;
+            let currentDotEl = null;
+            let graceActive = false;
+            let graceTimeout = null;
+            let spaceHandled = false; // prevents double-counting
+
+            // Final payload
+            let finalPayload = null;
+
+            /* ── Utility ────────────────────────────────────────────────── */
+            function rand(min, max) { return Math.random() * (max - min) + min; }
+
+            function showFlash(type) {
+                flashFeedback.className = '';
+                void flashFeedback.offsetWidth; // reflow
+                flashFeedback.classList.add(type);
+                setTimeout(() => { flashFeedback.className = ''; }, 250);
+            }
+
+            /* ── Fixation Animation ─────────────────────────────────────── */
+            function initFixation() {
+                fixX = window.innerWidth / 2;
+                fixY = window.innerHeight / 2;
+                fixation.style.left = fixX + 'px';
+                fixation.style.top = fixY + 'px';
+                fixation.style.display = 'block';
+            }
+
+            function animateFixation() {
+                if (!running) return;
+
+                fixAngle += fixSpeed;
+
+                const cx = window.innerWidth / 2;
+                const cy = window.innerHeight / 2;
+
+                // Lissajous-like smooth drift
+                fixX = cx + Math.sin(fixAngle * 1.3) * FIXATION_RADIUS;
+                fixY = cy + Math.cos(fixAngle * 0.9) * FIXATION_RADIUS;
+
+                fixation.style.left = fixX + 'px';
+                fixation.style.top = fixY + 'px';
+
+                // Check cursor proximity
+                const dx = mouseX - fixX;
+                const dy = mouseY - fixY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > HIT_RADIUS) {
+                    if (!paused) pauseTest();
+                } else {
+                    if (paused) resumeTest();
+                }
+
+                fixAnimId = requestAnimationFrame(animateFixation);
+            }
+
+            /* ── Pause / Resume ─────────────────────────────────────────── */
+            function pauseTest() {
+                paused = true;
+                warnOverlay.classList.add('active');
+                fixation.classList.add('warn');
+                // Remove current dot if any
+                if (dotVisible && currentDotEl) {
+                    currentDotEl.remove();
+                    currentDotEl = null;
+                }
+                clearTimeout(dotTimeout);
+                clearTimeout(dotRemoveTimeout);
+                clearTimeout(graceTimeout);
+                dotVisible = false;
+                graceActive = false;
+            }
+
+            function resumeTest() {
+                paused = false;
+                warnOverlay.classList.remove('active');
+                fixation.classList.remove('warn');
+                if (trialIndex < TOTAL_TRIALS) {
+                    scheduleDot();
+                }
+            }
+
+            /* ── Dot System ─────────────────────────────────────────────── */
+            function scheduleDot() {
+                if (!running || paused || trialIndex >= TOTAL_TRIALS) return;
+                const delay = rand(DOT_MIN_INTERVAL, DOT_MAX_INTERVAL);
+                dotTimeout = setTimeout(spawnDot, delay);
+            }
+
+            function pickZone() {
+                const z = ZONES[Math.floor(Math.random() * ZONES.length)];
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const x = rand(z.xMin * vw, z.xMax * vw);
+                const y = rand(z.yMin * vh, z.yMax * vh);
+                return { zone: z.name, x, y };
+            }
+
+            function spawnDot() {
+                if (!running || paused) return;
+
+                const { zone, x, y } = pickZone();
+                dotZone = zone;
+                spaceHandled = false;
+
+                // Track zone trials
+                zoneTrials[zone] = (zoneTrials[zone] || 0) + 1;
+
+                // Create dot element
+                const dot = document.createElement('div');
+                dot.className = 'peripheral-dot';
+                dot.style.left = x + 'px';
+                dot.style.top = y + 'px';
+                dot.setAttribute('aria-hidden', 'true');
+                gameArea.appendChild(dot);
+                currentDotEl = dot;
+
+                dotVisible = true;
+                dotSpawnTime = performance.now();
+
+                // Remove dot after lifespan
+                dotRemoveTimeout = setTimeout(() => {
+                    dotVisible = false;
+                    dot.remove();
+                    currentDotEl = null;
+
+                    // Start grace period
+                    graceActive = true;
+                    graceTimeout = setTimeout(() => {
+                        graceActive = false;
+                        if (!spaceHandled) {
+                            recordMiss();
+                        }
+                    }, GRACE_PERIOD);
+                }, DOT_LIFESPAN);
+            }
+
+            /* ── Input ──────────────────────────────────────────────────── */
+            function handleSpacebar() {
+                if (!running || paused || spaceHandled) return;
+
+                if (dotVisible || graceActive) {
+                    // HIT
+                    spaceHandled = true;
+                    const rt = performance.now() - dotSpawnTime;
+                    reactionTimes.push(rt);
+                    hits++;
+                    trialIndex++;
+
+                    // Cleanup
+                    clearTimeout(dotRemoveTimeout);
+                    clearTimeout(graceTimeout);
+                    dotVisible = false;
+                    graceActive = false;
+                    if (currentDotEl) { currentDotEl.remove(); currentDotEl = null; }
+
+                    showFlash('hit');
+                    updateHUD();
+
+                    if (trialIndex >= TOTAL_TRIALS) {
+                        endGame();
+                    } else {
+                        scheduleDot();
+                    }
+                } else {
+                    // Spacebar pressed when no dot — ignore (no penalty for false positives to keep it simple)
+                }
+            }
+
+            function recordMiss() {
+                if (spaceHandled) return;
+                spaceHandled = true;
+                misses++;
+                trialIndex++;
+                zoneMisses[dotZone] = (zoneMisses[dotZone] || 0) + 1;
+
+                showFlash('miss');
+                updateHUD();
+
+                if (trialIndex >= TOTAL_TRIALS) {
+                    endGame();
+                } else {
+                    scheduleDot();
+                }
+            }
+
+            /* ── HUD ────────────────────────────────────────────────────── */
+            function updateHUD() {
+                hudTrial.textContent = trialIndex + '/' + TOTAL_TRIALS;
+                hudHits.textContent = hits;
+                hudMisses.textContent = misses;
+                if (reactionTimes.length > 0) {
+                    const avg = reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length;
+                    hudRT.textContent = Math.round(avg) + 'ms';
+                }
+                const pct = Math.round((trialIndex / TOTAL_TRIALS) * 100);
+                pbFill.style.width = pct + '%';
+                pbPct.textContent = pct;
+            }
+
+            /* ── Scoring ────────────────────────────────────────────────── */
+            function computeResults() {
+                const hitRate = TOTAL_TRIALS > 0 ? hits / TOTAL_TRIALS : 0;
+
+                // Average reaction time (lower is better). Penalize if > 600ms.
+                let avgRT = reactionTimes.length > 0
+                    ? reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length
+                    : 999;
+
+                // Reaction score: 0ms → 50pts, 600ms+ → 0pts (linear scale, max 50)
+                let rtScore = Math.max(0, 50 - (avgRT / 600) * 50);
+                rtScore = Math.min(50, rtScore);
+
+                // Hit rate score: 0–50pts
+                let hitScore = hitRate * 50;
+
+                let baseScore = Math.round(rtScore + hitScore);
+                baseScore = Math.max(0, Math.min(100, baseScore));
+
+                // Deficit zones: zones where user missed ≥ 50% of trials in that zone
+                const deficitZones = [];
+                for (const zone of Object.keys(zoneMisses)) {
+                    const total = zoneTrials[zone] || 1;
+                    if (zoneMisses[zone] / total >= 0.5) {
+                        deficitZones.push(zone);
+                    }
+                }
+
+                // Also count zones where 100% miss (even single trial)
+                // Already captured above since 1/1 ≥ 0.5
+
+                const gameFlag = baseScore <= 45 ? 'Field Defect Suspected' : null;
+                const criticalFlag = deficitZones.length >= 3;
+
+                return {
+                    game_name: 'Peripheral Reaction',
+                    score: baseScore,
+                    deficit_zones_count: deficitZones.length,
+                    zones_affected: deficitZones,
+                    avg_reaction_time_ms: Math.round(avgRT),
+                    hit_rate: parseFloat((hitRate * 100).toFixed(1)),
+                    total_hits: hits,
+                    total_misses: misses,
+                    game_flag: gameFlag,
+                    critical_glaucoma_flag: criticalFlag
+                };
+            }
+
+            /* ── End Game & Results ─────────────────────────────────────── */
+            function endGame() {
+                running = false;
+                cancelAnimationFrame(fixAnimId);
+                fixation.style.display = 'none';
+                hud.classList.remove('visible');
+                progressBar.classList.remove('visible');
+                clearTimeout(dotTimeout);
+                clearTimeout(dotRemoveTimeout);
+                clearTimeout(graceTimeout);
+
+                finalPayload = computeResults();
+                renderResults(finalPayload);
+                resultsModal.classList.remove('hidden');
+            }
+
+            function renderResults(r) {
+                // Score color
+                let scoreClass = 'score-good';
+                if (r.score <= 45) scoreClass = 'score-bad';
+                else if (r.score <= 70) scoreClass = 'score-warn';
+
+                resultsGrid.innerHTML = `
+      <div class="result-card">
+        <div class="rc-label">Score</div>
+        <div class="rc-value ${scoreClass}">${r.score}<small style="font-size:14px;color:var(--gray-500)">/100</small></div>
+      </div>
+      <div class="result-card">
+        <div class="rc-label">Avg Reaction</div>
+        <div class="rc-value">${r.avg_reaction_time_ms}<small style="font-size:14px;color:var(--gray-500)">ms</small></div>
+      </div>
+      <div class="result-card">
+        <div class="rc-label">Hits</div>
+        <div class="rc-value">${r.total_hits}<small style="font-size:14px;color:var(--gray-500)">/${TOTAL_TRIALS}</small></div>
+      </div>
+      <div class="result-card">
+        <div class="rc-label">Deficit Zones</div>
+        <div class="rc-value ${r.deficit_zones_count >= 3 ? 'score-bad' : r.deficit_zones_count > 0 ? 'score-warn' : 'score-good'}">${r.deficit_zones_count}</div>
+      </div>
+    `;
+
+                // Flags
+                let flagsHTML = '';
+                if (r.critical_glaucoma_flag) {
+                    flagsHTML += `<div class="flag-box flag-critical"><span class="flag-icon">🚨</span>Critical: Severe peripheral vision loss suspected (${r.deficit_zones_count} deficit zones). See an ophthalmologist immediately.</div>`;
+                }
+                if (r.game_flag) {
+                    flagsHTML += `<div class="flag-box flag-warn"><span class="flag-icon">⚠️</span>${r.game_flag} — Score is below clinical threshold.</div>`;
+                }
+                if (!r.game_flag && !r.critical_glaucoma_flag) {
+                    flagsHTML += `<div class="flag-box flag-ok"><span class="flag-icon">✅</span>No significant peripheral vision deficits detected in this screening.</div>`;
+                }
+                flagsContainer.innerHTML = flagsHTML;
+
+                // Zone tags
+                if (r.zones_affected.length > 0) {
+                    zonesContainer.style.display = 'block';
+                    const allZones = ZONES.map(z => z.name);
+                    zoneTags.innerHTML = allZones.map(z =>
+                        `<span class="zone-tag ${r.zones_affected.includes(z) ? '' : 'ok'}">${z}</span>`
+                    ).join('');
+                } else {
+                    zonesContainer.style.display = 'none';
+                }
+            }
+
+            /* ── Game Start ─────────────────────────────────────────────── */
+            function startGame() {
+                // Reset state
+                running = true;
+                paused = false;
+                trialIndex = 0;
+                hits = 0;
+                misses = 0;
+                reactionTimes = [];
+                zoneMisses = {};
+                zoneTrials = {};
+                dotVisible = false;
+                graceActive = false;
+                spaceHandled = false;
+                finalPayload = null;
+
+                startModal.classList.add('hidden');
+                resultsModal.classList.add('hidden');
+
+                initFixation();
+                updateHUD();
+                hud.classList.add('visible');
+                progressBar.classList.add('visible');
+
+                // Small delay before starting
+                setTimeout(() => {
+                    animateFixation();
+                    scheduleDot();
+                }, 800);
+            }
+
+            /* ── Event Listeners ────────────────────────────────────────── */
+            document.addEventListener('mousemove', e => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.code === 'Space') {
+                    e.preventDefault();
+                    handleSpacebar();
+                }
+            });
+
+            btnStart.addEventListener('click', startGame);
+
+            btnLog.addEventListener('click', () => {
+                if (finalPayload) {
+                    console.log('=== RetinaSafe Peripheral Reaction Test Results ===');
+                    console.log(JSON.stringify(finalPayload, null, 2));
+                    console.log(finalPayload);
+                    btnLog.textContent = '✓ Exported to Console';
+                    setTimeout(() => {
+                        btnLog.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Export JSON`;
+                    }, 2000);
+                }
+            });
+
+            btnRestart.addEventListener('click', () => {
+                resultsModal.classList.add('hidden');
+                startGame();
+            });
+
+            // Focus start button for keyboard accessibility
+            btnStart.focus();
+        })();
+    </script>
+
+</body>
+
+</html>
