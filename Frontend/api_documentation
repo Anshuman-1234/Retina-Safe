@@ -1,0 +1,383 @@
+# RetinaSafe — API Documentation
+**Version:** 1.0 · **Base URL:** `http://localhost:8000` (dev) · `https://api.retinasafe.app` (prod)
+
+All requests/responses use JSON unless noted. Timestamps are ISO 8601 UTC.
+
+---
+
+## Architecture & Data Flow
+
+```
+Step 1  Medical History        ──  client-side only (localStorage)
+           │
+Step 2  Image Upload           ──  POST /api/upload-image
+           │ returns session_id
+           │  ↳ CNN runs async in background
+           │  ↳ frontend polls GET /api/model-result/:sessionId silently
+           │
+Step 3  Vision Games (×4)     ──  POST /api/game-result (after each game)
+           │ also saved to localStorage as fallback
+           │
+Step 4  Report                 ──  POST /api/compute-report
+           │ fuses model output + all 4 game results
+           ↓
+        GET /api/report/:reportId/pdf   (download)
+        POST /api/save-to-dashboard     (persist to history, optional)
+        GET  /api/health                (health check)
+```
+
+---
+
+## Endpoint Reference
+
+---
+
+### 1. POST `/api/upload-image`
+
+Upload a fundus photograph and begin model inference.
+
+**Content-Type:** `multipart/form-data`
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `image` | File | ✅ | JPEG / PNG / TIFF, max 10 MB |
+| `session_id` | string | ✅ | Client UUID from `RetinaSafeSession.get().sessionId` |
+| `medical_history` | JSON string | ✗ | Stringified — see shape below |
+
+```json
+// medical_history shape
+{
+  "age_group": "45-59",
+  "gender": "female",
+  "last_exam": "1-2yr",
+  "conditions": ["diabetes", "hypertension"]
+}
+```
+`conditions` allowed values: `"diabetes"`, `"hypertension"`, `"smoking"`, `"family-history"`
+
+**Response 200:**
+```json
+{
+  "session_id": "srv-a1b2c3d4",
+  "status": "queued",
+  "message": "Image received. Model inference queued."
+}
+```
+Store `session_id` — it is the backend's ID, which may differ from the client UUID.
+
+**Errors:** `400` missing image · `415` wrong format · `413` too large · `500` queue unavailable
+
+---
+
+### 2. GET `/api/model-result/:sessionId`
+
+Poll for the CNN prediction. Frontend polls every 2 s for up to 40 s **in the background while games run**.
+
+**Response 200 — processing:**
+```json
+{ "session_id": "srv-a1b2c3d4", "status": "processing", "predictions": null }
+```
+
+**Response 200 — done:**
+```json
+{
+  "session_id": "srv-a1b2c3d4",
+  "status": "done",
+  "model_version": "retinasafe-cnn-v2.1",
+  "processed_at": "2025-09-14T10:23:41Z",
+  "predictions": {
+    "diabetic_retinopathy": { "probability": 0.74, "risk_level": "High" },
+    "macular_degeneration": { "probability": 0.22, "risk_level": "Low" },
+    "glaucoma":             { "probability": 0.48, "risk_level": "Moderate" },
+    "cataract":             { "probability": 0.31, "risk_level": "Low" }
+  }
+}
+```
+
+**Risk level thresholds (model output):**
+
+| probability | risk_level |
+|---|---|
+| < 0.35 | Low |
+| 0.35–0.64 | Moderate |
+| ≥ 0.65 | High |
+
+**Errors:** `404` unknown session · `500` inference failed (frontend proceeds game-only)
+
+---
+
+### 3. POST `/api/game-result`
+
+Submit one game's JSON payload. Fire-and-forget — frontend also saves to localStorage.
+
+**Request:**
+```json
+{
+  "session_id": "srv-a1b2c3d4",
+  "game_payload": { ... }
+}
+```
+
+**Response 200:**
+```json
+{ "session_id": "srv-a1b2c3d4", "game_name": "Contrast Discrimination", "status": "saved", "saved_at": "…" }
+```
+
+---
+
+#### Game Payload Schemas
+
+##### Contrast Discrimination Challenge
+`game_name: "Contrast Discrimination"` — detects **Diabetic Retinopathy**
+```json
+{
+  "game_name": "Contrast Discrimination",
+  "score": 72,
+  "totalTrials": 30,
+  "correctAnswers": 24,
+  "accuracy": 0.80,
+  "levels_passed": [1, 2, 3, 4, 5],
+  "levels_failed": [6, 7, 8],
+  "min_detectable_contrast": 0.12,
+  "timestamp": "2025-09-14T10:25:00Z"
+}
+```
+Fusion key: **`score`** (0–100, higher = better sensitivity)
+
+---
+
+##### Dynamic Amsler Grid
+`game_name: "Amsler Grid"` — detects **Macular Degeneration**
+```json
+{
+  "game_name": "Amsler Grid",
+  "compositeAMDScore": 81,
+  "leftEye":  { "distortionScore": 12, "missingAreaScore": 5, "reactionTimeMs": 3200, "totalScore": 83 },
+  "rightEye": { "distortionScore":  8, "missingAreaScore": 2, "reactionTimeMs": 2900, "totalScore": 90 },
+  "centralZoneFlag": false,
+  "game_flag": null,
+  "timestamp": "2025-09-14T10:27:00Z"
+}
+```
+Fusion key: **`compositeAMDScore`** (0–100). `centralZoneFlag` true = urgent. `game_flag` string if abnormal.
+
+---
+
+##### Peripheral Reaction Tester
+`game_name: "Peripheral Reaction"` — detects **Glaucoma**
+```json
+{
+  "game_name": "Peripheral Reaction",
+  "score": 65,
+  "totalFlashes": 32,
+  "detectedFlashes": 21,
+  "avgReactionTimeMs": 480,
+  "zoneResults": {
+    "upper-left":  { "detected": 4, "total": 4, "avgMs": 420 },
+    "upper":       { "detected": 3, "total": 4, "avgMs": 510 },
+    "upper-right": { "detected": 4, "total": 4, "avgMs": 390 },
+    "right":       { "detected": 2, "total": 4, "avgMs": 600 },
+    "lower-right": { "detected": 1, "total": 4, "avgMs": 720 },
+    "lower":       { "detected": 3, "total": 4, "avgMs": 440 },
+    "lower-left":  { "detected": 2, "total": 4, "avgMs": 490 },
+    "left":        { "detected": 2, "total": 4, "avgMs": 520 }
+  },
+  "game_flag": "Lower-right peripheral zone significantly impaired",
+  "timestamp": "2025-09-14T10:29:00Z"
+}
+```
+Fusion key: **`score`** (detectedFlashes/totalFlashes × 100). `game_flag` set if any zone < 50%.
+
+---
+
+##### Color Hue Sorting
+`game_name: "Hue Sorting"` — detects **Cataract**
+```json
+{
+  "game_name": "Hue Sorting",
+  "score": 58,
+  "rounds": 10,
+  "correctRounds": 7,
+  "avgResponseTimeMs": 3800,
+  "axis": "tritan",
+  "errorPattern": "blue-yellow",
+  "tritanDeficiencyFlag": false,
+  "game_flag": null,
+  "timestamp": "2025-09-14T10:31:00Z"
+}
+```
+Fusion key: **`score`** (correctRounds/rounds × 100). `tritanDeficiencyFlag` true if score < 50.
+
+---
+
+### 4. POST `/api/compute-report`
+
+Fuse model predictions + all 4 game results into the final risk report.
+
+**Request:**
+```json
+{
+  "session_id": "srv-a1b2c3d4",
+  "game_results": {
+    "Contrast Discrimination": { ... },
+    "Amsler Grid": { ... },
+    "Peripheral Reaction": { ... },
+    "Hue Sorting": { ... }
+  },
+  "model_output": { "predictions": { ... } },
+  "medical_history": { "age_group": "45-59", "conditions": ["diabetes"] }
+}
+```
+`model_output` may be `null` — handle gracefully (game-only fusion).
+
+**Fusion algorithm (implement on backend):**
+```
+game_modifier = 1.2 - (game_score / 100) × 0.4   → range: 0.8 (best) to 1.2 (worst)
+final_probability = min(1.0, model_probability × game_modifier)
+
+Condition → Game mapping:
+  diabetic_retinopathy  ←  Contrast Discrimination  (score)
+  macular_degeneration  ←  Amsler Grid              (compositeAMDScore)
+  glaucoma              ←  Peripheral Reaction       (score)
+  cataract              ←  Hue Sorting               (score)
+
+overall_risk_score = round(mean(all final_probabilities) × 100)
+```
+
+Optional medical history adjustments:
+- diabetes → +0.05 to diabetic_retinopathy
+- age ≥ 60 → +0.03 to macular_degeneration and cataract
+- family-history → +0.02 to all conditions
+
+**Response 200:**
+```json
+{
+  "session_id": "srv-a1b2c3d4",
+  "report_id": "rpt-2025091401-x7k",
+  "overall_risk_score": 64,
+  "risk_label": "Moderate Risk",
+  "recommended_action": "Schedule an ophthalmology consultation within 4–6 weeks.",
+  "urgency_level": "RECOMMENDED",
+  "generated_at": "2025-09-14T10:35:00Z",
+  "conditions": {
+    "diabetic_retinopathy": {
+      "final_probability": 0.83,
+      "model_probability": 0.74,
+      "game_score": 72,
+      "risk_level": "High",
+      "game_flag": null
+    },
+    "macular_degeneration": {
+      "final_probability": 0.19, "model_probability": 0.22,
+      "game_score": 81, "risk_level": "Low", "game_flag": null
+    },
+    "glaucoma": {
+      "final_probability": 0.55, "model_probability": 0.48,
+      "game_score": 65, "risk_level": "Moderate",
+      "game_flag": "Lower-right peripheral zone significantly impaired"
+    },
+    "cataract": {
+      "final_probability": 0.38, "model_probability": 0.31,
+      "game_score": 58, "risk_level": "Moderate", "game_flag": null
+    }
+  }
+}
+```
+
+**Risk label thresholds (overall_risk_score):**
+
+| Score | risk_label | urgency_level |
+|---|---|---|
+| 0–34 | Low Risk | ROUTINE |
+| 35–59 | Borderline | MONITOR |
+| 60–74 | Moderate Risk | RECOMMENDED |
+| 75–89 | High Risk | URGENT |
+| 90–100 | Critical | CRITICAL |
+
+**Errors:** `400` missing session · `400` insufficient game results · `404` not found · `500` fusion failed
+
+---
+
+### 5. GET `/api/report/:reportId/pdf`
+
+Download the report as a PDF.
+
+**Response:** `application/pdf` with `Content-Disposition: attachment`
+
+**Errors:** `404` not found · `503` renderer unavailable
+
+---
+
+### 6. POST `/api/save-to-dashboard` *(optional)*
+
+Persist a completed screening to the patient's history (shown in dashboard.html).
+
+**Request:**
+```json
+{ "session_id": "srv-a1b2c3d4", "report_id": "rpt-2025091401-x7k" }
+```
+
+**Response 200:**
+```json
+{ "status": "saved", "dashboard_record_id": "dash-9z3mq" }
+```
+
+---
+
+### 7. GET `/api/health`
+
+**Response 200:**
+```json
+{ "status": "ok", "version": "1.0.0", "model_service": "healthy", "storage_service": "healthy" }
+```
+
+---
+
+## Error Response Shape (all endpoints)
+
+```json
+{ "detail": "Human-readable message", "error_code": "OPTIONAL_CODE", "timestamp": "…" }
+```
+
+---
+
+## Frontend File Reference
+
+| File | Purpose |
+|---|---|
+| `session.js` | Session state (localStorage). Survives page navigation between games. |
+| `api-bridge.js` | All API calls. Full mock mode for frontend dev without a backend. |
+| `game-collector.js` | Add to every game page. Call `RetinaSafeCollector.submit(payload)` to save + redirect. |
+| `screening.js` | 4-step wizard controller. |
+| `nav.js` | Shared nav bar injected into every page. |
+
+---
+
+## Integration Checklist
+
+### Backend developer
+- [ ] Implement all 7 endpoints with CORS (`Access-Control-Allow-Origin: *` in dev)
+- [ ] `/api/upload-image` queues model inference, returns immediately with `"queued"`
+- [ ] `/api/compute-report` handles `null` model_output (game-only fusion fallback)
+- [ ] Store all game results + model output under `session_id` for audit trail
+- [ ] Implement PDF generation (`/api/report/:id/pdf`) — WeasyPrint / Puppeteer recommended
+- [ ] Set `window.RS_API_BASE = 'https://your-backend.com'` in a `<script>` before `api-bridge.js`
+
+### Frontend developer — per game page
+- [ ] Add before `</body>` of every game HTML:
+  ```html
+  <script src="session.js"></script>
+  <script src="api-bridge.js"></script>
+  <script src="game-collector.js"></script>
+  ```
+- [ ] In each game's end-game / showResults function, call:
+  ```javascript
+  RetinaSafeCollector.submit(finalPayload);
+  ```
+- [ ] `finalPayload.game_name` must exactly match one of the 4 canonical names above
+- [ ] Comment out `RetinaSafeAPI.enableMock()` in `screening.js` when backend is live
+
+### Notes on AI Analysis step removal
+The previous "AI Analysis" wizard step has been **removed**. The model now runs silently while
+the user plays games (~7–10 min). If inference isn't done by the time they click "Generate Report",
+`computeReport` is still called and the backend applies game-only fusion. No spinner screen needed.
