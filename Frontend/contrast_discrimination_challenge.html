@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="RetinaSafe Contrast Discrimination Challenge — a clinical screening tool to detect early shifts in visual contrast sensitivity. Not a substitute for professional diagnosis.">
+    <title>Contrast Discrimination Challenge — RetinaSafe</title>
+
+    <!-- Google Fonts: Lora (display) + Source Sans 3 (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Skip link for keyboard accessibility -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <main id="main">
+
+        <!-- Fullscreen clickable area for logging misses -->
+        <div class="game-area" id="gameArea" aria-hidden="true"></div>
+
+        <!-- Central clickable target -->
+        <div class="target" id="target" role="button" aria-label="Click the target shape"></div>
+
+        <!-- HUD -->
+        <div class="game-ui hidden" id="gameUI" aria-live="polite">
+            <div class="hud-pill" id="livesDisplay">
+                <span class="icon" aria-hidden="true">❤️</span><span class="value">3</span>
+            </div>
+            <div class="hud-pill hud-score" id="scoreDisplay">
+                <span class="icon" aria-hidden="true">🏆</span><span class="value">0</span>
+            </div>
+            <div class="hud-pill" id="levelDisplay">
+                <span class="label">Level</span><span class="value">1</span>
+            </div>
+            <div class="hud-pill" id="timeDisplay">
+                <span class="icon" aria-hidden="true">⏱️</span><span class="value">00:30</span>
+            </div>
+        </div>
+
+        <!-- Start Screen -->
+        <div class="overlay" id="startOverlay">
+            <div class="glass-panel">
+                <h1>Contrast Discrimination Challenge</h1>
+                <p>Detect early shifts in visual contrast sensitivity.<br>Find and click the fading object. You have
+                    <strong>30 seconds</strong> and <strong>3 lives</strong>.
+                </p>
+                <button class="btn btn-primary btn-lg" id="startBtn">Begin Test</button>
+
+                <div class="medical-disclaimer" role="note">
+                    <strong>⚠ Medical Disclaimer:</strong> RetinaSafe is a screening and risk stratification tool only.
+                    It is not a substitute for clinical examination or professional diagnosis. All results should be
+                    reviewed with a medical professional. No personal data or retinal images are stored or transmitted.
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div class="overlay hidden" id="endOverlay">
+            <div class="glass-panel">
+                <h1>Test Complete</h1>
+                <div id="resultText" class="results-container"></div>
+                <div class="medical-disclaimer results-disclaimer" role="note">
+                    <strong>⚠ Disclaimer:</strong> This result is for screening purposes only and does not constitute a
+                    medical diagnosis. Please consult a qualified eye-care professional.
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- External JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>
+

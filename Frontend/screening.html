@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetinaSafe — Start Screening</title>
+  <meta name="description" content="Begin your AI-powered retinal screening. Upload your fundus image and complete four vision games to receive your risk report." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="screening.css" />
+</head>
+<body class="screening-page">
+
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+
+  <!-- Navigation — identical structure to index.html -->
+  <header class="nav-wrapper" role="banner">
+    <nav class="nav container" aria-label="Main navigation">
+
+
+      <a href="index.html" class="nav-brand" aria-label="RetinaSafe Home">
+        <div class="nav-iris" aria-hidden="true">
+          <div class="nav-iris-inner"></div>
+          <div class="nav-iris-pupil"></div>
+        </div>
+        <span class="nav-name">
+          <span class="nav-name-dark">Retina</span><span class="nav-name-blue">Safe</span>
+        </span>
+      </a>
+
+
+      <ul class="nav-links" role="list">
+        <li><a href="index.html#how-it-works" class="nav-link">How It Works</a></li>
+        <li><a href="index.html#conditions" class="nav-link">Conditions</a></li>
+        <li><a href="index.html#games" class="nav-link">Vision Games</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+      </ul>
+
+
+      <div class="nav-actions">
+        <span class="nav-disclaimer-pill" aria-label="Disclaimer">Screening tool only — not a diagnosis</span>
+        <a href="index.html" class="btn btn-outline btn-sm">← Back to Home</a>
+      </div>
+
+
+    </nav>
+  </header>
+
+
+  <main id="main">
+
+
+    <!-- Progress Stepper -->
+    <div class="progress-bar-wrapper" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="5" aria-label="Screening progress">
+      <div class="container progress-steps-row">
+        <div class="progress-step ps-active" id="pstep-1">
+          <div class="pstep-dot"><span class="pstep-number">1</span></div>
+          <span class="pstep-label">Medical History</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" id="pstep-2">
+          <div class="pstep-dot"><span class="pstep-number">2</span></div>
+          <span class="pstep-label">Fundus Image</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" id="pstep-3">
+          <div class="pstep-dot"><span class="pstep-number">3</span></div>
+          <span class="pstep-label">Vision Games</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" id="pstep-4">
+          <div class="pstep-dot"><span class="pstep-number">4</span></div>
+          <span class="pstep-label">AI Analysis</span>
+        </div>
+        <div class="progress-connector"></div>
+        <div class="progress-step" id="pstep-5">
+          <div class="pstep-dot"><span class="pstep-number">5</span></div>
+          <span class="pstep-label">Your Report</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Disclaimer banner -->
+    <div class="disclaimer-banner" role="note">
+      <div class="container">
+        <p><strong>⚠ Screening Tool Only:</strong> RetinaSafe is not a medical device or diagnostic replacement. Results must be reviewed by a qualified ophthalmologist. No retinal images or personal data are stored or transmitted.</p>
+      </div>
+    </div>
+
+
+    <!-- Step panels -->
+    <div class="screening-body">
+      <div class="container screening-container">
+
+
+        <!-- STEP 1: Medical History -->
+        <section class="screen-step ps-step-active" id="step-1" aria-labelledby="s1-heading">
+          <div class="step-header">
+            <p class="eyebrow">Step 1 of 5</p>
+            <h1 id="s1-heading" class="step-title">Medical History</h1>
+            <p class="step-desc">This information adjusts the AI model's risk weighting for your profile. All fields are optional but improve accuracy.</p>
+          </div>
+          <form id="history-form" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="age-group">Age Group</label>
+                <select class="form-select" id="age-group" name="age-group">
+                  <option value="">Select age group</option>
+                  <option value="under30">Under 30</option>
+                  <option value="30-44">30 – 44</option>
+                  <option value="45-59">45 – 59</option>
+                  <option value="60plus">60 and above</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="gender">Biological Sex</label>
+                <select class="form-select" id="gender" name="gender">
+                  <option value="">Select</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="other">Other / Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+            <fieldset class="form-fieldset">
+              <legend class="form-legend">Known Medical Conditions</legend>
+              <div class="checkbox-grid">
+                <label class="checkbox-label">
+                  <input type="checkbox" class="checkbox-input" name="diabetes" />
+                  <span class="checkbox-custom" aria-hidden="true"></span>
+                  <span class="checkbox-text">Type 1 or Type 2 Diabetes</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" class="checkbox-input" name="hypertension" />
+                  <span class="checkbox-custom" aria-hidden="true"></span>
+                  <span class="checkbox-text">Hypertension (High Blood Pressure)</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" class="checkbox-input" name="smoking" />
+                  <span class="checkbox-custom" aria-hidden="true"></span>
+                  <span class="checkbox-text">Current or Former Smoker</span>
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" class="checkbox-input" name="family-history" />
+                  <span class="checkbox-custom" aria-hidden="true"></span>
+                  <span class="checkbox-text">Family History of Eye Disease</span>
+                </label>
+              </div>
+            </fieldset>
+            <div class="form-group">
+              <label class="form-label" for="last-exam">Last Eye Examination</label>
+              <select class="form-select" id="last-exam" name="last-exam">
+                <option value="">Select timeframe</option>
+                <option value="within1yr">Within the last year</option>
+                <option value="1-2yr">1 – 2 years ago</option>
+                <option value="2-5yr">2 – 5 years ago</option>
+                <option value="5plusyr">More than 5 years ago</option>
+                <option value="never">Never had an eye exam</option>
+              </select>
+            </div>
+            <div class="step-actions">
+              <button type="button" class="btn btn-primary btn-lg" id="step1-next">Continue to Image Upload →</button>
+            </div>
+          </form>
+        </section>
+
+
+        <!-- STEP 2: Fundus Image Upload -->
+        <section class="screen-step" id="step-2" aria-labelledby="s2-heading">
+          <div class="step-header">
+            <p class="eyebrow">Step 2 of 5</p>
+            <h1 id="s2-heading" class="step-title">Upload Fundus Image</h1>
+            <p class="step-desc">Upload a retinal fundus photograph. This can be captured via a fundus camera, smartphone adapter, or provided by your clinic.</p>
+          </div>
+
+
+          <div class="upload-area" id="upload-area" role="button" tabindex="0" aria-label="Upload fundus image. Click or drag and drop.">
+            <div id="upload-idle">
+              <div class="upload-icon-wrap" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <p class="upload-title">Drop your fundus image here</p>
+              <p class="upload-sub">or <span class="upload-link">browse to upload</span></p>
+              <p class="upload-formats">Accepted: JPG, PNG, TIFF · Max 10 MB</p>
+            </div>
+            <div id="upload-preview" class="hidden">
+              <img id="preview-img" src="" alt="Uploaded fundus image preview" />
+              <div class="preview-meta">
+                <p class="preview-filename" id="preview-filename"></p>
+                <p class="preview-size" id="preview-size"></p>
+                <button type="button" class="btn btn-outline btn-sm" id="preview-replace">Replace</button>
+              </div>
+            </div>
+            <input type="file" id="file-input" accept="image/jpeg,image/png,image/tiff" class="file-input-hidden" aria-hidden="true" tabindex="-1" />
+          </div>
+
+
+          <div class="upload-tips">
+            <p class="tips-heading">Image quality tips</p>
+            <div class="tips-grid">
+              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Clear, in-focus retinal image</span>
+              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Optic disc visible in frame</span>
+              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Adequate illumination, no glare</span>
+              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Minimum 1024 × 1024 px</span>
+            </div>
+          </div>
+
+
+          <div class="step-actions">
+            <button type="button" class="btn btn-outline btn-lg" data-back="1">← Back</button>
+            <button type="button" class="btn btn-primary btn-lg" id="step2-next" disabled>Continue to Vision Games →</button>
+          </div>
+        </section>
+
+
+        <!-- STEP 3: Vision Games -->
+        <section class="screen-step" id="step-3" aria-labelledby="s3-heading">
+          <div class="step-header">
+            <p class="eyebrow">Step 3 of 5</p>
+            <h1 id="s3-heading" class="step-title">Vision Games</h1>
+            <p class="step-desc">Complete all four games. Each assesses a different aspect of functional vision and adjusts the AI model's confidence scores.</p>
+          </div>
+
+
+          <div class="games-checklist">
+            <div class="game-row" id="grow-1">
+              <div class="grow-left">
+                <div class="grow-dot dot-pending" aria-hidden="true"></div>
+                <div class="grow-info">
+                  <div class="grow-meta"><span class="grow-num">01</span><h3 class="grow-title">Contrast Discrimination</h3><span class="grow-tag">Diabetic Retinopathy</span></div>
+                  <p class="grow-desc">10 contrast levels, 30+ trials. Identify a subtly different object against grey. ~3 min.</p>
+                </div>
+              </div>
+              <div class="grow-right">
+                <span class="game-badge badge-pending" id="gbadge-1">Not Started</span>
+                <button class="btn btn-primary btn-sm" data-gid="1">Start Game</button>
+              </div>
+            </div>
+            <div class="game-row" id="grow-2">
+              <div class="grow-left">
+                <div class="grow-dot dot-pending" aria-hidden="true"></div>
+                <div class="grow-info">
+                  <div class="grow-meta"><span class="grow-num">02</span><h3 class="grow-title">Dynamic Amsler Grid</h3><span class="grow-tag">Macular Degeneration</span></div>
+                  <p class="grow-desc">Mark wavy or missing lines — each eye separately. Central zone weighted 4×. ~2 min.</p>
+                </div>
+              </div>
+              <div class="grow-right">
+                <span class="game-badge badge-pending" id="gbadge-2">Not Started</span>
+                <button class="btn btn-primary btn-sm" data-gid="2">Start Game</button>
+              </div>
+            </div>
+            <div class="game-row" id="grow-3">
+              <div class="grow-left">
+                <div class="grow-dot dot-pending" aria-hidden="true"></div>
+                <div class="grow-info">
+                  <div class="grow-meta"><span class="grow-num">03</span><h3 class="grow-title">Peripheral Reaction Tester</h3><span class="grow-tag">Glaucoma</span></div>
+                  <p class="grow-desc">Fixate centre. 32 peripheral flashes across 8 zones at 200 ms each. ~1 min.</p>
+                </div>
+              </div>
+              <div class="grow-right">
+                <span class="game-badge badge-pending" id="gbadge-3">Not Started</span>
+                <button class="btn btn-primary btn-sm" data-gid="3">Start Game</button>
+              </div>
+            </div>
+            <div class="game-row" id="grow-4">
+              <div class="grow-left">
+                <div class="grow-dot dot-pending" aria-hidden="true"></div>
+                <div class="grow-info">
+                  <div class="grow-meta"><span class="grow-num">04</span><h3 class="grow-title">Color Hue Sorting</h3><span class="grow-tag">Cataract</span></div>
+                  <p class="grow-desc">Find the odd-hue tile. 10 rounds on the blue-yellow tritan axis. 30 s limit.</p>
+                </div>
+              </div>
+              <div class="grow-right">
+                <span class="game-badge badge-pending" id="gbadge-4">Not Started</span>
+                <button class="btn btn-primary btn-sm" data-gid="4">Start Game</button>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="games-progress-row">
+            <div class="gpr-bar-wrap"><div class="gpr-bar" id="gpr-bar" style="width:0%"></div></div>
+            <span class="gpr-label" id="gpr-label">0 of 4 games completed</span>
+          </div>
+
+
+          <div class="step-actions">
+            <button type="button" class="btn btn-outline btn-lg" data-back="2">← Back</button>
+            <button type="button" class="btn btn-primary btn-lg" id="step3-next" disabled>Run AI Analysis →</button>
+          </div>
+        </section>
+
+
+        <!-- STEP 4: AI Analysis -->
+        <section class="screen-step" id="step-4" aria-labelledby="s4-heading" aria-live="polite">
+          <div class="analysis-panel">
+            <div class="analysis-iris-wrap" aria-hidden="true">
+              <div class="analysis-iris">
+                <div class="a-ring a-ring-outer"></div>
+                <div class="a-ring a-ring-inner"></div>
+                <div class="a-body"><div class="a-pupil"></div></div>
+                <div class="a-scan"></div>
+              </div>
+            </div>
+            <p class="eyebrow" style="text-align:center">Step 4 of 5</p>
+            <h1 id="s4-heading" class="step-title" style="text-align:center">Analysing your retina</h1>
+            <p class="step-desc" style="text-align:center">Our CNN model is processing your fundus image and combining it with your game scores. This takes about 15 seconds.</p>
+            <div class="analysis-log" aria-live="polite" aria-label="Analysis progress updates">
+              <div class="log-item log-active" id="log-1"><span class="log-dot" aria-hidden="true"></span><span>Preprocessing fundus image…</span></div>
+              <div class="log-item" id="log-2"><span class="log-dot" aria-hidden="true"></span><span>Running CNN classification model…</span></div>
+              <div class="log-item" id="log-3"><span class="log-dot" aria-hidden="true"></span><span>Applying game score modifiers…</span></div>
+              <div class="log-item" id="log-4"><span class="log-dot" aria-hidden="true"></span><span>Adjusting for medical history…</span></div>
+              <div class="log-item" id="log-5"><span class="log-dot" aria-hidden="true"></span><span>Generating risk classifications…</span></div>
+              <div class="log-item" id="log-6"><span class="log-dot" aria-hidden="true"></span><span>Building your report…</span></div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- STEP 5: Report -->
+        <section class="screen-step" id="step-5" aria-labelledby="s5-heading">
+          <div class="step-header">
+            <p class="eyebrow">Step 5 of 5 · Your Report</p>
+            <h1 id="s5-heading" class="step-title">Screening Complete</h1>
+            <p class="step-desc">This is a preliminary risk assessment only. Review all results with a qualified ophthalmologist before taking any action.</p>
+          </div>
+
+
+          <div class="report-score-card" id="report-score-card">
+            <div class="rsc-left">
+              <p class="rsc-label">Overall Risk Score</p>
+              <div class="rsc-score" id="rsc-score">—</div>
+              <div class="rsc-badge" id="rsc-badge">—</div>
+            </div>
+            <div class="rsc-right">
+              <p class="rsc-action-label">Recommended Action</p>
+              <p class="rsc-action" id="rsc-action">—</p>
+              <span class="rsc-urgency" id="rsc-urgency"></span>
+            </div>
+          </div>
+
+
+          <h2 class="report-section-title">Per-Condition Risk Breakdown</h2>
+          <div class="disease-grid">
+            <div class="disease-card" style="--d-accent:var(--dr-color)">
+              <div class="dc-top"><span class="dc-name">Diabetic Retinopathy</span><span class="dc-prob" id="dc-dr-prob">—</span></div>
+              <div class="dc-bar-wrap"><div class="dc-bar" id="dc-dr-bar" style="width:0%;background:var(--dr-color)"></div></div>
+              <div class="dc-bottom"><span id="dc-dr-game">Contrast score: —</span><span class="dc-level" id="dc-dr-level">—</span></div>
+            </div>
+            <div class="disease-card" style="--d-accent:var(--amd-color)">
+              <div class="dc-top"><span class="dc-name">Macular Degeneration</span><span class="dc-prob" id="dc-amd-prob">—</span></div>
+              <div class="dc-bar-wrap"><div class="dc-bar" id="dc-amd-bar" style="width:0%;background:var(--amd-color)"></div></div>
+              <div class="dc-bottom"><span id="dc-amd-game">Amsler score: —</span><span class="dc-level" id="dc-amd-level">—</span></div>
+            </div>
+            <div class="disease-card" style="--d-accent:var(--glauc-color)">
+              <div class="dc-top"><span class="dc-name">Glaucoma</span><span class="dc-prob" id="dc-glauc-prob">—</span></div>
+              <div class="dc-bar-wrap"><div class="dc-bar" id="dc-glauc-bar" style="width:0%;background:var(--glauc-color)"></div></div>
+              <div class="dc-bottom"><span id="dc-glauc-game">Peripheral score: —</span><span class="dc-level" id="dc-glauc-level">—</span></div>
+            </div>
+            <div class="disease-card" style="--d-accent:var(--cat-color)">
+              <div class="dc-top"><span class="dc-name">Cataract</span><span class="dc-prob" id="dc-cat-prob">—</span></div>
+              <div class="dc-bar-wrap"><div class="dc-bar" id="dc-cat-bar" style="width:0%;background:var(--cat-color)"></div></div>
+              <div class="dc-bottom"><span id="dc-cat-game">Hue score: —</span><span class="dc-level" id="dc-cat-level">—</span></div>
+            </div>
+          </div>
+
+
+          <div class="report-actions-row">
+            <button type="button" class="btn btn-primary btn-lg" id="download-report">⬇ Download PDF Report</button>
+            <button type="button" class="btn btn-outline btn-lg" id="find-doctor">Find Nearest Ophthalmologist</button>
+            <button type="button" class="btn btn-outline btn-lg" id="restart-screening">Start New Screening</button>
+          </div>
+
+
+          <div class="report-disclaimer" role="note">
+            <p><strong>⚠ Important:</strong> RetinaSafe is an AI-assisted screening tool only. Results do not constitute a medical diagnosis. All Moderate, High, or Critical classifications should prompt an urgent ophthalmology consultation. This report does not replace annual dilated eye examinations by a licensed professional.</p>
+          </div>
+        </section>
+
+
+      </div>
+    </div>
+
+
+  </main>
+
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. Not a medical device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
+        <p class="footer-copyright">© 2025 RetinaSafe · Team Rusty Brain</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="main.js"></script>
+  <script src="screening.js"></script>
+</body>
+</html>
+
