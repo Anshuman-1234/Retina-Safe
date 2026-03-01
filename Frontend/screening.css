@@ -17,6 +17,7 @@
 
 
 .progress-steps-row {
+  padding-inline: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +90,7 @@
   background-color: var(--blue-200);
   min-width: 2rem;
   max-width: 5rem;
-  margin-bottom: 1.45rem;
+  margin-top: 0;
   transition: background-color 0.3s;
 }
 .progress-connector.pc-done { background-color: var(--glauc-color); }
@@ -436,3 +437,334 @@
   .screen-step { animation: none; }
 }
 
+
+
+/* ── STEPPER ALIGNMENT FIX ─────────────────────────────────────
+   The connector line must be vertically centred with the dot (36px)
+   while the label text sits below the dot.
+   We use flex + align-items: flex-start on the row, then use
+   margin-top on the connector to push it to dot-centre level.
+   ──────────────────────────────────────────────────────────── */
+.progress-steps-row {
+  align-items: flex-start;
+}
+
+.progress-connector {
+  /* dot is 36px tall; connector should sit at 18px from top = dot centre */
+  margin-top: 17px;
+  margin-bottom: 0 !important;
+  flex-shrink: 1;
+}
+
+.progress-step {
+  /* ensure dot + label stack cleanly */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* nav bar on screening.html — override the injected nav if present */
+.screening-page .nav-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   STEP 3 — GAME CARDS GRID
+   ══════════════════════════════════════════════════════════════ */
+
+.game-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .game-cards-grid { grid-template-columns: 1fr; }
+}
+
+/* Individual game card */
+.gc-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  position: relative;
+}
+
+.gc-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Accent top stripe per condition */
+.gc-card-stripe {
+  height: 4px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.gc-card-body {
+  padding: 1.4rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gc-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.gc-card-icon-num {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.gc-num {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--blue-200);
+  line-height: 1;
+}
+
+.gc-emoji {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+/* Done checkmark badge top-right */
+.gc-done-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #065F46;
+  background: rgba(16,185,129,0.12);
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 100px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.gc-pending-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-200);
+  border-radius: 100px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.gc-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin: 0;
+}
+
+.gc-detects-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--blue-600);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-200);
+  border-radius: 100px;
+  padding: 0.15rem 0.55rem;
+  display: inline-block;
+  width: fit-content;
+}
+
+.gc-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+  flex: 1;
+}
+
+.gc-specs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.gc-spec {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: var(--radius);
+  padding: 0.2rem 0.55rem;
+  font-weight: 500;
+}
+
+.gc-card-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border);
+  background: var(--page-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+/* When game is done: muted footer */
+.gc-card.gc-done .gc-card-footer {
+  background: rgba(16,185,129,0.04);
+  border-top-color: rgba(16,185,129,0.2);
+}
+.gc-card.gc-done {
+  border-color: rgba(16,185,129,0.25);
+}
+
+.gc-score-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.gc-score-value {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--blue-600);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   GAME MODAL OVERLAY (iframe)
+   ══════════════════════════════════════════════════════════════ */
+
+.game-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(15, 28, 48, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: gm-fade-in 0.25s ease forwards;
+}
+
+.game-modal[hidden] {
+  display: none !important;
+}
+
+@keyframes gm-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.game-modal-header {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--blue-900);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  flex-wrap: wrap;
+}
+
+.game-modal-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.game-modal-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.game-modal-title {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.game-modal-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--blue-300);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 0.15rem 0.55rem;
+}
+
+.game-modal-close {
+  color: var(--white);
+  border-color: rgba(255,255,255,0.25);
+  background: transparent;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+}
+.game-modal-close:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.5);
+  color: var(--white);
+  transform: none;
+}
+
+.game-modal-body {
+  width: 100%;
+  max-width: 960px;
+  flex: 1;
+  max-height: 82vh;
+  background: var(--white);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.game-iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  border: none;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .game-modal { padding: 0.5rem; }
+  .game-modal-body { max-height: 78vh; border-radius: 0 0 var(--radius) var(--radius); }
+  .game-iframe { min-height: 440px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-modal { animation: none; }
+  .gc-card { transition: none; }
+}

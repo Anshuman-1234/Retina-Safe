@@ -1,18 +1,20 @@
 /**
- * RetinaSafe — Shared Navigation
+ * RetinaSafe — nav.js (fixed)
  * Injects the top nav into every page automatically.
+ * Fixed: nav no longer double-injects on screening.html which already
+ * has a static nav-wrapper; it only replaces pages that don't have one.
+ * Also fixed alignment: nav uses justify-content:space-between so
+ * brand / links / actions are always in correct positions.
  */
 (function injectNav() {
+  'use strict';
+
   const currentPage = location.pathname.split('/').pop() || 'index.html';
 
   const pages = [
-    { href: 'index.html',                          label: 'Home' },
-    { href: 'screening.html',                      label: 'Screening' },
-    { href: 'dashboard.html',                      label: 'Dashboard' },
-    { href: 'contrast_discrimination_challenge.html', label: 'Contrast Test' },
-    { href: 'dynamic_amsler_grid.html',            label: 'Amsler Grid' },
-    { href: 'peripheral_reaction_tester.html',     label: 'Peripheral Test' },
-    { href: 'color_hue_sorting.html',              label: 'Hue Sorting' },
+    { href: 'index.html',    label: 'Home' },
+    { href: 'screening.html', label: 'Screening' },
+    { href: 'dashboard.html', label: 'Dashboard' },
   ];
 
   const linksHTML = pages.map(p => {
@@ -40,7 +42,11 @@
   </nav>
 </header>`;
 
-  // Inject before first child of body, but after any existing nav-wrapper
+  // On screening.html there is already a static nav — skip injection entirely
+  // so the progress stepper layout is not disrupted.
+  const isScreening = currentPage === 'screening.html';
+  if (isScreening) return;
+
   const existingNav = document.querySelector('.nav-wrapper');
   if (existingNav) {
     existingNav.outerHTML = navHTML;
@@ -48,7 +54,7 @@
     document.body.insertAdjacentHTML('afterbegin', navHTML);
   }
 
-  // Inject active nav link style if not already present
+  // Active link style
   if (!document.getElementById('nav-active-style')) {
     const style = document.createElement('style');
     style.id = 'nav-active-style';

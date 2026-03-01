@@ -455,6 +455,17 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 100);
+
+        // Save result to RetinaSafe session
+        if (window.RetinaSafeCollector) {
+            RetinaSafeCollector.submit({
+                game_name          : 'Amsler Grid',
+                amd_amsler_score   : compositeScore,
+                distorted_area_pct : distortedAreaPercentage,
+                proximity_score    : proximityCenterScore,
+                amd_risk_modifier  : compositeScore < 40 ? 0.28 : compositeScore < 70 ? 0.18 : compositeScore < 90 ? 0.05 : -0.05,
+            });
+        }
     });
 
     // ── Clear ──
