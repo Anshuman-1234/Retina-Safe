@@ -349,11 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
   qs('#step3-next')?.addEventListener('click', () => goToStep(4));
 
   // Report buttons
-  qs('#download-report')?.addEventListener('click', () => {
-    if (state.reportData?.report_id && window.RetinaSafeAPI) RetinaSafeAPI.downloadReportPDF(state.reportData.report_id);
-    else alert('Report not yet generated. Please complete all steps first.');
-  });
-  qs('#find-doctor')?.addEventListener('click', () => alert('In production this opens a map of nearby ophthalmologists using the Geolocation API.'));
   qs('#restart-screening')?.addEventListener('click', () => {
     if (window.RetinaSafeSession) RetinaSafeSession.clear();
     if (state.modelPolling) { clearInterval(state.modelPolling); state.modelPolling=null; }

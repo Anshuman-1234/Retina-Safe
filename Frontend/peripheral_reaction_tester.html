@@ -712,14 +712,7 @@
         <div id="fixation-target" role="img"
             aria-label="Central fixation target. Keep your cursor on this moving cross."></div>
 
-        <!-- Warning Overlay -->
-        <div id="warn-overlay" role="alert">
-            <div class="warn-box">
-                <div class="warn-icon">⚠️</div>
-                <div class="warn-title">Test Paused</div>
-                <div class="warn-text">Please keep your cursor on the central target to continue.</div>
-            </div>
-        </div>
+        <!-- Warning overlay removed: test no longer pauses -->
 
         <!-- Progress Bar -->
         <div id="progress-bar">
@@ -746,7 +739,7 @@
                     </svg>
                 </div>
                 <h1 id="start-title">RetinaSafe</h1>
-                <p class="subtitle">Peripheral Reaction Tester</p>
+                <p class="subtitle">Peripheral Vision Screening</p>
             </div>
             <div class="modal-body">
                 <div class="disclaimer-box">
@@ -773,12 +766,11 @@
                 <div class="instructions">
                     <h3>How to Take This Test</h3>
                     <ul>
-                        <li>A blue cross will appear and drift at the center of the screen. Keep your mouse cursor on it
-                            at all times.</li>
-                        <li>Small dots will briefly flash at the edges of your screen.</li>
-                        <li>Press the <strong>Spacebar</strong> as fast as you can when you notice a dot.</li>
-                        <li>The test consists of <strong>10 trials</strong> and takes about 30–60 seconds.</li>
-                        <li>If your cursor leaves the target, the test will pause until you return.</li>
+                        <li>A blue cross will appear and drift gently at the center of the screen. Keep your <strong>eyes focused</strong> on it throughout the test.</li>
+                        <li>Small blue dots will briefly flash at the edges of your screen.</li>
+                        <li>Press the <strong>Spacebar</strong>, <strong>tap the screen</strong>, or <strong>click</strong> as soon as you notice a dot.</li>
+                        <li>The test consists of <strong>10 trials</strong> and takes about 40–70 seconds.</li>
+                        <li>Try not to move your eyes to search for dots — rely on your peripheral vision.</li>
                     </ul>
                 </div>
 
@@ -833,10 +825,10 @@
 
             /* ── Constants ──────────────────────────────────────────────── */
             const TOTAL_TRIALS = 10;
-            const DOT_MIN_INTERVAL = 2000;   // ms
-            const DOT_MAX_INTERVAL = 5000;
-            const DOT_LIFESPAN = 400;    // ms
-            const GRACE_PERIOD = 200;    // ms after dot disappears
+            const DOT_MIN_INTERVAL = 2500;   // ms
+            const DOT_MAX_INTERVAL = 6000;
+            const DOT_LIFESPAN = 1200;   // ms — extended for low-capability devices
+            const GRACE_PERIOD = 600;    // ms after dot disappears — extended grace
             const FIXATION_RADIUS = 38;     // px movement radius
             const TARGET_SIZE = 56;     // px, matches CSS
             const HIT_RADIUS = TARGET_SIZE / 2 + 14; // generous hover zone
@@ -856,7 +848,6 @@
             /* ── DOM refs ───────────────────────────────────────────────── */
             const gameArea = document.getElementById('game-area');
             const fixation = document.getElementById('fixation-target');
-            const warnOverlay = document.getElementById('warn-overlay');
             const hud = document.getElementById('hud');
             const hudTrial = document.getElementById('hud-trial');
             const hudHits = document.getElementById('hud-hits');
@@ -936,52 +927,22 @@
                 const cx = window.innerWidth / 2;
                 const cy = window.innerHeight / 2;
 
-                // Lissajous-like smooth drift
+                // Lissajous-like smooth drift — gentle movement
                 fixX = cx + Math.sin(fixAngle * 1.3) * FIXATION_RADIUS;
                 fixY = cy + Math.cos(fixAngle * 0.9) * FIXATION_RADIUS;
 
                 fixation.style.left = fixX + 'px';
                 fixation.style.top = fixY + 'px';
 
-                // Check cursor proximity
-                const dx = mouseX - fixX;
-                const dy = mouseY - fixY;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist > HIT_RADIUS) {
-                    if (!paused) pauseTest();
-                } else {
-                    if (paused) resumeTest();
-                }
-
+                // No cursor-tracking pause: test runs continuously
+                // The warning overlay is removed — pausing caused repeated error messages
                 fixAnimId = requestAnimationFrame(animateFixation);
             }
 
             /* ── Pause / Resume ─────────────────────────────────────────── */
-            function pauseTest() {
-                paused = true;
-                warnOverlay.classList.add('active');
-                fixation.classList.add('warn');
-                // Remove current dot if any
-                if (dotVisible && currentDotEl) {
-                    currentDotEl.remove();
-                    currentDotEl = null;
-                }
-                clearTimeout(dotTimeout);
-                clearTimeout(dotRemoveTimeout);
-                clearTimeout(graceTimeout);
-                dotVisible = false;
-                graceActive = false;
-            }
-
-            function resumeTest() {
-                paused = false;
-                warnOverlay.classList.remove('active');
-                fixation.classList.remove('warn');
-                if (trialIndex < TOTAL_TRIALS) {
-                    scheduleDot();
-                }
-            }
+            // Pause/resume are no-ops: test runs continuously without cursor tracking
+            function pauseTest() { /* disabled — no cursor tracking pause */ }
+            function resumeTest() { /* disabled */ }
 
             /* ── Dot System ─────────────────────────────────────────────── */
             function scheduleDot() {
@@ -1105,19 +1066,14 @@
             function computeResults() {
                 const hitRate = TOTAL_TRIALS > 0 ? hits / TOTAL_TRIALS : 0;
 
-                // Average reaction time (lower is better). Penalize if > 600ms.
+                // Reaction time tracked for display only — NOT used in scoring
+                // Score is purely based on hit rate (peripheral vision detection ability)
                 let avgRT = reactionTimes.length > 0
                     ? reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length
-                    : 999;
+                    : 0;
 
-                // Reaction score: 0ms → 50pts, 600ms+ → 0pts (linear scale, max 50)
-                let rtScore = Math.max(0, 50 - (avgRT / 600) * 50);
-                rtScore = Math.min(50, rtScore);
-
-                // Hit rate score: 0–50pts
-                let hitScore = hitRate * 50;
-
-                let baseScore = Math.round(rtScore + hitScore);
+                // Score: 0–100 based on hit rate only
+                let baseScore = Math.round(hitRate * 100);
                 baseScore = Math.max(0, Math.min(100, baseScore));
 
                 // Deficit zones: zones where user missed ≥ 50% of trials in that zone
@@ -1275,6 +1231,17 @@
                 }
             });
 
+            // Touch support for mobile/tablet users
+            document.addEventListener('touchstart', e => {
+                e.preventDefault();
+                handleSpacebar();
+            }, { passive: false });
+
+            // Also allow clicking anywhere on the game area
+            document.getElementById('game-area').addEventListener('click', () => {
+                handleSpacebar();
+            });
+
             btnStart.addEventListener('click', startGame);
 
             btnLog.addEventListener('click', () => {
@@ -1301,6 +1268,7 @@
 
   <script src="session.js"></script>
   <script src="game-collector.js"></script>
+  <script src="theme.js"></script>
 </body>
 
 </html>

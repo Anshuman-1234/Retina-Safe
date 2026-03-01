@@ -229,15 +229,6 @@ function initClearHistory() {
   });
 }
 
-// ── DOWNLOAD PDF (stub) ───────────────────────────────────────
-function initDownloadPDF() {
-  const btn = qs('#download-pdf-btn');
-  if (!btn) return;
-  btn.addEventListener('click', () => {
-    alert('PDF report download would be generated server-side in production. Your report data has been prepared.');
-  });
-}
-
 // ── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   let history = loadHistory();
@@ -254,5 +245,4 @@ document.addEventListener('DOMContentLoaded', () => {
   renderHistory(history);
   renderStats(history);
   initClearHistory();
-  initDownloadPDF();
 });

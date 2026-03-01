@@ -120,6 +120,8 @@
                 <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="hypertension" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Hypertension (High Blood Pressure)</span></label>
                 <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="smoking" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Current or Former Smoker</span></label>
                 <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="family-history" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Family History of Eye Disease</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="no-history" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">No history of such disease</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="dont-know-history" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Don't know as never been diagnosed</span></label>
               </div>
             </fieldset>
             <div class="form-group">
@@ -256,9 +258,7 @@
               </div>
             </div>
             <div class="report-actions-row">
-              <button type="button" class="btn btn-primary btn-lg" id="download-report">⬇ Download PDF Report</button>
-              <button type="button" class="btn btn-outline btn-lg" id="find-doctor">Find Nearest Ophthalmologist</button>
-              <button type="button" class="btn btn-outline btn-lg" id="restart-screening">Start New Screening</button>
+              <button type="button" class="btn btn-primary btn-lg" id="restart-screening">Start New Screening</button>
             </div>
             <div class="report-disclaimer" role="note">
               <p><strong>⚠ Important:</strong> RetinaSafe is an AI-assisted screening tool only. Results do not constitute a medical diagnosis. All Moderate, High, or Critical classifications should prompt an urgent ophthalmology consultation. This report does not replace annual dilated eye examinations by a licensed professional.</p>
@@ -306,5 +306,6 @@
   <script src="Api bridge.js"></script>
   <script src="screening.js"></script>
   <script src="nav.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>
