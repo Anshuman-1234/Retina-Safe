@@ -1,0 +1,487 @@
+/*
+=====================================================
+RetinaSafe — dashboard.css
+Dashboard page styles — matches main design system
+=====================================================
+*/
+
+/* ── PAGE BASE ── */
+.dashboard-page {
+  background-color: var(--blue-50);
+}
+
+/* ── HERO / PAGE HEADER ── */
+.dash-hero {
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding-block: 2.5rem;
+}
+
+.dash-hero-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.dash-title {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: var(--blue-900);
+  margin-bottom: 0.25rem;
+}
+
+.dash-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+/* ── LAYOUT ── */
+.dash-layout {
+  padding-block: 2.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ── CARD BASE ── */
+.dash-card {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.card-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--blue-600);
+  margin-bottom: 0.75rem;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.card-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.card-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+.card-header-row .card-sub {
+  margin-bottom: 0;
+}
+
+.card-header-row + .games-launch-grid,
+.card-header-row + #history-list {
+  margin-top: 1.5rem;
+}
+
+/* ── OVERALL RISK CARD ── */
+.risk-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.risk-score-ring {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+}
+
+.risk-score-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--blue-100);
+  stroke-width: 8;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: var(--blue-600);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.5s ease;
+}
+
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-value {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.ring-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.risk-right {
+  flex: 1;
+  min-width: 220px;
+}
+
+.risk-tier-label {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.risk-action {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  line-height: 1.65;
+}
+
+.risk-meta-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.risk-meta-pill {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  background-color: var(--blue-50);
+  color: var(--text-muted);
+  border: 1px solid var(--blue-200);
+}
+
+/* Risk tier color overrides */
+.risk-low    .ring-fill { stroke: var(--risk-low); }
+.risk-mod    .ring-fill { stroke: var(--risk-moderate); }
+.risk-high   .ring-fill { stroke: var(--risk-high); }
+
+.risk-low    .ring-value,
+.risk-low    .risk-tier-label { color: #059669; }
+.risk-mod    .ring-value,
+.risk-mod    .risk-tier-label { color: #B45309; }
+.risk-high   .ring-value,
+.risk-high   .risk-tier-label { color: var(--risk-high); }
+
+/* ── CONDITION BARS ── */
+.condition-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cbar-placeholder {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 1rem 0;
+}
+
+.cbar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cbar-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.cbar-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cbar-pct {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cbar-level {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 100px;
+}
+
+.level-low      { color: #065F46; background: rgba(52,211,153,0.12); }
+.level-moderate { color: #92400E; background: rgba(245,158,11,0.12); }
+.level-high     { color: #991B1B; background: rgba(239,68,68,0.12); }
+
+.cbar-track {
+  height: 8px;
+  background-color: var(--blue-100);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.cbar-fill {
+  height: 100%;
+  border-radius: 100px;
+  width: 0%;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── GAMES LAUNCH GRID ── */
+.games-launch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .games-launch-grid { grid-template-columns: 1fr; }
+}
+
+.game-launch-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background-color: var(--page-bg);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.25s, background-color 0.2s;
+}
+
+.game-launch-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  background-color: var(--white);
+}
+
+.glc-num {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--blue-200);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.glc-emoji {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.glc-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.glc-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--blue-600);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0;
+}
+
+.glc-arrow {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  font-size: 1.1rem;
+  color: var(--blue-400);
+  transition: transform 0.2s, color 0.2s;
+}
+
+.game-launch-card:hover .glc-arrow {
+  transform: translateX(4px);
+  color: var(--blue-600);
+}
+
+/* ── HISTORY LIST ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 0;
+}
+
+.history-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.history-entry:last-child {
+  border-bottom: none;
+}
+
+.he-date {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.he-score {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--blue-600);
+  flex-shrink: 0;
+}
+
+.he-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+
+/* ── STATS ROW ── */
+.dash-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 680px) {
+  .dash-stats-row { grid-template-columns: 1fr 1fr; }
+}
+
+.dash-stat-card {
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+
+.dash-stat-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.dsc-number {
+  font-family: 'Lora', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--blue-600);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.dsc-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── CTA CARD ── */
+.dash-cta-card {
+  background-color: var(--blue-900);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border: none;
+}
+
+.dash-cta-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(37, 99, 235, 0.4) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.dash-cta-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.dash-cta-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--white);
+  margin-bottom: 0.75rem;
+}
+
+.dash-cta-desc {
+  font-size: 0.95rem;
+  color: var(--blue-300);
+  max-width: 540px;
+  margin-inline: auto;
+  margin-bottom: 1.75rem;
+  line-height: 1.75;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .risk-card-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .dash-hero-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

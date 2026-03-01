@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetinaSafe — Dashboard</title>
+  <meta name="description" content="RetinaSafe patient dashboard. View your screening history, risk scores, and game performance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body class="dashboard-page">
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Nav is injected by nav.js -->
+
+  <main id="main">
+    <!-- Page Header -->
+    <section class="dash-hero">
+      <div class="container">
+        <div class="dash-hero-inner">
+          <div>
+            <p class="eyebrow">Patient Dashboard</p>
+            <h1 class="dash-title">Welcome back</h1>
+            <p class="dash-subtitle">Last screening: <span id="last-screening-date">—</span></p>
+          </div>
+          <a href="screening.html" class="btn btn-primary btn-lg">+ New Screening</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer-banner" role="note">
+      <div class="container">
+        <p><strong>⚠ Medical Disclaimer:</strong> This dashboard displays screening data for informational purposes only. All results must be reviewed with a qualified ophthalmologist before any clinical decisions are made.</p>
+      </div>
+    </div>
+
+    <div class="container dash-layout">
+
+      <!-- ── OVERALL RISK CARD ── -->
+      <section class="dash-card risk-card fade-up" aria-labelledby="risk-heading">
+        <div class="risk-card-inner">
+          <div class="risk-left">
+            <p class="card-eyebrow">Overall Risk Score</p>
+            <div class="risk-score-ring" aria-label="Risk score gauge">
+              <svg viewBox="0 0 120 120">
+                <circle class="ring-track" cx="60" cy="60" r="50" />
+                <circle class="ring-fill" id="risk-ring" cx="60" cy="60" r="50"
+                        stroke-dasharray="314.16"
+                        stroke-dashoffset="314.16" />
+              </svg>
+              <div class="ring-center">
+                <span class="ring-value" id="overall-score">—</span>
+                <span class="ring-label">/100</span>
+              </div>
+            </div>
+          </div>
+          <div class="risk-right">
+            <h2 id="risk-heading" class="risk-tier-label" id="risk-tier">Awaiting Screening</h2>
+            <p class="risk-action" id="risk-action">Complete a screening to receive your risk classification.</p>
+            <div class="risk-meta-row">
+              <span class="risk-meta-pill" id="risk-urgency"></span>
+            </div>
+            <a href="screening.html" class="btn btn-primary" style="margin-top:1.5rem;">Begin Screening</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CONDITION BREAKDOWN ── -->
+      <section class="dash-card fade-up" aria-labelledby="conditions-dash-heading" data-delay="100">
+        <h2 id="conditions-dash-heading" class="card-title">Per-Condition Risk</h2>
+        <p class="card-sub">Probability estimates derived from AI retinal analysis, adjusted by vision game scores.</p>
+        <div class="condition-bars" id="condition-bars">
+          <!-- Injected by dashboard.js -->
+          <div class="cbar-placeholder">No screening data yet. <a href="screening.html">Start your first screening →</a></div>
+        </div>
+      </section>
+
+      <!-- ── VISION GAMES PANEL ── -->
+      <section class="dash-card fade-up" aria-labelledby="games-dash-heading" data-delay="150">
+        <div class="card-header-row">
+          <div>
+            <h2 id="games-dash-heading" class="card-title">Vision Games</h2>
+            <p class="card-sub">Launch any assessment directly from here.</p>
+          </div>
+        </div>
+        <div class="games-launch-grid">
+          <a href="contrast_discrimination_challenge.html" class="game-launch-card">
+            <div class="glc-num">01</div>
+            <div class="glc-emoji">🌫</div>
+            <h3 class="glc-title">Contrast Discrimination</h3>
+            <p class="glc-tag">Diabetic Retinopathy</p>
+            <span class="glc-arrow">→</span>
+          </a>
+          <a href="dynamic_amsler_grid.html" class="game-launch-card">
+            <div class="glc-num">02</div>
+            <div class="glc-emoji">⊞</div>
+            <h3 class="glc-title">Dynamic Amsler Grid</h3>
+            <p class="glc-tag">Macular Degeneration</p>
+            <span class="glc-arrow">→</span>
+          </a>
+          <a href="peripheral_reaction_tester.html" class="game-launch-card">
+            <div class="glc-num">03</div>
+            <div class="glc-emoji">✦</div>
+            <h3 class="glc-title">Peripheral Reaction</h3>
+            <p class="glc-tag">Glaucoma</p>
+            <span class="glc-arrow">→</span>
+          </a>
+          <a href="color_hue_sorting.html" class="game-launch-card">
+            <div class="glc-num">04</div>
+            <div class="glc-emoji">🎨</div>
+            <h3 class="glc-title">Color Hue Sorting</h3>
+            <p class="glc-tag">Cataract</p>
+            <span class="glc-arrow">→</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ── SCREENING HISTORY ── -->
+      <section class="dash-card fade-up" aria-labelledby="history-heading" data-delay="200">
+        <div class="card-header-row">
+          <div>
+            <h2 id="history-heading" class="card-title">Screening History</h2>
+            <p class="card-sub">Previous screening sessions and risk trends.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" id="clear-history-btn">Clear History</button>
+        </div>
+        <div id="history-list">
+          <div class="empty-state">
+            <span class="empty-icon">📋</span>
+            <p>No past screenings on file.</p>
+            <a href="screening.html" class="btn btn-primary btn-sm">Start First Screening</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── STATS ROW ── -->
+      <section class="dash-stats-row fade-up" aria-label="Summary statistics" data-delay="250">
+        <div class="dash-stat-card">
+          <div class="dsc-number" id="stat-screenings">0</div>
+          <div class="dsc-label">Total Screenings</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dsc-number" id="stat-games">0</div>
+          <div class="dsc-label">Games Completed</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dsc-number" id="stat-avg-score">—</div>
+          <div class="dsc-label">Average Risk Score</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dsc-number" id="stat-trend">—</div>
+          <div class="dsc-label">Score Trend</div>
+        </div>
+      </section>
+
+      <!-- ── SAMPLE REPORT CTA ── -->
+      <section class="dash-card dash-cta-card fade-up" data-delay="300" aria-labelledby="cta-dash-heading">
+        <div class="dash-cta-glow" aria-hidden="true"></div>
+        <div class="dash-cta-inner">
+          <p class="eyebrow eyebrow-light">Ready to share?</p>
+          <h2 id="cta-dash-heading" class="dash-cta-title">Generate a doctor-ready report</h2>
+          <p class="dash-cta-desc">Download a structured PDF report with your latest risk scores, annotated findings, and ophthalmologist referral recommendations.</p>
+          <button class="btn btn-white btn-lg" id="download-pdf-btn">⬇ Download PDF Report</button>
+        </div>
+      </section>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. Not a medical device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
+        <p class="footer-copyright">© 2025 RetinaSafe · Team Rusty Brain</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+  <script src="nav.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
