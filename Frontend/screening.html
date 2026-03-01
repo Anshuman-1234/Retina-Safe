@@ -26,6 +26,29 @@
 <body class="screening-page">
   <a href="#main" class="skip-link">Skip to main content</a>
 
+  <!-- Site Nav -->
+  <header class="nav-wrapper" role="banner">
+    <nav class="nav container" aria-label="Main navigation">
+      <a href="index.html" class="nav-brand" aria-label="RetinaSafe Home">
+        <div class="nav-iris" aria-hidden="true">
+          <div class="nav-iris-inner"></div>
+          <div class="nav-iris-pupil"></div>
+        </div>
+        <span class="nav-name">
+          <span class="nav-name-dark">Retina</span><span class="nav-name-blue">Safe</span>
+        </span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="screening.html" class="nav-link nav-link-active">Screening</a></li>
+        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <span class="nav-disclaimer-pill" aria-label="Disclaimer">Screening tool only</span>
+      </div>
+    </nav>
+  </header>
+
   <main id="main">
     <!-- PROGRESS STEPPER (4 steps) -->
     <div class="progress-bar-wrapper" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" aria-label="Screening progress">
@@ -164,15 +187,21 @@
           <div class="step-header">
             <p class="eyebrow">Step 3 of 4</p>
             <h1 id="s3-heading" class="step-title">Vision Games</h1>
-            <p class="step-desc">Complete all four assessments. Each game tests a different aspect of functional vision and calibrates the AI model's confidence. You will be taken to the game and returned here automatically after each one.</p>
+            <p class="step-desc">Complete all four assessments. Each game tests a different aspect of functional vision. Click <strong>Launch Game</strong> to open it — complete it, then return here to continue.</p>
           </div>
-          <div class="games-checklist" id="games-checklist" aria-label="Vision games checklist"></div>
-          <div class="games-progress-row">
+
+          <!-- Progress bar -->
+          <div class="games-progress-row" style="margin-bottom:1.5rem">
             <div class="gpr-bar-wrap"><div class="gpr-bar" id="gpr-bar" style="width:0%"></div></div>
             <span class="gpr-label" id="gpr-label">0 of 4 games completed</span>
           </div>
+
+          <!-- Game Cards Grid — always visible, rendered by JS -->
+          <div class="game-cards-grid" id="game-cards-grid" role="list" aria-label="Vision games"></div>
+
           <p id="model-bg-status"></p>
-          <div class="step-actions">
+
+          <div class="step-actions" style="margin-top:2rem">
             <button type="button" class="btn btn-outline btn-lg" data-back="2">← Back</button>
             <button type="button" class="btn btn-primary btn-lg" id="step3-next" disabled>Generate Report →</button>
           </div>
@@ -250,9 +279,31 @@
     </div>
   </footer>
 
-  <script src="main.js"></script>
+
+  <!-- ── GAME MODAL OVERLAY (iframe) — at body level for true fullscreen ── -->
+  <div id="game-modal" class="game-modal" role="dialog" aria-modal="true" aria-label="Vision game" hidden>
+    <div class="game-modal-header">
+      <div class="game-modal-title-row">
+        <span class="game-modal-icon" id="gm-icon" aria-hidden="true"></span>
+        <span class="game-modal-title" id="gm-title">Game</span>
+        <span class="game-modal-tag" id="gm-tag"></span>
+      </div>
+      <button class="game-modal-close btn btn-outline btn-sm" id="game-modal-close" aria-label="Close game and return to checklist">✕ Close</button>
+    </div>
+    <div class="game-modal-body">
+      <iframe
+        id="game-iframe"
+        class="game-iframe"
+        src=""
+        title="Vision game"
+        allow="fullscreen"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+      ></iframe>
+    </div>
+  </div>
+
   <script src="session.js"></script>
-  <script src="api-bridge.js"></script>
+  <script src="Api bridge.js"></script>
   <script src="screening.js"></script>
   <script src="nav.js"></script>
 </body>

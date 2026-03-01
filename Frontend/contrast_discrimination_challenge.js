@@ -213,6 +213,18 @@ function endGame(reason) {
   // Push to standard output for parent application to read
   console.log("[Medical-Logic] Session Object Export: ", scoreObject);
 
+  // Save result to session + redirect back to screening (new-tab mode)
+  if (window.RetinaSafeCollector) {
+    RetinaSafeCollector.submit({
+      game_name            : 'Contrast Discrimination',
+      dr_contrast_score    : Math.min(100, Math.round((1 - scoreObject.lowestContrastReached / 50) * 100)),
+      levels_passed        : scoreObject.levelsCleared,
+      raw_score            : scoreObject.score,
+      risk_multiplier      : scoreObject.riskMultiplier,
+      dr_risk_modifier     : scoreObject.riskMultiplier > 2 ? 0.20 : scoreObject.riskMultiplier > 1.5 ? 0.10 : 0.00,
+    });
+  }
+
   // Render results readout
   resultText.innerHTML = `
     <h2>${reason}</h2>

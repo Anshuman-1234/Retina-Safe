@@ -1087,6 +1087,18 @@
 
         // Show results modal
         showResults(score, levelsCleared, lastLvl, wrongClicks, flag);
+
+        // Save to RetinaSafe session
+        if (window.RetinaSafeCollector) {
+          RetinaSafeCollector.submit({
+            game_name           : 'Hue Sorting',
+            cataract_hue_score  : score,
+            rounds_cleared      : levelsCleared,
+            last_level_cleared  : lastLvl,
+            tritan_deficiency_flag: flag === 'tritan',
+            cataract_risk_modifier: score < 22 ? 0.38 : score < 42 ? 0.28 : score < 62 ? 0.18 : score < 82 ? 0.08 : -0.05,
+          });
+        }
       }
 
       function showResults(score, cleared, lastLvl, wrong, flag) {
@@ -1219,6 +1231,8 @@
 
     })();
   </script>
+  <script src="session.js"></script>
+  <script src="game-collector.js"></script>
 </body>
 </html>
 

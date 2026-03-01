@@ -1163,6 +1163,22 @@
                 finalPayload = computeResults();
                 renderResults(finalPayload);
                 resultsModal.classList.remove('hidden');
+
+                // Save to RetinaSafe session and return to screening
+                if (window.RetinaSafeCollector) {
+                    const modifier = finalPayload.score >= 85 ? -0.05
+                        : finalPayload.score >= 65 ? 0.05
+                        : finalPayload.score >= 45 ? 0.18
+                        : finalPayload.score >= 25 ? 0.30 : 0.40;
+                    RetinaSafeCollector.submit({
+                        game_name                : 'Peripheral Reaction',
+                        glaucoma_peripheral_score: finalPayload.score,
+                        deficit_zones_count      : finalPayload.deficit_zones_count,
+                        hit_rate                 : finalPayload.hit_rate,
+                        game_flag                : finalPayload.game_flag,
+                        glaucoma_risk_modifier   : modifier,
+                    });
+                }
             }
 
             function renderResults(r) {
@@ -1283,6 +1299,8 @@
         })();
     </script>
 
+  <script src="session.js"></script>
+  <script src="game-collector.js"></script>
 </body>
 
 </html>
