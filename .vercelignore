@@ -1,0 +1,15 @@
+# Exclude datasets to stay under the 500MB limit
+**/data/
+**/src/
+**/*.keras
+**/__pycache__/
+**/*.pyc
+
+# Local environments
+venv/
+.env
+
+# Standard ignores
+.git/
+.vscode/
+node_modules/
