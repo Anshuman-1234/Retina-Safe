@@ -68,13 +68,15 @@ window.RetinaSafeCollector = (function () {
       console.warn('[RetinaSafeCollector] session.js not loaded — result not persisted locally.');
     }
 
-    // 2. POST to backend (async, non-blocking)
+    // 2. POST to backend (await to avoid "message channel closed" error)
     if (window.RetinaSafeAPI) {
-      const session   = RetinaSafeSession?.get();
+      const session = RetinaSafeSession?.get();
       const sessionId = session?.imageMeta?.serverSessionId || session?.sessionId || 'unknown';
-      RetinaSafeAPI.submitGameResult(sessionId, payload).catch(err => {
+      try {
+        await RetinaSafeAPI.submitGameResult(sessionId, payload);
+      } catch (err) {
         console.warn('[RetinaSafeCollector] Backend submit failed (result still saved locally):', err.message);
-      });
+      }
     }
 
     // 3. Show brief overlay then redirect

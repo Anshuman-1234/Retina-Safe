@@ -15,7 +15,7 @@ except ImportError:
         import tensorflow.lite as tflite
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 MODEL_CONFIG = {
@@ -62,24 +62,27 @@ def predict():
     img_bytes = file.read()
     
     try:
+        import time
+        start_time = time.time()
+        
         input_data = preprocess_image(img_bytes)
         results = []
         
         for key, model_info in interpreters.items():
+            m_start = time.time()
             interpreter = model_info['interpreter']
             input_details = model_info['input_details']
             output_details = model_info['output_details']
             
-            # Set input and invoke
             interpreter.set_tensor(input_details[0]['index'], input_data)
             interpreter.invoke()
             
-            # Get prediction
             prediction = interpreter.get_tensor(output_details[0]['index'])
             score = float(prediction[0][0])
-            
             results.append({'id': key, 'score': score})
-        
+            print(f"Model {key} took {time.time() - m_start:.3f}s")
+            
+        print(f"Total prediction time: {time.time() - start_time:.3f}s")
         return jsonify({'results': results})
     
     except Exception as e:

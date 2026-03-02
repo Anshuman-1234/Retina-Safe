@@ -25,7 +25,13 @@ window.RetinaSafeAPI = (function () {
    * On Vercel, the backend is mapped to /api via vercel.json.
    * If running locally, you can still use window.RS_API_BASE.
    */
-  const BASE_URL = window.RS_API_BASE || '/api';
+  // Detect local vs production backend
+  const hostname = window.location.hostname;
+  const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]' || hostname === '::1' || hostname === '';
+  const BASE_URL = window.RS_API_BASE || (isLocal ? 'http://localhost:5000/api' : '/api');
+
+  console.log(`%c[RetinaSafe API] %cInitialized with BASE_URL: ${BASE_URL}`, "color: #3b82f6; font-weight: bold", "color: inherit");
+  console.log(`[RetinaSafe API] Detected Hostname: ${hostname}`);
 
   // ── LOW-LEVEL FETCH WRAPPER ────────────────────────────────────
   async function request(method, path, body, isFormData = false) {
@@ -35,17 +41,28 @@ window.RetinaSafeAPI = (function () {
 
     if (body) {
       if (isFormData) {
-        bodyPayload = body; // FormData – browser sets Content-Type automatically
+        bodyPayload = body;
       } else {
         headers['Content-Type'] = 'application/json';
         bodyPayload = JSON.stringify(body);
       }
     }
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
     let res;
     try {
-      res = await fetch(url, { method, headers, body: bodyPayload });
+      res = await fetch(url, {
+        method,
+        headers,
+        body: bodyPayload,
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
     } catch (e) {
+      clearTimeout(timeoutId);
+      if (e.name === 'AbortError') throw new Error('Request timed out after 15s');
       throw new Error(`Network error: ${e.message}`);
     }
 

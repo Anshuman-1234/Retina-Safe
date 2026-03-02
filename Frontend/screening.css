@@ -795,6 +795,115 @@
   }
 }
 
+/* ── LANGUAGE SELECTOR ── */
+.lang-selector {
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.lang-select {
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1.5px solid var(--blue-200);
+  background: var(--white);
+  color: var(--text-secondary);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.lang-select:hover {
+  border-color: var(--blue-400);
+}
+
+.lang-select:focus {
+  border-color: var(--blue-600);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ── CAMERA SWITCH ── */
+.btn-switch-cam {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--blue-50);
+  border-color: var(--blue-200);
+  color: var(--blue-700);
+}
+
+.btn-switch-cam:hover {
+  background: var(--blue-100);
+  border-color: var(--blue-400);
+}
+
+/* ── WARNING ALERT ── */
+.warning-alert {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.warning-alert-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.warning-alert-content h4 {
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #92400E;
+  margin-bottom: 0.25rem;
+}
+
+.warning-alert-content p {
+  font-size: 0.82rem;
+  color: #B45309;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+/* ── TOAST MESSAGE ── */
+.rs-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: #1E3A5F;
+  color: white;
+  padding: 0.85rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rs-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.rs-toast-icon {
+  font-size: 1.1rem;
+}
+
+
 
 .analysis-log {
   display: flex;

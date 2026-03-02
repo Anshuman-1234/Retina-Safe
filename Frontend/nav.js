@@ -6,13 +6,42 @@
  * Also fixed alignment: nav uses justify-content:space-between so
  * brand / links / actions are always in correct positions.
  */
+// Health Check for Backend Status
+async function checkBackendHealth() {
+  const pill = document.getElementById('backend-status-pill');
+  if (!pill) return;
+
+  try {
+    // Use the API Bridge health check
+    const data = await window.RetinaSafeAPI.healthCheck();
+    if (data.status === 'healthy' || data.status === 'ok') {
+      pill.textContent = 'AI Backend: Online';
+      pill.style.background = '#ecfdf5';
+      pill.style.color = '#059669';
+    } else {
+      throw new Error();
+    }
+  } catch (e) {
+    pill.textContent = 'AI Backend: Offline';
+    pill.style.background = '#fef2f2';
+    pill.style.color = '#dc2626';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Check health on load and every 10 seconds
+  if (window.RetinaSafeAPI) {
+    checkBackendHealth();
+    setInterval(checkBackendHealth, 10000);
+  }
+});
 (function injectNav() {
   'use strict';
 
   const currentPage = location.pathname.split('/').pop() || 'index.html';
 
   const pages = [
-    { href: 'index.html',    label: 'Home' },
+    { href: 'index.html', label: 'Home' },
     { href: 'screening.html', label: 'Screening' },
     { href: 'dashboard.html', label: 'Dashboard' },
   ];

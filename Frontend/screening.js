@@ -13,7 +13,112 @@
 const qs = (s, ctx = document) => ctx.querySelector(s);
 const qsa = (s, ctx = document) => [...ctx.querySelectorAll(s)];
 
-const state = { currentStep: 1, modelPolling: null, reportData: null };
+const state = { currentStep: 1, modelPolling: null, reportData: null, currentLang: 'en', cameraFacing: 'environment' };
+
+// ── TRANSLATIONS ───────────────────────────────────────────────
+const TRANSLATIONS = {
+  en: {
+    s1_heading: "Patient Information",
+    s1_desc: "Enter your medical background to calibrate the diagnostic weights.",
+    s2_heading: "Upload Fundus Image",
+    s2_desc: "Upload a retinal fundus photograph. This can be captured via a fundus camera, smartphone adapter, or provided by your clinic.",
+    s3_heading: "Vision Challenges",
+    s3_desc: "Complete all 4 screening games to measure functional vision performance across different retinal zones.",
+    s4_heading: "Clinical Analysis Report",
+    s4_desc: "Your screening results have been generated using professional-grade TFLite AI models.",
+    warn_title: "Important Requirement",
+    warn_text: "Please upload only clear, clinically valid retinal fundus images. Providing unrelated images will lead to unexpected results.",
+    btn_next: "Next Step",
+    btn_prev: "Previous",
+    btn_capture: "Capture",
+    btn_switch: "Switch Camera",
+    btn_cancel: "Cancel",
+    btn_upload: "Select File",
+    err_step_upload: "You must upload a valid retinal image before proceeding.",
+    err_step_games: "Please complete all 4 vision games before generating your report.",
+    toast_welcome: "RetinaSafe: Multilingual support activated."
+  },
+  hi: {
+    s1_heading: "रोगी की जानकारी",
+    s1_desc: "डायग्नोस्टिक वेट्स को कैलिब्रेट करने के लिए अपनी चिकित्सा पृष्ठभूमि दर्ज करें।",
+    s2_heading: "फंडस इमेज अपलोड करें",
+    s2_desc: "रेटिनल फंडस फोटोग्राफ अपलोड करें। इसे फंडस कैमरा या स्मार्टफोन एडाप्टर के माध्यम से लिया जा सकता है।",
+    s3_heading: "दृष्टि चुनौतियाँ",
+    s3_desc: "विभिन्न रेटिनल ज़ोन में दृष्टि प्रदर्शन को मापने के लिए सभी 4 स्क्रीनिंग गेम पूरे करें।",
+    s4_heading: "नैदानिक विश्लेषण रिपोर्ट",
+    s4_desc: "आपकी स्क्रीनिंग के परिणाम पेशेवर TFLite AI मॉडल का उपयोग करके तैयार किए गए हैं।",
+    warn_title: "महत्वपूर्ण आवश्यकता",
+    warn_text: "कृपया केवल स्पष्ट और मान्य रेटिनल फंडस छवियां अपलोड करें। असंबंधित चित्र गलत परिणाम देंगे।",
+    btn_next: "अगला कदम",
+    btn_prev: "पिछला",
+    btn_capture: "फोटो लें",
+    btn_switch: "कैमरा बदलें",
+    btn_cancel: "रद्द करें",
+    btn_upload: "फाइल चुनें",
+    err_step_upload: "आगे बढ़ने से पहले आपको एक रेटिनल छवि अपलोड करनी होगी।",
+    err_step_games: "रिपोर्ट तैयार करने से पहले कृपया सभी 4 विजन गेम पूरे करें।",
+    toast_welcome: "रेटीनासेफ: बहुभाषी समर्थन सक्रिय।"
+  },
+  or: {
+    s1_heading: "ରୋଗୀ ସୂଚନା",
+    s1_desc: "ଡାଇଗ୍ନୋଷ୍ଟିକ୍ ଓଜନକୁ କାଲିବ୍ରେଟ୍ କରିବା ପାଇଁ ଆପଣଙ୍କର ଚିକିତ୍ସା ପୃଷ୍ଠଭୂମି ପ୍ରବେଶ କରନ୍ତୁ |",
+    s2_heading: "ଫଣ୍ଡସ୍ ଚିତ୍ର ଅପଲୋଡ୍ କରନ୍ତୁ",
+    s2_desc: "ଏକ ରେଟିନାଲ୍ ଫଣ୍ଡସ୍ ଆଲୋକଚିତ୍ର ଅପଲୋଡ୍ କରନ୍ତୁ | ଏହା ଏକ କ୍ୟାମେରା କିମ୍ବା ସ୍ମାର୍ଟଫୋନ୍ ମାଧ୍ୟମରେ ନିଆଯାଇପାରେ |",
+    s3_heading: "ଦୃଷ୍ଟି ଆହ୍ୱାନ",
+    s3_desc: "ଦୃଷ୍ଟି ପ୍ରଦର୍ଶନ ମାପିବା ପାଇଁ ସମସ୍ତ 4 ଟି ସ୍କ୍ରିନିଂ ଗେମ୍ ସମାପ୍ତ କରନ୍ତୁ |",
+    s4_heading: "କ୍ଲିନିକାଲ୍ ବିଶ୍ଳେଷଣ ରିପୋର୍ଟ",
+    s4_desc: "ଆପଣଙ୍କର ସ୍କ୍ରିନିଂ ଫଳାଫଳ ପ୍ରଫେସନାଲ୍ TFLite AI ମଡେଲ୍ ବ୍ୟବହାର କରି ପ୍ରସ୍ତୁତ କରାଯାଇଛି |",
+    warn_title: "ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ଆବଶ୍ୟକତା",
+    warn_text: "ଦୟାକରି କେବଳ ସ୍ପଷ୍ଟ ଏବଂ ବୈଧ ରେଟିନାଲ୍ ଚିତ୍ର ଅପଲୋଡ୍ କରନ୍ତୁ | ଅସମ୍ବନ୍ଧିତ ଚିତ୍ରଗୁଡ଼ିକ ଭୁଲ ଫଳାଫଳ ଦେବ |",
+    btn_next: "ପରବର୍ତ୍ତୀ ପଦକ୍ଷେପ",
+    btn_prev: "ପୂର୍ବବର୍ତ୍ତୀ",
+    btn_capture: "ଫଟୋ ଉଠାନ୍ତୁ",
+    btn_switch: "କ୍ୟାମେରା ବଦଳାନ୍ତୁ",
+    btn_cancel: "ବାତିଲ୍ କରନ୍ତୁ",
+    btn_upload: "ଫାଇଲ୍ ବାଛନ୍ତୁ",
+    err_step_upload: "ଆଗକୁ ବଢିବା ପାଇଁ ଆପଣଙ୍କୁ ଏକ ରେଟିନାଲ୍ ଚିତ୍ର ଅପଲୋଡ୍ କରିବାକୁ ପଡିବ |",
+    err_step_games: "ରିପୋର୍ଟ ପ୍ରସ୍ତୁତ କରିବା ପୂର୍ବରୁ ଦୟାକରି ସମସ୍ତ 4 ଟି ଭିଜନ ଗେମ୍ ସମାପ୍ତ କରନ୍ତୁ |",
+    toast_welcome: "ରେଟିନାସେଫ୍: ବହୁଭାଷୀ ସମର୍ଥନ ସକ୍ରିୟ |"
+  }
+};
+
+function updateLanguage(lang) {
+  state.currentLang = lang;
+  const t = TRANSLATIONS[lang];
+  if (!t) return;
+
+  const map = {
+    '#s1-heading': t.s1_heading, '#s1-desc': t.s1_desc,
+    '#s2-heading': t.s2_heading, '#s2-desc': t.s2_desc,
+    '#s3-heading': t.s3_heading, '#s3-desc': t.s3_desc,
+    '#s4-heading': t.s4_heading, '#s4-desc': t.s4_desc,
+    '#warn-title': t.warn_title, '#warn-text': t.warn_text,
+    '#capture-image': t.btn_capture, '#switch-camera': t.btn_switch, '#close-camera': t.btn_cancel,
+    '#upload-link-text': t.btn_upload
+  };
+
+  Object.entries(map).forEach(([sel, val]) => {
+    const el = qs(sel);
+    if (el) {
+      if (el.tagName === 'INPUT' || el.tagName === 'SELECT') el.placeholder = val;
+      else el.innerHTML = val;
+    }
+  });
+
+  qsa('.btn-next-step').forEach(btn => btn.textContent = t.btn_next);
+  qsa('.btn-prev-step').forEach(btn => btn.textContent = t.btn_prev);
+
+  showToast(t.toast_welcome);
+}
+
+function showToast(msg) {
+  const toast = qs('#rs-toast');
+  const text = qs('#rs-toast-text');
+  if (!toast || !text) return;
+  text.textContent = msg;
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), 3000);
+}
 
 // ── GAME DEFINITIONS ───────────────────────────────────────────
 const GAMES = [
@@ -51,10 +156,26 @@ const GAMES = [
 function goToStep(n) {
   if (n < 1 || n > 4) return;
 
-  // sequence - check minimal requirements
   const session = window.RetinaSafeSession ? RetinaSafeSession.get() : null;
-  if (n === 2 && !session) return; // Need Step 1 initialized
-  // Removed strict game requirements to allow skipping steps as requested.
+  const t = TRANSLATIONS[state.currentLang];
+
+  // STRICT VALIDATION
+  if (n === 2 && !session) return;
+
+  if (n === 3) {
+    if (!session || !session.imageUploaded) {
+      showToast(t?.err_step_upload || "Please upload an image first.");
+      return;
+    }
+  }
+
+  if (n === 4) {
+    const done = Object.keys(RetinaSafeSession.getGameResults()).length;
+    if (done < 4) {
+      showToast(t?.err_step_games || "Please complete all 4 games first.");
+      return;
+    }
+  }
 
   qsa('.screen-step').forEach(el => el.classList.remove('ps-step-active'));
   qs(`#step-${n}`)?.classList.add('ps-step-active');
@@ -87,6 +208,11 @@ function initStep1() {
     if (window.RetinaSafeSession) RetinaSafeSession.init(h);
     goToStep(2);
   });
+
+  // Language Switch Listener
+  qs('#lang-select')?.addEventListener('change', (e) => {
+    updateLanguage(e.target.value);
+  });
 }
 
 // ── STEP 2 ─────────────────────────────────────────────────────
@@ -102,6 +228,7 @@ function initStep2() {
 
   // Camera elements
   const openCamBtn = qs('#open-camera');
+  const switchCamBtn = qs('#switch-camera');
   const camView = qs('#camera-view');
   const camFeed = qs('#camera-feed');
   const captureBtn = qs('#capture-image');
@@ -179,21 +306,42 @@ function initStep2() {
     if (camFeed) camFeed.srcObject = null;
     camView?.classList.add('hidden');
     uploadIdle?.classList.remove('hidden');
+    // Also remove warning when camera is closed
+    qs('#upload-warning')?.classList.remove('hidden');
+  };
+
+  const startCamera = async () => {
+    try {
+      if (camStream) {
+        camStream.getTracks().forEach(t => t.stop());
+      }
+      camStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: state.cameraFacing, width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      if (camFeed) {
+        camFeed.srcObject = camStream;
+        // Mirror the feed if it's the front camera
+        camFeed.style.transform = state.cameraFacing === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
+      }
+      uploadIdle?.classList.add('hidden');
+      qs('#upload-warning')?.classList.add('hidden'); // Hide warning while camera is active to save space
+      camView?.classList.remove('hidden');
+    } catch (err) {
+      showToast("Camera access denied.");
+      console.error(err);
+    }
   };
 
   openCamBtn?.addEventListener('click', async (e) => {
     e.stopPropagation();
-    try {
-      camStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
-      });
-      if (camFeed) camFeed.srcObject = camStream;
-      uploadIdle?.classList.add('hidden');
-      camView?.classList.remove('hidden');
-    } catch (err) {
-      alert("Camera access denied. Please allow camera permissions or upload a file manually.");
-      console.error(err);
-    }
+    state.cameraFacing = 'environment'; // Default to back camera
+    await startCamera();
+  });
+
+  switchCamBtn?.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    state.cameraFacing = state.cameraFacing === 'user' ? 'environment' : 'user';
+    await startCamera();
   });
 
   captureBtn?.addEventListener('click', (e) => {
@@ -202,7 +350,13 @@ function initStep2() {
     captureCanvas.width = camFeed.videoWidth;
     captureCanvas.height = camFeed.videoHeight;
     const ctx = captureCanvas.getContext('2d');
-    // Mirror back if it was mirrored in CSS, or just capture raw
+
+    // If mirrored, we need to mirror the capture too
+    if (state.cameraFacing === 'user') {
+      ctx.translate(captureCanvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+
     ctx.drawImage(camFeed, 0, 0);
     const dataUrl = captureCanvas.toDataURL('image/jpeg', 0.95);
     const file = dataURLtoFile(dataUrl, 'retina_capture.jpg');
@@ -214,6 +368,16 @@ function initStep2() {
   closeCamBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     stopCamera();
+  });
+
+  step2Next?.addEventListener('click', () => {
+    const session = RetinaSafeSession.get();
+    const t = TRANSLATIONS[state.currentLang];
+    if (!session || !session.imageUploaded) {
+      showToast(t?.err_step_upload || "Please upload an image first.");
+      return;
+    }
+    goToStep(3);
   });
 
   uploadArea?.addEventListener('click', e => {
@@ -367,15 +531,21 @@ async function buildReport() {
   const loadingDiv = qs('#report-loading');
   const contentDiv = qs('#report-content');
 
+  // Show loading state immediately
   if (loadingDiv) loadingDiv.hidden = false;
   if (contentDiv) contentDiv.hidden = true;
 
   try {
-    if (!window.RetinaSafeAPI) throw new Error("API Bridge missing");
+    if (!window.RetinaSafeAPI) throw new Error("Connection Bridge (API) is missing. Please refresh.");
+
+    // Validate we have AI results
+    if (!session || !session.modelOutput) {
+      console.warn("No AI results found. Using baseline vision data.");
+    }
 
     // Compute result (fusing game results and AI output)
     const r = await RetinaSafeAPI.computeReport(
-      session?.sessionId,
+      session?.sessionId || 'new-session',
       RetinaSafeSession.getGameResults(),
       session?.modelOutput,
       session?.medicalHistory
@@ -384,20 +554,24 @@ async function buildReport() {
     state.reportData = r;
     if (window.RetinaSafeSession) RetinaSafeSession.setReportReady(true);
 
-    // Minor delay so the user sees the professional 'processing' state
-    setTimeout(() => {
-      if (loadingDiv) loadingDiv.hidden = true;
-      if (contentDiv) {
-        contentDiv.hidden = false;
-        renderReport(r);
-      }
-    }, 800);
-  } catch (err) {
-    console.error('[screening] report failed:', err);
+    // Transition UI
     if (loadingDiv) loadingDiv.hidden = true;
     if (contentDiv) {
       contentDiv.hidden = false;
-      contentDiv.innerHTML = `<div class="report-disclaimer"><p><strong>⚠ Failed to generate report:</strong> ${err.message}</p></div>`;
+      renderReport(r);
+      console.info("[RetinaSafe] Report generated successfully.");
+    }
+  } catch (err) {
+    console.error('[RetinaSafe] Report failed:', err);
+    if (loadingDiv) loadingDiv.hidden = true;
+    if (contentDiv) {
+      contentDiv.hidden = false;
+      contentDiv.innerHTML = `
+        <div class="report-disclaimer" style="border-left: 4px solid #ef4444;">
+          <p><strong>⚠ Report Generation Error:</strong> ${err.message}</p>
+          <button class="btn btn-outline btn-sm" onclick="window.location.reload()">Refresh Page</button>
+        </div>
+      `;
     }
   }
 }
@@ -505,18 +679,22 @@ document.addEventListener('DOMContentLoaded', () => {
   qs('#game-modal')?.addEventListener('click', e => { if (e.target === qs('#game-modal')) closeGameModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && qs('#game-modal') && !qs('#game-modal').hidden) closeGameModal(); });
 
-  qs('#step3-next')?.addEventListener('click', () => goToStep(4));
+  const step3Next = qs('#step3-next');
+  step3Next?.addEventListener('click', () => {
+    const done = GAMES.filter(g => window.RetinaSafeSession && RetinaSafeSession.isGameDone(g.game_name)).length;
+    const t = TRANSLATIONS[state.currentLang];
+    if (done < 4) {
+      showToast(t?.err_step_games || "Please complete all 4 vision games first.");
+      return;
+    }
+    goToStep(4);
+  });
   qs('#download-report')?.addEventListener('click', generatePDF);
 
   qs('#restart-screening')?.addEventListener('click', () => {
     if (window.RetinaSafeSession) RetinaSafeSession.clear();
-    state.reportData = null;
-    qs('#upload-idle')?.classList.remove('hidden');
-    qs('#upload-preview')?.classList.add('hidden');
-    const se = qs('#upload-status'); if (se) se.hidden = true;
-    const sn = qs('#step2-next'); if (sn) sn.disabled = true;
-    const fi = qs('#file-input'); if (fi) fi.value = '';
-    goToStep(1);
+    // Use a clean reload to ensure all UI states and memory are reset
+    window.location.reload();
   });
 
   const session = window.RetinaSafeSession ? RetinaSafeSession.get() : null;
@@ -535,6 +713,9 @@ document.addEventListener('DOMContentLoaded', () => {
       goToStep(1);
     }
   } else {
+    // Set default language
+    updateLanguage('en');
+
     goToStep(1);
   }
 });
