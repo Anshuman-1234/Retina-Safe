@@ -5,11 +5,14 @@ import os
 import io
 from PIL import Image
 
-# Use tflite-runtime if available (standard for Vercel/IoT), else standard tf
+# Use ai-edge-litert (modern TFLite successor)
 try:
-    import tflite_runtime.interpreter as tflite
+    import ai_edge_litert.interpreter as tflite
 except ImportError:
-    import tensorflow.lite as tflite
+    try:
+        import tflite_runtime.interpreter as tflite
+    except ImportError:
+        import tensorflow.lite as tflite
 
 app = Flask(__name__)
 CORS(app)
