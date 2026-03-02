@@ -54,8 +54,9 @@
         html,
         body {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
             font-family: var(--font);
             background: var(--white);
             color: var(--gray-900);
@@ -93,21 +94,24 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 28px;
+            gap: 20px;
             align-items: center;
             background: rgba(255, 255, 255, .85);
             backdrop-filter: blur(14px);
             border: 1px solid var(--gray-200);
             border-radius: 60px;
-            padding: 10px 32px;
+            padding: 8px 24px;
             z-index: 10;
             box-shadow: var(--shadow-card);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--gray-700);
             user-select: none;
             opacity: 0;
             transition: opacity var(--transition);
+            max-width: 95vw;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         #hud.visible {
@@ -685,9 +689,44 @@
             transform: scaleX(1);
         }
 
-        #flash-feedback.miss {
-            background: var(--red-500);
-            transform: scaleX(1);
+        /* ── Responsive adjustments ────────────────────────────────── */
+        @media (max-width: 600px) {
+            #hud {
+                top: 10px;
+                gap: 12px;
+                padding: 6px 16px;
+                font-size: 12px;
+                border-radius: 20px;
+            }
+
+            #hud .hud-item {
+                gap: 4px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                padding: 20px 16px;
+            }
+
+            .modal-header h1 {
+                font-size: 22px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .result-card .rc-value {
+                font-size: 24px;
+            }
+
+            .pb-track {
+                width: 100px;
+            }
         }
     </style>
 </head>
@@ -767,10 +806,12 @@
                     <h3>How to Take This Test</h3>
                     <ul>
                         <li>A blue cross will appear and drift gently at the center of the screen. Keep your
-                            <strong>eyes focused</strong> on it throughout the test.</li>
+                            <strong>eyes focused</strong> on it throughout the test.
+                        </li>
                         <li>Small blue dots will briefly flash at the edges of your screen.</li>
                         <li>Press the <strong>Spacebar</strong>, <strong>tap the screen</strong>, or
-                            <strong>click</strong> as soon as you notice a dot.</li>
+                            <strong>click</strong> as soon as you notice a dot.
+                        </li>
                         <li>The test consists of <strong>10 trials</strong> and takes about 40–70 seconds.</li>
                         <li>Try not to move your eyes to search for dots — rely on your peripheral vision.</li>
                     </ul>
@@ -837,14 +878,14 @@
 
             /* ── Zone definitions (edge of screen) ──────────────────────── */
             const ZONES = [
-                { name: 'North', xMin: .3, xMax: .7, yMin: 0, yMax: .05 },
-                { name: 'South', xMin: .3, xMax: .7, yMin: .95, yMax: 1 },
-                { name: 'East', xMin: .95, xMax: 1, yMin: .3, yMax: .7 },
-                { name: 'West', xMin: 0, xMax: .05, yMin: .3, yMax: .7 },
-                { name: 'NE', xMin: .95, xMax: 1, yMin: 0, yMax: .05 },
-                { name: 'NW', xMin: 0, xMax: .05, yMin: 0, yMax: .05 },
-                { name: 'SE', xMin: .95, xMax: 1, yMin: .95, yMax: 1 },
-                { name: 'SW', xMin: 0, xMax: .05, yMin: .95, yMax: 1 },
+                { name: 'North', xMin: .35, xMax: .65, yMin: 0.05, yMax: .12 },
+                { name: 'South', xMin: .35, xMax: .65, yMin: .88, yMax: 0.95 },
+                { name: 'East', xMin: .88, xMax: 0.95, yMin: .35, yMax: .65 },
+                { name: 'West', xMin: 0.05, xMax: .12, yMin: .35, yMax: .65 },
+                { name: 'NE', xMin: .85, xMax: 0.95, yMin: 0.05, yMax: .15 },
+                { name: 'NW', xMin: 0.05, xMax: .15, yMin: 0.05, yMax: .15 },
+                { name: 'SE', xMin: .85, xMax: 0.95, yMin: .85, yMax: 0.95 },
+                { name: 'SW', xMin: 0.05, xMax: .15, yMin: .85, yMax: 0.95 },
             ];
 
             /* ── DOM refs ───────────────────────────────────────────────── */
@@ -1235,8 +1276,10 @@
 
             // Touch support for mobile/tablet users
             document.addEventListener('touchstart', e => {
-                e.preventDefault();
-                handleSpacebar();
+                if (running && !e.target.closest('button') && !e.target.closest('.modal')) {
+                    e.preventDefault();
+                    handleSpacebar();
+                }
             }, { passive: false });
 
             // Also allow clicking anywhere on the game area
