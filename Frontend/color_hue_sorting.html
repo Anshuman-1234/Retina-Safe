@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RetinaSafe — Color Hue Sorting Cataract Test</title>
-  <meta name="description" content="RetinaSafe Color Hue Sorting Cataract Test: A clinical screening game to assess blue-light perception and detect early cataract risk." />
+  <meta name="description"
+    content="RetinaSafe Color Hue Sorting Cataract Test: A clinical screening game to assess blue-light perception and detect early cataract risk." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     /* ========== CSS RESET & VARIABLES ========== */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -42,10 +46,10 @@
       --gray-700: #374151;
       --gray-800: #1F2937;
       --gray-900: #111827;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-      --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
-      --shadow-xl: 0 20px 50px rgba(0,0,0,0.16);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.16);
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
@@ -54,7 +58,8 @@
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    html, body {
+    html,
+    body {
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -176,8 +181,15 @@
     }
 
     @keyframes timer-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
     }
 
     #timer-bar-track {
@@ -240,8 +252,8 @@
     }
 
     .tile {
-      width: 120px;
-      height: 120px;
+      width: clamp(60px, 12vw, 120px);
+      height: clamp(60px, 12vw, 120px);
       border-radius: var(--radius-md);
       cursor: pointer;
       border: 3px solid transparent;
@@ -274,17 +286,41 @@
     }
 
     @keyframes correct-pop {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.12); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.12);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
 
     @keyframes wrong-shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-6px); }
-      40% { transform: translateX(6px); }
-      60% { transform: translateX(-4px); }
-      80% { transform: translateX(4px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      20% {
+        transform: translateX(-6px);
+      }
+
+      40% {
+        transform: translateX(6px);
+      }
+
+      60% {
+        transform: translateX(-4px);
+      }
+
+      80% {
+        transform: translateX(4px);
+      }
     }
 
     /* ========== INSTRUCTION HINT ========== */
@@ -295,7 +331,31 @@
       margin-top: 4px;
     }
 
-    /* ========== PENALTY TOAST ========== */
+    /* ========== MEDIA QUERIES ========== */
+    @media (max-width: 600px) {
+      #top-bar {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #brand-name {
+        font-size: 1.1rem;
+      }
+
+      .stat-value {
+        font-size: 1.25rem;
+      }
+
+      #timer-value {
+        font-size: 1.8rem;
+      }
+
+      #timer-bar-track {
+        width: 140px;
+      }
+    }
+
     .penalty-toast {
       position: fixed;
       top: 90px;
@@ -314,10 +374,24 @@
     }
 
     @keyframes toast-in-out {
-      0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-      15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-      75% { opacity: 1; }
-      100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
+
+      15% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      75% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+      }
     }
 
     /* ========== MODAL OVERLAY ========== */
@@ -339,8 +413,13 @@
     }
 
     @keyframes overlay-fade {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .modal-box {
@@ -356,8 +435,15 @@
     }
 
     @keyframes modal-slide-up {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .modal-title {
@@ -653,6 +739,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- ===== GAME CONTAINER ===== -->
   <div id="game-container">
@@ -660,7 +747,10 @@
     <header id="top-bar" role="banner">
       <div id="brand">
         <div id="brand-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+          </svg>
         </div>
         <div id="brand-name">Retina<span>Safe</span></div>
       </div>
@@ -717,11 +807,18 @@
 
       <div class="disclaimer-box">
         <div class="disclaimer-label">
-          <svg viewBox="0 0 20 20"><path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z"/></svg>
+          <svg viewBox="0 0 20 20">
+            <path d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z" />
+          </svg>
           Disclaimer
         </div>
         <p class="disclaimer-text">
-          DISCLAIMER: RetinaSafe is an AI-assisted screening and risk stratification tool intended for informational purposes only. It is not a medical device, not a licensed diagnostic instrument, and the results it produces do not constitute a medical diagnosis. RetinaSafe results must not be used as the sole basis for any clinical decision, treatment, or management plan. All individuals with a Moderate, High, or Critical risk classification should consult a qualified ophthalmologist promptly. RetinaSafe does not replace annual dilated eye examinations performed by a licensed eye care professional.
+          DISCLAIMER: RetinaSafe is an AI-assisted screening and risk stratification tool intended for informational
+          purposes only. It is not a medical device, not a licensed diagnostic instrument, and the results it produces
+          do not constitute a medical diagnosis. RetinaSafe results must not be used as the sole basis for any clinical
+          decision, treatment, or management plan. All individuals with a Moderate, High, or Critical risk
+          classification should consult a qualified ophthalmologist promptly. RetinaSafe does not replace annual dilated
+          eye examinations performed by a licensed eye care professional.
         </p>
       </div>
 
@@ -730,7 +827,8 @@
   </div>
 
   <!-- ===== RESULTS MODAL ===== -->
-  <div id="results-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="results-title" aria-hidden="true">
+  <div id="results-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="results-title"
+    aria-hidden="true">
     <div class="modal-box">
       <div class="modal-title" id="results-title">Screening Complete</div>
       <div class="modal-subtitle">Here are your color perception results.</div>
@@ -739,9 +837,8 @@
       <div class="result-score-ring" aria-label="Score display">
         <svg viewBox="0 0 140 140">
           <circle class="track" cx="70" cy="70" r="58" />
-          <circle class="progress" id="score-ring-progress" cx="70" cy="70" r="58"
-                  stroke-dasharray="364.42"
-                  stroke-dashoffset="364.42" />
+          <circle class="progress" id="score-ring-progress" cx="70" cy="70" r="58" stroke-dasharray="364.42"
+            stroke-dashoffset="364.42" />
         </svg>
         <div class="result-score-number">
           <span class="value" id="result-score-value">0</span>
@@ -779,7 +876,10 @@
       <div class="result-actions">
         <button id="btn-log-payload" class="btn-primary">Export JSON Payload to Console</button>
         <button id="btn-restart" class="btn-secondary" style="width:100%;justify-content:center;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+          </svg>
           Play Again
         </button>
       </div>
@@ -791,41 +891,41 @@
       'use strict';
 
       // ===== DOM Elements =====
-      const startModal       = document.getElementById('start-modal');
-      const resultsModal     = document.getElementById('results-modal');
-      const btnStart         = document.getElementById('btn-start');
-      const btnLogPayload    = document.getElementById('btn-log-payload');
-      const btnRestart       = document.getElementById('btn-restart');
-      const tileGrid         = document.getElementById('tile-grid');
-      const timerValue       = document.getElementById('timer-value');
-      const timerBarFill     = document.getElementById('timer-bar-fill');
-      const statLevel        = document.getElementById('stat-level');
-      const statScore        = document.getElementById('stat-score');
-      const levelIndicator   = document.getElementById('level-indicator');
-      const liveFeedback     = document.getElementById('live-feedback');
+      const startModal = document.getElementById('start-modal');
+      const resultsModal = document.getElementById('results-modal');
+      const btnStart = document.getElementById('btn-start');
+      const btnLogPayload = document.getElementById('btn-log-payload');
+      const btnRestart = document.getElementById('btn-restart');
+      const tileGrid = document.getElementById('tile-grid');
+      const timerValue = document.getElementById('timer-value');
+      const timerBarFill = document.getElementById('timer-bar-fill');
+      const statLevel = document.getElementById('stat-level');
+      const statScore = document.getElementById('stat-score');
+      const levelIndicator = document.getElementById('level-indicator');
+      const liveFeedback = document.getElementById('live-feedback');
       const scoreRingProgress = document.getElementById('score-ring-progress');
-      const resultScoreValue  = document.getElementById('result-score-value');
-      const resultLevels      = document.getElementById('result-levels');
-      const resultLastLevel   = document.getElementById('result-last-level');
-      const resultWrong       = document.getElementById('result-wrong');
-      const resultFlag        = document.getElementById('result-flag');
-      const flagBanner        = document.getElementById('flag-banner');
-      const flagText          = document.getElementById('flag-text');
+      const resultScoreValue = document.getElementById('result-score-value');
+      const resultLevels = document.getElementById('result-levels');
+      const resultLastLevel = document.getElementById('result-last-level');
+      const resultWrong = document.getElementById('result-wrong');
+      const resultFlag = document.getElementById('result-flag');
+      const flagBanner = document.getElementById('flag-banner');
+      const flagText = document.getElementById('flag-text');
 
       // ===== Game State =====
-      const TOTAL_TIME       = 30;
-      const PENALTY          = 2;
+      const TOTAL_TIME = 30;
+      const PENALTY = 2;
       const MAX_LEVELS_FOR_SCORE = 20; // baseline: clearing 20 levels = 100 score
-      const CIRCUMFERENCE    = 2 * Math.PI * 58; // for the SVG ring
+      const CIRCUMFERENCE = 2 * Math.PI * 58; // for the SVG ring
 
-      let currentLevel       = 1;
-      let levelsCleared      = 0;
-      let wrongClicks        = 0;
-      let timeRemaining      = TOTAL_TIME;
-      let timerInterval      = null;
-      let isRunning          = false;
-      let imposterIndex      = -1;
-      let finalPayload       = null;
+      let currentLevel = 1;
+      let levelsCleared = 0;
+      let wrongClicks = 0;
+      let timeRemaining = TOTAL_TIME;
+      let timerInterval = null;
+      let isRunning = false;
+      let imposterIndex = -1;
+      let finalPayload = null;
 
       // ===== Utility Functions =====
 
@@ -893,7 +993,7 @@
         tileGrid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
         tileGrid.innerHTML = '';
 
-        const base   = generateBaseColor();
+        const base = generateBaseColor();
         const hueDelta = getHueDelta(currentLevel);
         const satDelta = getSatDelta(currentLevel);
 
@@ -932,7 +1032,7 @@
       function onTileClick(e) {
         if (!isRunning) return;
 
-        const tile  = e.currentTarget;
+        const tile = e.currentTarget;
         const index = parseInt(tile.dataset.index, 10);
 
         if (index === imposterIndex) {
@@ -1045,15 +1145,15 @@
 
       function startGame() {
         // Reset state
-        currentLevel  = 1;
+        currentLevel = 1;
         levelsCleared = 0;
-        wrongClicks   = 0;
+        wrongClicks = 0;
         timeRemaining = TOTAL_TIME;
-        isRunning     = true;
-        finalPayload  = null;
+        isRunning = true;
+        finalPayload = null;
 
         // Reset display
-        statScore.textContent  = '0';
+        statScore.textContent = '0';
         updateTimerDisplay();
 
         // Hide modals
@@ -1071,15 +1171,15 @@
         isRunning = false;
         stopTimer();
 
-        const score   = calculateScore();
+        const score = calculateScore();
         const lastLvl = currentLevel; // The level they were on when time ran out
-        const flag    = score <= 45 ? 'Tritan Deficiency Noted' : null;
+        const flag = score <= 45 ? 'Tritan Deficiency Noted' : null;
 
         finalPayload = {
-          game_name:  'Hue Sorting',
-          score:      score,
+          game_name: 'Hue Sorting',
+          score: score,
           last_level: lastLvl,
-          game_flag:  flag
+          game_flag: flag
         };
 
         // Update stat bar
@@ -1091,10 +1191,10 @@
         // Save to RetinaSafe session
         if (window.RetinaSafeCollector) {
           RetinaSafeCollector.submit({
-            game_name           : 'Hue Sorting',
-            cataract_hue_score  : score,
-            rounds_cleared      : levelsCleared,
-            last_level_cleared  : lastLvl,
+            game_name: 'Hue Sorting',
+            cataract_hue_score: score,
+            rounds_cleared: levelsCleared,
+            last_level_cleared: lastLvl,
             tritan_deficiency_flag: flag === 'tritan',
             cataract_risk_modifier: score < 22 ? 0.38 : score < 42 ? 0.28 : score < 62 ? 0.18 : score < 82 ? 0.08 : -0.05,
           });
@@ -1105,28 +1205,28 @@
         // Score ring animation
         const offset = CIRCUMFERENCE - (score / 100) * CIRCUMFERENCE;
         let ringColor;
-        if (score >= 70)      ringColor = '#22C55E';
+        if (score >= 70) ringColor = '#22C55E';
         else if (score >= 45) ringColor = '#F59E0B';
-        else                  ringColor = '#EF4444';
+        else ringColor = '#EF4444';
 
         scoreRingProgress.style.stroke = ringColor;
         scoreRingProgress.style.strokeDashoffset = CIRCUMFERENCE; // reset
         resultScoreValue.textContent = score;
         resultScoreValue.style.color = ringColor;
 
-        resultLevels.textContent    = cleared;
+        resultLevels.textContent = cleared;
         resultLastLevel.textContent = lastLvl;
-        resultWrong.textContent     = wrong;
+        resultWrong.textContent = wrong;
 
         if (flag) {
           flagBanner.style.display = 'block';
-          flagText.textContent     = flag;
-          resultFlag.textContent   = '⚠️';
-          resultFlag.style.color   = '#F59E0B';
+          flagText.textContent = flag;
+          resultFlag.textContent = '⚠️';
+          resultFlag.style.color = '#F59E0B';
         } else {
           flagBanner.style.display = 'none';
-          resultFlag.textContent   = 'None';
-          resultFlag.style.color   = '#22C55E';
+          resultFlag.textContent = 'None';
+          resultFlag.style.color = '#22C55E';
         }
 
         resultsModal.setAttribute('aria-hidden', 'false');
@@ -1214,7 +1314,7 @@
           if (focusable.length === 0) return;
 
           const first = focusable[0];
-          const last  = focusable[focusable.length - 1];
+          const last = focusable[focusable.length - 1];
 
           if (e.shiftKey && document.activeElement === first) {
             e.preventDefault();
@@ -1235,5 +1335,5 @@
   <script src="game-collector.js"></script>
   <script src="theme.js"></script>
 </body>
-</html>
 
+</html>

@@ -1,38 +1,21 @@
-# 👁️ Retina Safe
+# 👁️ RetinaSafe — AI-Powered Retinal Screening & Risk Stratification
 
-**Retina Safe** is a cutting-edge, AI-powered medical screening application designed to detect various retinal diseases from fundus images. Using advanced Deep Learning models (MobileNetV2), it provides instant analysis for 6 major eye conditions with professional PDF report generation.
+**RetinaSafe** is a premium, end-to-end medical screening platform designed to detect and stratify the risk of major retinal diseases. By fusing **Deep Learning (Computer Vision)** with **Specialized Vision Games**, it provides a unique "Objective + Functional" assessment of eye health.
 
 ---
 
 ## ✨ Key Features
 
-- **🧠 Multi-Disease AI Analysis**: Simultaneously analyzes images for:
-  - Age-Related Macular Degeneration (AMD)
-  - Cataract
-  - Diabetic Retinopathy
-  - Glaucoma
-  - Hypertensive Retinopathy
-  - Normal (Healthy) Eye Health
-- **📸 Real-time Capture & Upload**: Supports high-resolution image uploads or real-time camera capture.
-- **📊 Interactive Dashboard**: Visualizes confidence scores for each condition with animated progress bars.
-- **📄 Professional PDF Reports**: Generates downloadable clinical-style reports including patient data, the analyzed image, and AI findings.
-- **🎨 Premium Dark UI**: Modern glassmorphism interface with smooth animations and responsive design.
-
----
-
-## 🛠️ Technology Stack
-
-### **Frontend**
-- **Structure**: Semantic HTML5
-- **Styling**: Vanilla CSS (Modern Design System, Glassmorphism)
-- **Logic**: Vanilla JavaScript (ES6+)
-- **Reporting**: jsPDF
-
-### **Backend (AI Hub)**
-- **Framework**: Python 3.x, Flask
-- **AI/ML**: TensorFlow 2.x, Keras
-- **Image Processing**: Pillow (PIL), NumPy
-- **Security**: Flask-CORS
+- **🧠 Multi-Disease AI Hub**: Simultaneous analysis for **AMD, Cataract, Diabetic Retinopathy, Glaucoma, and Hypertensive Retinopathy** using MobileNetV2-based Keras models.
+- **🎮 Functional Vision Testing**: Four interactive games designed to detect clinical visual biomarkers:
+  - Central field distortion (Amsler Grid)
+  - Contrast sensitivity (Contrast Discrimination)
+  - Peripheral awareness (Peripheral Reaction)
+  - Blue-yellow color discrimination (Hue Sorting)
+- **📊 Risk Fusion Engine**: Proprietary logic that adjusts AI predictions based on real-time vision performance.
+- **📄 Clinical Report Generation**: Professional PDF reports generated via `jsPDF`, including risk levels and recommended actions.
+- **� Healthcare Connectivity**: One-click redirection to find the nearest Eye Hospitals via Google Maps integration.
+- **🎨 Premium Experience**: A high-end user interface featuring **Glassmorphism**, smooth micro-animations, and a fully responsive design.
 
 ---
 
@@ -41,56 +24,87 @@
 ```text
 Retina_Safe/
 ├── Backend/
-│   ├── app.py              # Main Flask API Hub
-│   ├── requirements.txt    # Python dependencies
-│   └── [Disease_Name]/     # Individual model directories
-│       └── models/         # Trained .keras files
+│   ├── app.py                  # Flask API & Model Inference Hub
+│   ├── requirements.txt        # Backend dependencies
+│   └── [Disease_Models]/       # 6 Disease-specific Keras models
 └── Frontend/
-    ├── index.html          # Web UI Structure
-    ├── styles.css          # Design System
-    └── app.js              # Frontend logic & API integration
+    ├── screening.html          # Core 4-step workflow UI
+    ├── dashboard.html          # Patient health tracking dashboard
+    ├── Api bridge.js           # API Connector & Fusion Logic
+    ├── session.js              # State management & LocalStorage persistence
+    ├── screening.js            # Workflow controller
+    ├── Game collector.js       # Global result collector for vision games
+    └── [Game_Modules].html/js  # Specialized vision assessment games
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-### **1. Prerequisites**
-Ensure you have Python 3.8+ installed on your system.
-
-### **2. Setup the Backend (AI Server)**
+### **1. Setup the Backend (AI Inference Server)**
 ```powershell
 cd Backend
 pip install -r requirements.txt
 python app.py
 ```
-*The server will start at `http://localhost:5000`*
+*Port 5000: Handles `/predict` and `/health` endpoints.*
 
-### **3. Setup the Frontend (Web UI)**
+### **2. Setup the Frontend (Web Dashboard)**
 ```powershell
 cd Frontend
+# Use any static server (Live Server, Python HTTP, etc.)
 python -m http.server 8080
 ```
-*Access the application at `http://localhost:8080`*
+*Access via `http://localhost:8080`*
 
 ---
 
-## 🔬 How to Use
+## 🌩️ Deployment to Vercel
 
-1. **Launch**: Start both servers and open the browser.
-2. **Input**: Either drag-and-drop a fundus image (JPG/PNG) or use the **"Use Camera"** feature to capture one.
-3. **Analyze**: Click the **"Analyze"** button. The frontend will communicate with the AI models.
-4. **Review**: Check the results in the sidebar. The model with the highest confidence will be highlighted.
-5. **Export**: Click **"Download PDF Report"**, enter patient details, and save your results.
+RetinaSafe is configured for seamless monorepo deployment on **Vercel**:
+
+1.  **Project Settings**: Connect your repository to Vercel.
+2.  **Configuration**: The root `vercel.json` handles routing:
+    -   `/api/*` targets the Python/Flask backend.
+    -   All other routes serve the static `Frontend` directory.
+3.  **Automatic Builds**: Vercel will install the Python dependencies from `Backend/requirements.txt` and serve the site globally.
+
+## 🔬 The 4-Step Screening Workflow
+
+1.  **Medical History**: Patient provides baseline information (age, gender, existing conditions).
+2.  **Fundus Analysis**: High-resolution retinal image upload. Your AI models analyze the image for objective disease markers.
+3.  **Vision Games**: Four specialized games test how the patient *actually sees*. Results are collected and scored out of 100.
+4.  **Integrated Report**: The system fuses AI probabilities with game scores to generate a final risk classification (Low → Critical).
+
+---
+
+## 🧬 Scoring & Risk Calculation
+
+RetinaSafe uses a **Multi-Modal Risk Stratification** approach:
+
+### **Fusion Algorithm**
+The AI's raw probability ($P_{model}$) is adjusted by the patient's functional vision performance:
+
+$$Risk_{final} = P_{model} \times \left( 1.3 - \frac{\text{Game Score}}{100} \times 0.5 \right)$$
+
+- **Positive Reinforcement**: A perfect game score (100) reduces AI risk prediction by **20%**.
+- **Clinical Buffer**: Poor game performance (0 score) increases AI risk prediction by **30%**, acting as a confirmation of high risk.
+
+---
+
+## 🏥 Actionable Insights
+After screening, the system provides:
+- **Risk Score (0-100)**: A unified "Eye Health Index".
+- **Dynamic Recommendations**: From "Routine Screening" to "Urgent Consultation".
+- **Nearby Care**: Integrated Google Maps link for Govt Eye Hospitals.
 
 ---
 
 ## ⚠️ Medical Disclaimer
 
 > [!WARNING]
-> This application is intended for **screening and educational purposes only**. It NOT a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of a qualified ophthalmologist or healthcare provider with any questions you may have regarding a medical condition.
+> RetinaSafe is a **screening and risk stratification tool**. It is NOT a medical device or a diagnostic replacement. All results are preliminary and MUST be reviewed by a qualified ophthalmologist before any clinical action is taken.
 
 ---
 
-## 📄 License & Credits
-© 2026 Retina Safe Team. Built with ❤️ for better eye health.
+© 2026 RetinaSafe · Built with ❤️ for better eye health.

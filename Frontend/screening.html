@@ -1,28 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RetinaSafe — Start Screening</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="screening.css" />
+  <!-- Correct jspdf script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    .upload-status{font-size:.85rem;font-weight:500;padding:.5rem 1rem;border-radius:var(--radius);margin-top:.75rem;display:block}
-    .upload-status-info{background:var(--blue-50);color:var(--text-secondary);border:1px solid var(--blue-200)}
-    .upload-status-success{background:#ECFDF5;color:#065F46;border:1px solid #6EE7B7}
-    .upload-status-error{background:#FEF2F2;color:#991B1B;border:1px solid #FCA5A5}
-    #report-loading{display:flex;flex-direction:column;align-items:center;gap:1.25rem;padding:3rem 0}
-    .report-spinner{width:52px;height:52px;border:4px solid var(--blue-100);border-top-color:var(--blue-600);border-radius:50%;animation:spin .8s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .report-loading-text{font-size:.95rem;color:var(--text-secondary);text-align:center}
-    #report-game-flags{margin-bottom:1.25rem}
-    .report-flag-item{font-size:.82rem;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:var(--radius);padding:.5rem .85rem;margin-bottom:.4rem}
-    #model-bg-status{font-size:.75rem;color:var(--text-light);text-align:right;margin-top:.5rem}
+    .upload-status {
+      font-size: .85rem;
+      font-weight: 500;
+      padding: .5rem 1rem;
+      border-radius: var(--radius);
+      margin-top: .75rem;
+      display: block
+    }
+
+    .upload-status-info {
+      background: var(--blue-50);
+      color: var(--text-secondary);
+      border: 1px solid var(--blue-200)
+    }
+
+    .upload-status-success {
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #6EE7B7
+    }
+
+    .upload-status-error {
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5
+    }
+
+    #report-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 3rem 0
+    }
+
+    .report-spinner {
+      width: 52px;
+      height: 52px;
+      border: 4px solid var(--blue-100);
+      border-top-color: var(--blue-600);
+      border-radius: 50%;
+      animation: spin .8s linear infinite
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .report-loading-text {
+      font-size: .95rem;
+      color: var(--text-secondary);
+      text-align: center
+    }
+
+    #report-game-flags {
+      margin-bottom: 1.25rem
+    }
+
+    .report-flag-item {
+      font-size: .82rem;
+      color: #92400E;
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      border-radius: var(--radius);
+      padding: .5rem .85rem;
+      margin-bottom: .4rem
+    }
+
+    #model-bg-status {
+      font-size: .75rem;
+      color: var(--text-light);
+      text-align: right;
+      margin-top: .5rem
+    }
   </style>
 </head>
+
 <body class="screening-page">
   <a href="#main" class="skip-link">Skip to main content</a>
 
@@ -51,7 +122,8 @@
 
   <main id="main">
     <!-- PROGRESS STEPPER (4 steps) -->
-    <div class="progress-bar-wrapper" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" aria-label="Screening progress">
+    <div class="progress-bar-wrapper" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4"
+      aria-label="Screening progress">
       <div class="container progress-steps-row">
         <div class="progress-step ps-active" id="pstep-1">
           <div class="pstep-dot"><span class="pstep-number">1</span></div>
@@ -77,7 +149,9 @@
 
     <div class="disclaimer-banner" role="note">
       <div class="container">
-        <p><strong>⚠ Screening Tool Only:</strong> RetinaSafe is not a medical device or diagnostic replacement. Results must be reviewed by a qualified ophthalmologist. No retinal images or personal data are stored or transmitted.</p>
+        <p><strong>⚠ Screening Tool Only:</strong> RetinaSafe is not a medical device or diagnostic replacement. Results
+          must be reviewed by a qualified ophthalmologist. No retinal images or personal data are stored or transmitted.
+        </p>
       </div>
     </div>
 
@@ -89,7 +163,8 @@
           <div class="step-header">
             <p class="eyebrow">Step 1 of 4</p>
             <h1 id="s1-heading" class="step-title">Medical History</h1>
-            <p class="step-desc">This information adjusts the AI model's risk weighting for your profile. All fields are optional but improve accuracy.</p>
+            <p class="step-desc">This information adjusts the AI model's risk weighting for your profile. All fields are
+              optional but improve accuracy.</p>
           </div>
           <form id="history-form" novalidate>
             <div class="form-grid">
@@ -116,12 +191,24 @@
             <fieldset class="form-fieldset">
               <legend class="form-legend">Known Medical Conditions</legend>
               <div class="checkbox-grid">
-                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="diabetes" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Type 1 or Type 2 Diabetes</span></label>
-                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="hypertension" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Hypertension (High Blood Pressure)</span></label>
-                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="smoking" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Current or Former Smoker</span></label>
-                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="family-history" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Family History of Eye Disease</span></label>
-                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="no-history" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">No history of such disease</span></label>
-                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="dont-know-history" /><span class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Don't know as never been diagnosed</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="diabetes" /><span
+                    class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Type 1 or Type 2
+                    Diabetes</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="hypertension" /><span
+                    class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Hypertension (High
+                    Blood Pressure)</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="smoking" /><span
+                    class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">Current or Former
+                    Smoker</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input"
+                    name="family-history" /><span class="checkbox-custom" aria-hidden="true"></span><span
+                    class="checkbox-text">Family History of Eye Disease</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input" name="no-history" /><span
+                    class="checkbox-custom" aria-hidden="true"></span><span class="checkbox-text">No history of such
+                    disease</span></label>
+                <label class="checkbox-label"><input type="checkbox" class="checkbox-input"
+                    name="dont-know-history" /><span class="checkbox-custom" aria-hidden="true"></span><span
+                    class="checkbox-text">Don't know as never been diagnosed</span></label>
               </div>
             </fieldset>
             <div class="form-group">
@@ -135,6 +222,14 @@
                 <option value="never">Never had an eye exam</option>
               </select>
             </div>
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label class="checkbox-label">
+                <input type="checkbox" class="checkbox-input" id="remember-me" checked />
+                <span class="checkbox-custom" aria-hidden="true"></span>
+                <span class="checkbox-text"><strong>Remember me</strong> — Keep my progress if I refresh or close the
+                  browser</span>
+              </label>
+            </div>
             <div class="step-actions">
               <button type="button" class="btn btn-primary btn-lg" id="step1-next">Continue to Image Upload →</button>
             </div>
@@ -146,18 +241,40 @@
           <div class="step-header">
             <p class="eyebrow">Step 2 of 4</p>
             <h1 id="s2-heading" class="step-title">Upload Fundus Image</h1>
-            <p class="step-desc">Upload a retinal fundus photograph. This can be captured via a fundus camera, smartphone adapter, or provided by your clinic.</p>
+            <p class="step-desc">Upload a retinal fundus photograph. This can be captured via a fundus camera,
+              smartphone adapter, or provided by your clinic.</p>
           </div>
-          <div class="upload-area" id="upload-area" role="button" tabindex="0" aria-label="Upload fundus image. Click or drag and drop.">
+          <div class="upload-area" id="upload-area" role="button" tabindex="0"
+            aria-label="Upload fundus image. Click or drag and drop.">
             <div id="upload-idle">
               <div class="upload-icon-wrap" aria-hidden="true">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
                 </svg>
               </div>
               <p class="upload-title">Drop your fundus image here</p>
               <p class="upload-sub">or <span class="upload-link">browse to upload</span></p>
+              <div class="upload-divider"><span>OR</span></div>
+              <button type="button" class="btn btn-outline btn-camera" id="open-camera">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+                Capture via Camera
+              </button>
               <p class="upload-formats">Accepted: JPG, PNG, TIFF · Max 10 MB</p>
+            </div>
+            <!-- Camera View -->
+            <div id="camera-view" class="hidden">
+              <video id="camera-feed" autoplay playsinline></video>
+              <div class="camera-controls">
+                <button type="button" class="btn btn-primary" id="capture-image">Capture</button>
+                <button type="button" class="btn btn-outline" id="close-camera">Cancel</button>
+              </div>
+              <canvas id="capture-canvas" class="hidden"></canvas>
             </div>
             <div id="upload-preview" class="hidden">
               <img id="preview-img" src="" alt="Uploaded fundus image preview" />
@@ -167,20 +284,25 @@
                 <button type="button" class="btn btn-outline btn-sm" id="preview-replace">Replace</button>
               </div>
             </div>
-            <input type="file" id="file-input" accept="image/jpeg,image/png,image/tiff" class="file-input-hidden" aria-hidden="true" tabindex="-1" />
+            <input type="file" id="file-input" accept="image/jpeg,image/png,image/tiff" class="file-input-hidden"
+              aria-hidden="true" tabindex="-1" />
           </div>
           <div class="upload-tips">
             <p class="tips-heading">Image quality tips</p>
             <div class="tips-grid">
-              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Clear, in-focus retinal image</span>
-              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Optic disc visible in frame</span>
-              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Adequate illumination, no glare</span>
+              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Clear, in-focus retinal
+                image</span>
+              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Optic disc visible in
+                frame</span>
+              <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Adequate illumination, no
+                glare</span>
               <span class="tip-item"><span class="tip-check" aria-hidden="true">✓</span> Minimum 1024 × 1024 px</span>
             </div>
           </div>
           <div class="step-actions">
             <button type="button" class="btn btn-outline btn-lg" data-back="1">← Back</button>
-            <button type="button" class="btn btn-primary btn-lg" id="step2-next" disabled>Continue to Vision Games →</button>
+            <button type="button" class="btn btn-primary btn-lg" id="step2-next" disabled>Continue to Vision Games
+              →</button>
           </div>
         </section>
 
@@ -189,12 +311,15 @@
           <div class="step-header">
             <p class="eyebrow">Step 3 of 4</p>
             <h1 id="s3-heading" class="step-title">Vision Games</h1>
-            <p class="step-desc">Complete all four assessments. Each game tests a different aspect of functional vision. Click <strong>Launch Game</strong> to open it — complete it, then return here to continue.</p>
+            <p class="step-desc">Complete all four assessments. Each game tests a different aspect of functional vision.
+              Click <strong>Launch Game</strong> to open it — complete it, then return here to continue.</p>
           </div>
 
           <!-- Progress bar -->
           <div class="games-progress-row" style="margin-bottom:1.5rem">
-            <div class="gpr-bar-wrap"><div class="gpr-bar" id="gpr-bar" style="width:0%"></div></div>
+            <div class="gpr-bar-wrap">
+              <div class="gpr-bar" id="gpr-bar" style="width:0%"></div>
+            </div>
             <span class="gpr-label" id="gpr-label">0 of 4 games completed</span>
           </div>
 
@@ -205,7 +330,7 @@
 
           <div class="step-actions" style="margin-top:2rem">
             <button type="button" class="btn btn-outline btn-lg" data-back="2">← Back</button>
-            <button type="button" class="btn btn-primary btn-lg" id="step3-next" disabled>Generate Report →</button>
+            <button type="button" class="btn btn-primary btn-lg" id="step3-next" disabled>View Final Report →</button>
           </div>
         </section>
 
@@ -213,13 +338,15 @@
         <section class="screen-step" id="step-4" aria-labelledby="s4-heading">
           <div id="report-loading">
             <div class="report-spinner" aria-hidden="true"></div>
-            <div class="report-loading-text"><strong>Generating your report…</strong><br>Combining AI model predictions with your vision game results.</div>
+            <div class="report-loading-text"><strong>Generating your report…</strong><br>Combining AI model predictions
+              with your vision game results.</div>
           </div>
           <div id="report-content" hidden>
             <div class="step-header">
               <p class="eyebrow">Step 4 of 4 · Your Report</p>
               <h1 id="s4-heading" class="step-title">Screening Complete</h1>
-              <p class="step-desc">This is a preliminary risk assessment only. Review all results with a qualified ophthalmologist before taking any action.</p>
+              <p class="step-desc">This is a preliminary risk assessment only. Review all results with a qualified
+                ophthalmologist before taking any action.</p>
             </div>
             <div class="report-score-card" id="report-score-card">
               <div class="rsc-left">
@@ -237,31 +364,55 @@
             <h2 class="report-section-title">Per-Condition Risk Breakdown</h2>
             <div class="disease-grid">
               <div class="disease-card" style="--d-accent:var(--dr-color)">
-                <div class="dc-top"><span class="dc-name">Diabetic Retinopathy</span><span class="dc-prob" id="dc-dr-prob">—</span></div>
-                <div class="dc-bar-wrap"><div class="dc-bar" id="dc-dr-bar" style="width:0%;background:var(--dr-color)"></div></div>
-                <div class="dc-bottom"><span id="dc-dr-game">Contrast score: —</span><span class="dc-level" id="dc-dr-level">—</span></div>
+                <div class="dc-top"><span class="dc-name">Diabetic Retinopathy</span><span class="dc-prob"
+                    id="dc-dr-prob">—</span></div>
+                <div class="dc-bar-wrap">
+                  <div class="dc-bar" id="dc-dr-bar" style="width:0%;background:var(--dr-color)"></div>
+                </div>
+                <div class="dc-bottom"><span id="dc-dr-game">Contrast score: —</span><span class="dc-level"
+                    id="dc-dr-level">—</span></div>
               </div>
               <div class="disease-card" style="--d-accent:var(--amd-color)">
-                <div class="dc-top"><span class="dc-name">Macular Degeneration</span><span class="dc-prob" id="dc-amd-prob">—</span></div>
-                <div class="dc-bar-wrap"><div class="dc-bar" id="dc-amd-bar" style="width:0%;background:var(--amd-color)"></div></div>
-                <div class="dc-bottom"><span id="dc-amd-game">Amsler score: —</span><span class="dc-level" id="dc-amd-level">—</span></div>
+                <div class="dc-top"><span class="dc-name">Macular Degeneration</span><span class="dc-prob"
+                    id="dc-amd-prob">—</span></div>
+                <div class="dc-bar-wrap">
+                  <div class="dc-bar" id="dc-amd-bar" style="width:0%;background:var(--amd-color)"></div>
+                </div>
+                <div class="dc-bottom"><span id="dc-amd-game">Amsler score: —</span><span class="dc-level"
+                    id="dc-amd-level">—</span></div>
               </div>
               <div class="disease-card" style="--d-accent:var(--glauc-color)">
-                <div class="dc-top"><span class="dc-name">Glaucoma</span><span class="dc-prob" id="dc-glauc-prob">—</span></div>
-                <div class="dc-bar-wrap"><div class="dc-bar" id="dc-glauc-bar" style="width:0%;background:var(--glauc-color)"></div></div>
-                <div class="dc-bottom"><span id="dc-glauc-game">Peripheral score: —</span><span class="dc-level" id="dc-glauc-level">—</span></div>
+                <div class="dc-top"><span class="dc-name">Glaucoma</span><span class="dc-prob"
+                    id="dc-glauc-prob">—</span></div>
+                <div class="dc-bar-wrap">
+                  <div class="dc-bar" id="dc-glauc-bar" style="width:0%;background:var(--glauc-color)"></div>
+                </div>
+                <div class="dc-bottom"><span id="dc-glauc-game">Peripheral score: —</span><span class="dc-level"
+                    id="dc-glauc-level">—</span></div>
               </div>
               <div class="disease-card" style="--d-accent:var(--cat-color)">
-                <div class="dc-top"><span class="dc-name">Cataract</span><span class="dc-prob" id="dc-cat-prob">—</span></div>
-                <div class="dc-bar-wrap"><div class="dc-bar" id="dc-cat-bar" style="width:0%;background:var(--cat-color)"></div></div>
-                <div class="dc-bottom"><span id="dc-cat-game">Hue score: —</span><span class="dc-level" id="dc-cat-level">—</span></div>
+                <div class="dc-top"><span class="dc-name">Cataract</span><span class="dc-prob" id="dc-cat-prob">—</span>
+                </div>
+                <div class="dc-bar-wrap">
+                  <div class="dc-bar" id="dc-cat-bar" style="width:0%;background:var(--cat-color)"></div>
+                </div>
+                <div class="dc-bottom"><span id="dc-cat-game">Hue score: —</span><span class="dc-level"
+                    id="dc-cat-level">—</span></div>
               </div>
             </div>
-            <div class="report-actions-row">
+            <div class="report-actions-row"
+              style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2rem;">
               <button type="button" class="btn btn-primary btn-lg" id="restart-screening">Start New Screening</button>
+              <button type="button" class="btn btn-outline btn-lg" id="download-report">Download PDF Report</button>
+              <a href="https://www.google.com/maps/search/govt+eye+hospital+near+me/" target="_blank"
+                class="btn btn-primary btn-lg" style="background-color: #10b981; border-color: #10b981;">Find Nearby Eye
+                Hospital</a>
             </div>
             <div class="report-disclaimer" role="note">
-              <p><strong>⚠ Important:</strong> RetinaSafe is an AI-assisted screening tool only. Results do not constitute a medical diagnosis. All Moderate, High, or Critical classifications should prompt an urgent ophthalmology consultation. This report does not replace annual dilated eye examinations by a licensed professional.</p>
+              <p><strong>⚠ Important:</strong> RetinaSafe is an AI-assisted screening tool only. Results do not
+                constitute a medical diagnosis. All Moderate, High, or Critical classifications should prompt an urgent
+                ophthalmology consultation. This report does not replace annual dilated eye examinations by a licensed
+                professional.</p>
             </div>
           </div>
         </section>
@@ -273,7 +424,8 @@
   <footer class="footer" role="contentinfo">
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. Not a medical device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
+        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. Not a medical
+          device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
         <p class="footer-copyright">© 2025 RetinaSafe · Team Rusty Brain</p>
       </div>
     </div>
@@ -288,17 +440,12 @@
         <span class="game-modal-title" id="gm-title">Game</span>
         <span class="game-modal-tag" id="gm-tag"></span>
       </div>
-      <button class="game-modal-close btn btn-outline btn-sm" id="game-modal-close" aria-label="Close game and return to checklist">✕ Close</button>
+      <button class="game-modal-close btn btn-outline btn-sm" id="game-modal-close"
+        aria-label="Close game and return to checklist">✕ Close</button>
     </div>
     <div class="game-modal-body">
-      <iframe
-        id="game-iframe"
-        class="game-iframe"
-        src=""
-        title="Vision game"
-        allow="fullscreen"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-      ></iframe>
+      <iframe id="game-iframe" class="game-iframe" src="" title="Vision game" allow="fullscreen"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
     </div>
   </div>
 
@@ -308,4 +455,5 @@
   <script src="nav.js"></script>
   <script src="theme.js"></script>
 </body>
+
 </html>

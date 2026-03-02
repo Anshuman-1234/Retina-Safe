@@ -310,7 +310,7 @@
             background: var(--white);
             border-radius: var(--radius);
             box-shadow: var(--shadow-modal);
-            width: min(560px, 92vw);
+            width: min(800px, 92vw);
             max-height: 88vh;
             overflow-y: auto;
             animation: modalSlide .35s cubic-bezier(.4, 0, .2, 1);
@@ -766,9 +766,11 @@
                 <div class="instructions">
                     <h3>How to Take This Test</h3>
                     <ul>
-                        <li>A blue cross will appear and drift gently at the center of the screen. Keep your <strong>eyes focused</strong> on it throughout the test.</li>
+                        <li>A blue cross will appear and drift gently at the center of the screen. Keep your
+                            <strong>eyes focused</strong> on it throughout the test.</li>
                         <li>Small blue dots will briefly flash at the edges of your screen.</li>
-                        <li>Press the <strong>Spacebar</strong>, <strong>tap the screen</strong>, or <strong>click</strong> as soon as you notice a dot.</li>
+                        <li>Press the <strong>Spacebar</strong>, <strong>tap the screen</strong>, or
+                            <strong>click</strong> as soon as you notice a dot.</li>
                         <li>The test consists of <strong>10 trials</strong> and takes about 40–70 seconds.</li>
                         <li>Try not to move your eyes to search for dots — rely on your peripheral vision.</li>
                     </ul>
@@ -1124,15 +1126,15 @@
                 if (window.RetinaSafeCollector) {
                     const modifier = finalPayload.score >= 85 ? -0.05
                         : finalPayload.score >= 65 ? 0.05
-                        : finalPayload.score >= 45 ? 0.18
-                        : finalPayload.score >= 25 ? 0.30 : 0.40;
+                            : finalPayload.score >= 45 ? 0.18
+                                : finalPayload.score >= 25 ? 0.30 : 0.40;
                     RetinaSafeCollector.submit({
-                        game_name                : 'Peripheral Reaction',
+                        game_name: 'Peripheral Reaction',
                         glaucoma_peripheral_score: finalPayload.score,
-                        deficit_zones_count      : finalPayload.deficit_zones_count,
-                        hit_rate                 : finalPayload.hit_rate,
-                        game_flag                : finalPayload.game_flag,
-                        glaucoma_risk_modifier   : modifier,
+                        deficit_zones_count: finalPayload.deficit_zones_count,
+                        hit_rate: finalPayload.hit_rate,
+                        game_flag: finalPayload.game_flag,
+                        glaucoma_risk_modifier: modifier,
                     });
                 }
             }
@@ -1266,10 +1268,9 @@
         })();
     </script>
 
-  <script src="session.js"></script>
-  <script src="game-collector.js"></script>
-  <script src="theme.js"></script>
+    <script src="session.js"></script>
+    <script src="game-collector.js"></script>
+    <script src="theme.js"></script>
 </body>
 
 </html>
-

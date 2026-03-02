@@ -50,7 +50,7 @@ def preprocess_image(img_bytes):
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
-@app.route('/predict', methods=['POST'])
+@app.route('/api/predict', methods=['POST'])
 def predict():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
@@ -84,7 +84,7 @@ def predict():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
 def health():
     return jsonify({
         'status': 'healthy',
