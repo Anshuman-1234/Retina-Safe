@@ -92,7 +92,10 @@ body {
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    padding: 2rem 0;
+    padding: 1rem 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* ── Skip Link (Accessibility) ── */
@@ -202,9 +205,9 @@ strong {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 95%;
     max-width: 900px;
-    padding: 3rem;
+    padding: 2rem 1.5rem;
     background: var(--white);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
@@ -291,6 +294,7 @@ strong {
 .setting-row {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 /* ── Density Selector ── */
@@ -1019,12 +1023,14 @@ pre {
         padding: 2rem 1.25rem;
         border-radius: var(--radius-lg);
         margin: 0.5rem;
-        width: auto;
+        width: 95%;
     }
 
     .canvas-wrapper {
-        width: 80vmin;
-        height: 80vmin;
+        width: 85vw;
+        height: 85vw;
+        max-width: 400px;
+        max-height: 400px;
     }
 
     .results-grid {
@@ -1042,6 +1048,7 @@ pre {
     .density-btn {
         flex-direction: row;
         gap: 0.5rem;
+        padding: 1rem;
     }
 }
 
@@ -1052,7 +1059,10 @@ pre {
 
     .app-container {
         padding: 1.5rem 1rem;
-        border-radius: var(--radius);
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        border: none;
     }
 
     .controls {
@@ -1063,5 +1073,13 @@ pre {
     .controls button {
         width: 100%;
     }
-}
 
+    .header h1 {
+        font-size: 1.75rem;
+    }
+
+    .instructions {
+        padding: 1rem;
+        font-size: 0.9rem;
+    }
+}

@@ -1550,33 +1550,42 @@
   width: 100%;
   max-width: 1100px;
   flex: 1;
-  max-height: 82vh;
+  max-height: 88vh;
+  /* Increased to use more space */
   background: var(--white);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
+  display: flex;
+  /* Ensure iframe fills it properly */
+  flex-direction: column;
 }
 
 .game-iframe {
   width: 100%;
-  height: 100%;
-  min-height: 560px;
+  flex: 1;
+  min-height: 500px;
+  /* Reduced from 560px for better baseline */
   border: none;
   display: block;
 }
 
 @media (max-width: 600px) {
   .game-modal {
-    padding: 0.25rem;
+    padding: 0.5rem;
+    /* Slightly more padding */
   }
 
   .game-modal-body {
-    max-height: 85vh;
+    max-height: 92vh;
+    /* Use almost full height on mobile */
     border-radius: 0 0 var(--radius) var(--radius);
   }
 
   .game-iframe {
-    min-height: 480px;
+    min-height: 350px;
+    /* Significantly reduced for small phones */
+    height: 100%;
   }
 }
 

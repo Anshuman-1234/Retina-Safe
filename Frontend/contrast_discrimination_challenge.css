@@ -69,17 +69,19 @@ html {
 }
 
 body {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
   background-color: var(--bg-color);
   font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif;
   font-weight: 400;
   line-height: 1.75;
   color: var(--text-primary);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
   user-select: none;
   transition: background-color 0.15s ease;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* --- 3. Accessibility — Skip Link --- */
@@ -110,11 +112,11 @@ body {
 
 /* --- 5. Overlays & Panels --- */
 .overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: rgba(30, 58, 95, 0.35);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -124,8 +126,9 @@ body {
   z-index: 100;
   opacity: 1;
   overflow-y: auto;
-  padding: 1.5rem 0;
+  padding: 1rem;
   transition: opacity 0.4s ease, visibility 0.4s;
+  -webkit-overflow-scrolling: touch;
 }
 
 .overlay.hidden {
@@ -522,30 +525,32 @@ body {
 /* --- 16. Responsive Adjustments --- */
 @media (max-width: 680px) {
   .glass-panel {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
+    width: 95%;
   }
 
   .glass-panel h1 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
   }
 
   .results-container {
     min-width: auto;
     width: 100%;
+    padding: 1rem;
   }
 
   .hud-pill {
-    padding: 0.45rem 0.85rem;
-    font-size: 0.88rem;
-    gap: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    gap: 0.3rem;
   }
 
   .game-ui {
-    top: 1rem;
-    left: 0.75rem;
-    right: 0.75rem;
+    top: 0.75rem;
+    left: 0.5rem;
+    right: 0.5rem;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 4px;
     justify-content: center;
   }
 }
