@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetinaSafe — Privacy Policy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue-900: #1E3A5F;
+      --blue-800: #1E40AF;
+      --blue-700: #1D4ED8;
+      --blue-600: #2563EB;
+      --blue-500: #3B82F6;
+      --blue-400: #60A5FA;
+      --blue-300: #93C5FD;
+      --blue-200: #BFDBFE;
+      --blue-100: #DBEAFE;
+      --blue-50:  #EFF6FF;
+      --page-bg:  #F8FBFF;
+      --white:    #FFFFFF;
+      --text-primary:   #1E3A5F;
+      --text-secondary: #3D5A80;
+      --text-muted:     #6B8CAE;
+      --text-light:     #A8C0D6;
+      --border:      var(--blue-200);
+      --radius:      10px;
+      --radius-lg:   16px;
+      --shadow-sm: 0 1px 4px rgba(30,58,95,0.08);
+      --shadow-md: 0 4px 20px rgba(30,58,95,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 18px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+      font-size: 1rem;
+      line-height: 1.75;
+      color: var(--text-primary);
+      background: var(--page-bg);
+    }
+    a { color: var(--blue-600); text-decoration: underline; text-underline-offset: 3px; }
+    a:hover { color: var(--blue-800); }
+    a:focus-visible { outline: 3px solid var(--blue-400); outline-offset: 3px; border-radius: 3px; }
+
+    .skip-link {
+      position: absolute; top: -100px; left: 1rem;
+      background: var(--blue-600); color: var(--white);
+      padding: 0.5rem 1rem; border-radius: var(--radius);
+      font-size: 0.88rem; font-weight: 600; z-index: 9999; text-decoration: none;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav {
+      max-width: 1100px; margin: 0 auto; padding: 0 2rem;
+      height: 64px; display: flex; align-items: center;
+      justify-content: space-between; gap: 2rem;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 0.65rem; text-decoration: none; flex-shrink: 0;
+    }
+    .nav-iris {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--blue-600); position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-iris::before {
+      content: ''; width: 12px; height: 12px; border-radius: 50%;
+      background: var(--white); position: absolute;
+    }
+    .nav-iris::after {
+      content: ''; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--blue-900); position: absolute;
+    }
+    .nav-brand-text { font-family: 'Lora', Georgia, serif; font-weight: 700; font-size: 1.2rem; line-height: 1; }
+    .nav-brand-text .retina { color: var(--text-primary); }
+    .nav-brand-text .safe   { color: var(--blue-600); }
+    .nav-links { display: flex; list-style: none; gap: 2rem; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); text-decoration: none; }
+    .nav-links a:hover { color: var(--blue-600); }
+    .nav-disclaimer {
+      font-size: 0.72rem; background: var(--blue-50); color: var(--text-muted);
+      padding: 0.3rem 0.9rem; border-radius: 100px; border: 1px solid var(--blue-100); white-space: nowrap;
+    }
+    @media (max-width: 900px) { .nav-disclaimer { display: none; } }
+    @media (max-width: 700px) { .nav-links { display: none; } }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+    .container-narrow { max-width: 760px; margin: 0 auto; padding: 0 2rem; }
+
+    .page-hero { background: var(--white); padding: 4rem 0 3rem; border-bottom: 1px solid var(--border); }
+    .page-hero .eyebrow { margin-bottom: 0.85rem; }
+    .page-hero h1 {
+      font-family: 'Lora', Georgia, serif;
+      font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 700; line-height: 1.25;
+      color: var(--text-primary); margin-bottom: 0.75rem;
+    }
+    .page-hero .meta { font-size: 0.88rem; color: var(--text-muted); }
+
+    .eyebrow {
+      display: inline-block; font-size: 0.75rem;
+      font-family: 'Source Sans 3', sans-serif; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.12em; color: var(--blue-600);
+    }
+    .eyebrow::before { content: '— '; }
+
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+    .summary-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-top: 4px solid var(--blue-600); border-radius: var(--radius-lg); padding: 1.5rem;
+    }
+    .summary-card-title { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.4rem; }
+    .summary-card p { font-size: 0.88rem; color: var(--text-secondary); margin: 0; }
+
+    .toc-panel {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem 2.25rem;
+    }
+    .toc-panel h2 {
+      font-family: 'Lora', Georgia, serif; font-size: 1.2rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 1rem; padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--blue-100);
+    }
+    .toc-list {
+      list-style: none; display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.4rem 2rem;
+    }
+    .toc-list li { display: flex; align-items: baseline; gap: 0.5rem; }
+    .toc-list .toc-num { font-size: 0.78rem; font-weight: 600; color: var(--blue-400); min-width: 1.4rem; flex-shrink: 0; }
+    .toc-list a { font-size: 0.88rem; color: var(--text-secondary); text-decoration: none; }
+    .toc-list a:hover { color: var(--blue-600); text-decoration: underline; text-underline-offset: 3px; }
+
+    .content-section { padding: 4rem 0; border-bottom: 1px solid var(--blue-100); }
+    .content-section:last-child { border-bottom: none; }
+    .content-section.tinted { background: var(--blue-50); }
+
+    .section-heading { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.75rem; }
+    .section-num {
+      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; min-width: 36px; border-radius: 50%;
+      background: var(--blue-600); color: var(--white);
+      font-family: 'Lora', Georgia, serif; font-size: 0.88rem; font-weight: 700;
+      box-shadow: 0 0 0 5px var(--blue-100); margin-top: 4px;
+    }
+    .section-heading h2 {
+      font-family: 'Lora', Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 700; line-height: 1.25; color: var(--text-primary);
+    }
+    h3 { font-family: 'Lora', Georgia, serif; font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin: 2rem 0 0.75rem; }
+    p { color: var(--text-secondary); margin-bottom: 0.75em; }
+    p:last-child { margin-bottom: 0; }
+    ul { margin: 0.5rem 0 1rem 1.5rem; color: var(--text-secondary); }
+    ul li { margin-bottom: 0.4rem; }
+    strong { color: var(--text-primary); font-weight: 600; }
+    em { color: var(--text-muted); font-style: italic; }
+
+    .intro-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 1.5rem; }
+    .applies-list { list-style: none; margin: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+    .applies-list li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.95rem; color: var(--text-secondary); }
+    .applies-list li::before { content: '✓'; color: var(--blue-600); font-weight: 700; font-size: 0.88rem; margin-top: 0.15rem; flex-shrink: 0; }
+
+    .info-panel {
+      background: var(--blue-50); border: 1px solid var(--blue-200);
+      border-left: 4px solid var(--blue-500); border-radius: var(--radius);
+      padding: 1.25rem 1.5rem; margin: 1.25rem 0;
+    }
+    .info-panel p { font-size: 0.95rem; margin: 0; color: var(--text-secondary); }
+
+    .table-wrapper { overflow-x: auto; margin: 1.5rem 0; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    thead tr { background: var(--blue-900); color: var(--white); }
+    thead th { padding: 0.85rem 1rem; text-align: left; font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    tbody tr { border-bottom: 1px solid var(--blue-100); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--blue-50); }
+    tbody td { padding: 0.85rem 1rem; color: var(--text-secondary); vertical-align: middle; }
+    td.center { text-align: center; }
+    .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.75rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600; }
+    .badge-yes { background: rgba(16,185,129,0.10); color: #065F46; }
+    .badge-yes::before { content: '●'; font-size: 0.55rem; color: #10B981; }
+    .badge-no { background: var(--blue-50); color: var(--text-muted); }
+    .badge-no::before { content: '●'; font-size: 0.55rem; color: var(--blue-300); }
+
+    .rights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .right-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.1rem 1.25rem; display: flex; align-items: flex-start; gap: 0.75rem;
+    }
+    .right-icon {
+      width: 30px; height: 30px; min-width: 30px; border-radius: 8px;
+      background: var(--blue-50); display: flex; align-items: center; justify-content: center;
+      font-size: 0.82rem; color: var(--blue-600);
+    }
+    .right-card strong { display: block; font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.2rem; }
+    .right-card span { font-size: 0.82rem; color: var(--text-muted); }
+
+    .disclaimer-bar { background: #FFFBEB; border-top: 1px solid #FDE68A; border-bottom: 1px solid #FDE68A; }
+    .disclaimer-bar .container { padding-top: 1.25rem; padding-bottom: 1.25rem; text-align: center; }
+    .disclaimer-bar p { font-size: 0.82rem; color: #92400E; max-width: 800px; margin: 0 auto; }
+    .disclaimer-bar strong { color: #78350F; }
+
+    .cta-section { background: var(--blue-900); padding: 4rem 0; }
+    .cta-section .eyebrow { color: var(--blue-300); }
+    .cta-section h2 { font-family: 'Lora', Georgia, serif; font-size: clamp(1.5rem,3vw,2.1rem); font-weight: 700; color: var(--white); margin: 0.5rem 0 1rem; }
+    .cta-section p { color: var(--blue-200); margin-bottom: 1.75rem; }
+    .cta-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.75rem; border-radius: var(--radius);
+      font-family: 'Source Sans 3', sans-serif; font-weight: 600; font-size: 1rem;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    .btn:focus-visible { outline: 3px solid var(--blue-400); outline-offset: 3px; }
+    .btn-primary { background: var(--blue-600); color: var(--white); box-shadow: 0 2px 12px rgba(37,99,235,0.30); }
+    .btn-primary:hover { background: var(--blue-700); transform: translateY(-1px); color: var(--white); text-decoration: none; }
+    .btn-white { background: var(--white); color: var(--blue-800); box-shadow: var(--shadow-sm); }
+    .btn-white:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); color: var(--blue-800); text-decoration: none; }
+    .btn-ghost-white { background: transparent; color: var(--blue-200); border: 2px solid rgba(255,255,255,0.25); }
+    .btn-ghost-white:hover { background: rgba(255,255,255,0.08); color: var(--white); text-decoration: none; }
+    .btn-outline { background: transparent; color: var(--blue-600); border: 2px solid var(--blue-300); }
+    .btn-outline:hover { background: var(--blue-50); border-color: var(--blue-400); transform: translateY(-1px); text-decoration: none; }
+
+    .contact-block {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.75rem 2rem;
+      display: inline-block; margin-top: 1rem;
+    }
+    .contact-block p { margin: 0.15rem 0; font-size: 0.95rem; }
+    .contact-block .org-name { font-family: 'Lora', Georgia, serif; font-weight: 700; font-size: 1.1rem; color: var(--text-primary); }
+    .dsa-cta { margin-top: 1.5rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+    footer { background: var(--white); border-top: 1px solid var(--border); padding: 2rem 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .footer-brand { font-family: 'Lora', Georgia, serif; font-weight: 700; font-size: 1rem; }
+    .footer-brand .retina { color: var(--text-primary); }
+    .footer-brand .safe   { color: var(--blue-600); }
+    .footer-meta { font-size: 0.82rem; color: var(--text-muted); }
+    footer nav ul { list-style: none; display: flex; gap: 1.5rem; }
+    footer nav a { font-size: 0.82rem; color: var(--text-muted); text-decoration: none; }
+    footer nav a:hover { color: var(--blue-600); }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    @media (max-width: 680px) {
+      .summary-grid, .rights-grid, .toc-list { grid-template-columns: 1fr; }
+      .cta-buttons { flex-direction: column; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 600px) { .section-heading { flex-direction: column; } .section-num { margin-top: 0; } }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header role="banner">
+    <nav role="navigation" aria-label="Main navigation">
+      <a href="/" class="nav-brand" aria-label="RetinaSafe home">
+        <div class="nav-iris" aria-hidden="true"></div>
+        <span class="nav-brand-text"><span class="retina">Retina</span><span class="safe">Safe</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="screening.html">Scan</a></li>
+        <li><a href="index.html">Vision Games</a></li>
+      </ul>
+      <span class="nav-disclaimer" aria-label="Disclaimer">Screening tool only — not a clinical diagnosis</span>
+    </nav>
+  </header>
+
+  <div class="disclaimer-bar" role="note" aria-label="Medical disclaimer">
+    <div class="container">
+      <p><strong>⚠ Medical Disclaimer:</strong> RetinaSafe is a screening and risk stratification tool only. It is <strong>not a substitute for clinical examination or professional diagnosis.</strong> All results should be reviewed with a medical professional before acting on them. No personal data or retinal images are stored or transmitted.</p>
+    </div>
+  </div>
+
+  <section class="page-hero" aria-labelledby="page-title">
+    <div class="container">
+      <span class="eyebrow">Legal &amp; Privacy</span>
+      <h1 id="page-title">Privacy Policy</h1>
+      <p class="meta">Last updated: <strong>March 02, 2026</strong> &nbsp;·&nbsp; Version 1.0</p>
+    </div>
+  </section>
+
+  <main id="main">
+
+    <section class="content-section" aria-labelledby="about-heading">
+      <div class="container-narrow">
+        <h2 id="about-heading" style="clip:rect(0 0 0 0);position:absolute;visibility:hidden;">About This Notice</h2>
+        <div class="intro-card">
+          <p>This Privacy Notice for <strong>RetinaSafe</strong> ("we," "us," or "our") describes how and why we might access, collect, store, use, and/or share ("process") your personal information when you use our <strong>Services</strong>, including when you:</p>
+          <ul class="applies-list" style="margin-top:1rem;">
+            <li>Visit our website at <a href="https://retinasafe.vercel.app" target="_blank" rel="noopener">retinasafe.vercel.app</a> or any website of ours that links to this Privacy Notice</li>
+            <li>Use <strong>RetinaSafe</strong> — which combines deep learning retinal image analysis with scientifically designed vision games to detect early signs of diabetic retinopathy, glaucoma, AMD, and cataracts before symptoms appear</li>
+            <li>Engage with us in other related ways, including any marketing or events</li>
+          </ul>
+        </div>
+        <p>If you do not agree with our policies and practices, please do not use our Services.</p>
+      </div>
+    </section>
+
+    <section class="content-section tinted" aria-labelledby="summary-heading">
+      <div class="container-narrow">
+        <span class="eyebrow">At a glance</span>
+        <h2 id="summary-heading" style="font-family:'Lora',Georgia,serif;font-size:clamp(1.5rem,3vw,2.1rem);font-weight:700;line-height:1.25;color:var(--text-primary);margin-bottom:0.5rem;">Summary of Key Points</h2>
+        <p style="margin-bottom:0;">Key points from our Privacy Notice — click any item to jump to the full section.</p>
+        <div class="summary-grid">
+          <div class="summary-card"><p class="summary-card-title">What personal information do we process?</p><p>We may process personal information depending on how you interact with us. <a href="#infocollect">Learn more →</a></p></div>
+          <div class="summary-card"><p class="summary-card-title">Do we process sensitive information?</p><p>Yes — health data, with your consent or as permitted by law. <a href="#sensitiveinfo">Learn more →</a></p></div>
+          <div class="summary-card"><p class="summary-card-title">Do we collect third-party data?</p><p>We do not collect any information from third parties.</p></div>
+          <div class="summary-card"><p class="summary-card-title">How do we process your information?</p><p>To provide and improve our Services, for security, and to comply with law. <a href="#infouse">Learn more →</a></p></div>
+          <div class="summary-card"><p class="summary-card-title">Who do we share your information with?</p><p>Only in specific situations and with specific third parties. <a href="#whoshare">Learn more →</a></p></div>
+          <div class="summary-card"><p class="summary-card-title">How do you exercise your rights?</p><p>Submit a <a href="https://app.termly.io/dsar/f62ff3e6-1ee0-4f37-99f9-1f7474ef05d1" target="_blank" rel="noopener">data subject access request</a> or contact us directly.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section" aria-labelledby="toc-heading">
+      <div class="container-narrow">
+        <div class="toc-panel">
+          <h2 id="toc-heading">Table of Contents</h2>
+          <ul class="toc-list" role="list">
+            <li><span class="toc-num">01</span><a href="#infocollect">What Information Do We Collect?</a></li>
+            <li><span class="toc-num">02</span><a href="#infouse">How Do We Process Your Information?</a></li>
+            <li><span class="toc-num">03</span><a href="#legalbases">What Legal Bases Do We Rely On?</a></li>
+            <li><span class="toc-num">04</span><a href="#whoshare">When and With Whom Do We Share?</a></li>
+            <li><span class="toc-num">05</span><a href="#cookies">Do We Use Cookies?</a></li>
+            <li><span class="toc-num">06</span><a href="#ai">Do We Offer AI-Based Products?</a></li>
+            <li><span class="toc-num">07</span><a href="#inforetain">How Long Do We Keep Your Information?</a></li>
+            <li><span class="toc-num">08</span><a href="#infosafe">How Do We Keep Your Information Safe?</a></li>
+            <li><span class="toc-num">09</span><a href="#privacyrights">What Are Your Privacy Rights?</a></li>
+            <li><span class="toc-num">10</span><a href="#DNT">Do-Not-Track Controls</a></li>
+            <li><span class="toc-num">11</span><a href="#uslaws">US Residents — Specific Privacy Rights</a></li>
+            <li><span class="toc-num">12</span><a href="#policyupdates">Do We Make Updates to This Notice?</a></li>
+            <li><span class="toc-num">13</span><a href="#contact">How Can You Contact Us?</a></li>
+            <li><span class="toc-num">14</span><a href="#request">Review, Update, or Delete Your Data</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="infocollect" class="content-section tinted" aria-labelledby="s1-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">1</span><h2 id="s1-heading">What Information Do We Collect?</h2></div>
+        <h3 id="personalinfo">Personal Information You Disclose to Us</h3>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We collect personal information that you voluntarily provide to us.</em></p></div>
+        <p>We collect personal information that you voluntarily provide when you express an interest in our products and Services, when you participate in activities on the Services, or otherwise when you contact us.</p>
+        <p><strong>Personal Information Provided by You</strong> may include:</p>
+        <ul>
+          <li>Names</li><li>Phone numbers</li><li>Email addresses</li><li>Mailing addresses</li><li>Age and medical history</li>
+        </ul>
+        <h3 id="sensitiveinfo">Sensitive Information</h3>
+        <p>When necessary, with your consent or as otherwise permitted by applicable law, we process the following categories of sensitive information:</p>
+        <ul><li>Health data</li></ul>
+        <p>All personal information that you provide to us must be true, complete, and accurate, and you must notify us of any changes.</p>
+      </div>
+    </section>
+
+    <section id="infouse" class="content-section" aria-labelledby="s2-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">2</span><h2 id="s2-heading">How Do We Process Your Information?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with law.</em></p></div>
+        <p>We process your personal information for a variety of reasons, including:</p>
+        <ul>
+          <li><strong>To deliver and facilitate delivery of services to the user.</strong> We may process your information to provide you with the requested service.</li>
+          <li><strong>To save or protect an individual's vital interest.</strong> We may process your information when necessary to save or protect an individual's vital interest, such as to prevent harm.</li>
+        </ul>
+        <p>We may also process your information for other purposes only with your prior explicit consent.</p>
+      </div>
+    </section>
+
+    <section id="legalbases" class="content-section tinted" aria-labelledby="s3-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">3</span><h2 id="s3-heading">What Legal Bases Do We Rely On to Process Your Personal Information?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We only process your personal information when we believe it is necessary and we have a valid legal reason to do so under applicable law.</em></p></div>
+        <h3>If you are located in the EU or UK</h3>
+        <p>The GDPR and UK GDPR require us to explain the valid legal bases we rely on:</p>
+        <ul>
+          <li><strong>Consent.</strong> We may process your information if you have given us permission for a specific purpose. You can withdraw your consent at any time. <a href="#withdrawconsent">Learn more</a></li>
+          <li><strong>Performance of a Contract.</strong> We may process your personal information when necessary to fulfill our contractual obligations to you.</li>
+          <li><strong>Legal Obligations.</strong> We may process your information where necessary for compliance with our legal obligations.</li>
+          <li><strong>Vital Interests.</strong> We may process your information where necessary to protect your vital interests or those of a third party.</li>
+        </ul>
+        <h3>If you are located in Canada</h3>
+        <p>We may process your information based on express or implied consent, which you can withdraw at any time. In exceptional cases, we may process without consent — including for fraud detection, business transactions, insurance claims, court orders, employment-related purposes, journalistic/literary purposes, and de-identified approved research projects.</p>
+      </div>
+    </section>
+
+    <section id="whoshare" class="content-section" aria-labelledby="s4-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">4</span><h2 id="s4-heading">When and With Whom Do We Share Your Personal Information?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We may share information in specific situations and with the following third parties.</em></p></div>
+        <ul>
+          <li><strong>Business Transfers.</strong> We may share or transfer your information in connection with any merger, sale of company assets, financing, or acquisition.</li>
+          <li><strong>Google Maps Platform APIs.</strong> We may share your information with certain Google Maps Platform APIs (e.g., Google Maps API, Places API). Google Maps uses GPS, Wi-Fi, and cell towers to estimate your location.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="cookies" class="content-section tinted" aria-labelledby="s5-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">5</span><h2 id="s5-heading">Do We Use Cookies and Other Tracking Technologies?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We may use cookies and other tracking technologies to collect and store your information.</em></p></div>
+        <p>We may use cookies and similar tracking technologies (like web beacons and pixels) to gather information when you interact with our Services. Some online tracking technologies help us maintain the security of our Services, prevent crashes, fix bugs, save your preferences, and assist with basic site functions.</p>
+        <p>We also permit third parties and service providers to use online tracking technologies on our Services for analytics and advertising, including to help manage and display advertisements or tailor advertisements to your interests.</p>
+        <p>To the extent these technologies are deemed a "sale"/"sharing" under applicable US state laws, you can opt out by submitting a request as described under section <a href="#uslaws">Do United States Residents Have Specific Privacy Rights?</a></p>
+        <p>Specific information about how we use such technologies and how you can refuse certain cookies is set out in our Cookie Notice.</p>
+      </div>
+    </section>
+
+    <section id="ai" class="content-section" aria-labelledby="s6-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">6</span><h2 id="s6-heading">Do We Offer Artificial Intelligence-Based Products?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We offer products, features, or tools powered by artificial intelligence, machine learning, or similar technologies.</em></p></div>
+        <p>As part of our Services, we offer products, features, or tools powered by artificial intelligence, machine learning, or similar technologies (collectively, "AI Products"). These tools are designed to enhance your experience and provide you with innovative solutions.</p>
+        <h3>Our AI Products</h3>
+        <ul><li>AI predictive analytics</li><li>AI insights</li></ul>
+        <h3>How We Process Your Data Using AI</h3>
+        <p>All personal information processed using our AI Products is handled in line with our Privacy Notice and our agreement with third parties. This ensures high security and safeguards your personal information throughout the process.</p>
+      </div>
+    </section>
+
+    <section id="inforetain" class="content-section tinted" aria-labelledby="s7-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">7</span><h2 id="s7-heading">How Long Do We Keep Your Information?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We keep your information for as long as necessary to fulfill the purposes outlined in this Privacy Notice unless otherwise required by law.</em></p></div>
+        <p>No purpose in this notice will require us keeping your personal information for longer than <strong>7–8 days</strong>.</p>
+        <p>When we have no ongoing legitimate business need to process your personal information, we will either delete or anonymize such information, or securely store and isolate it from any further processing until deletion is possible.</p>
+      </div>
+    </section>
+
+    <section id="infosafe" class="content-section" aria-labelledby="s8-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">8</span><h2 id="s8-heading">How Do We Keep Your Information Safe?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> We aim to protect your personal information through a system of organizational and technical security measures.</em></p></div>
+        <p>We have implemented appropriate and reasonable technical and organizational security measures designed to protect the security of any personal information we process. However, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure. You should only access the Services within a secure environment.</p>
+      </div>
+    </section>
+
+    <section id="privacyrights" class="content-section tinted" aria-labelledby="s9-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">9</span><h2 id="s9-heading">What Are Your Privacy Rights?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> Depending on your state of residence in the US or in some regions such as the EEA, UK, Switzerland, and Canada, you have rights that allow you greater access to and control over your personal information.</em></p></div>
+        <p>In some regions (like the EEA, UK, Switzerland, and Canada), your rights may include: requesting access and a copy of your personal information, requesting rectification or erasure, restricting the processing of your personal information, data portability, not being subject to automated decision-making, and objecting to processing.</p>
+        <p>If you are in the EEA or UK and believe we are unlawfully processing your personal information, you have the right to complain to your <a href="https://ec.europa.eu/justice/data-protection/bodies/authorities/index_en.htm" target="_blank" rel="noopener">Member State data protection authority</a> or <a href="https://ico.org.uk/make-a-complaint/data-protection-complaints/data-protection-complaints/" target="_blank" rel="noopener">UK data protection authority</a>. If you are in Switzerland, you may contact the <a href="https://www.edoeb.admin.ch/edoeb/en/home.html" target="_blank" rel="noopener">Federal Data Protection and Information Commissioner</a>.</p>
+        <h3 id="withdrawconsent">Withdrawing Your Consent</h3>
+        <p>You have the right to withdraw your consent at any time by contacting us using the details in <a href="#contact">Section 13</a>. This will not affect the lawfulness of processing before its withdrawal.</p>
+      </div>
+    </section>
+
+    <section id="DNT" class="content-section" aria-labelledby="s10-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">10</span><h2 id="s10-heading">Controls for Do-Not-Track Features</h2></div>
+        <p>Most web browsers include a Do-Not-Track ("DNT") feature or setting you can activate to signal your privacy preference. At this stage, no uniform technology standard for recognizing and implementing DNT signals has been finalized. As such, we do not currently respond to DNT browser signals or any other mechanism that automatically communicates your choice not to be tracked online.</p>
+        <p>California law requires us to let you know how we respond to web browser DNT signals. Because there currently is not an industry or legal standard for recognizing or honoring DNT signals, we do not respond to them at this time.</p>
+      </div>
+    </section>
+
+    <section id="uslaws" class="content-section tinted" aria-labelledby="s11-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">11</span><h2 id="s11-heading">Do United States Residents Have Specific Privacy Rights?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> If you are a resident of California, Colorado, Connecticut, Delaware, Florida, Indiana, Iowa, Kentucky, Maryland, Minnesota, Montana, Nebraska, New Hampshire, New Jersey, Oregon, Rhode Island, Tennessee, Texas, Utah, or Virginia, you may have specific privacy rights.</em></p></div>
+        <h3>Categories of Personal Information We Collect</h3>
+        <div class="table-wrapper">
+          <table aria-label="Personal information categories collected">
+            <thead><tr><th style="width:32%">Category</th><th style="width:53%">Examples</th><th style="width:15%">Collected</th></tr></thead>
+            <tbody>
+              <tr><td><strong>A. Identifiers</strong></td><td>Real name, alias, postal address, phone number, IP address, email address, account name</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>B. California Customer Records</strong></td><td>Name, contact information, education, employment, employment history, and financial information</td><td class="center"><span class="badge badge-yes">YES</span></td></tr>
+              <tr><td><strong>C. Protected classification characteristics</strong></td><td>Gender, age, date of birth, race and ethnicity, national origin, marital status, and other demographic data</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>D. Commercial information</strong></td><td>Transaction information, purchase history, financial details, and payment information</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>E. Biometric information</strong></td><td>Fingerprints and voiceprints</td><td class="center"><span class="badge badge-yes">YES</span></td></tr>
+              <tr><td><strong>F. Internet or network activity</strong></td><td>Browsing history, search history, online behavior, and interactions with our and other websites</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>G. Geolocation data</strong></td><td>Device location</td><td class="center"><span class="badge badge-yes">YES</span></td></tr>
+              <tr><td><strong>H. Audio, electronic, sensory information</strong></td><td>Images and audio, video or call recordings created in connection with our business activities</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>I. Professional or employment information</strong></td><td>Business contact details, job title, work history, and professional qualifications</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>J. Education Information</strong></td><td>Student records and directory information</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>K. Inferences from personal information</strong></td><td>Inferences drawn to create a profile or summary about an individual's preferences and characteristics</td><td class="center"><span class="badge badge-no">NO</span></td></tr>
+              <tr><td><strong>L. Sensitive personal Information</strong></td><td>Biometric data</td><td class="center"><span class="badge badge-yes">YES</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>We will use and retain collected personal information for: Category B, E, G, and L — as long as the user has an account with us.</p>
+        <p>We have not disclosed, sold, or shared any personal information to third parties for a business or commercial purpose in the preceding twelve (12) months, and will not do so in the future.</p>
+        <h3>Your Rights</h3>
+        <div class="rights-grid">
+          <div class="right-card"><div class="right-icon" aria-hidden="true">👁</div><div><strong>Right to know</strong><span>Whether or not we are processing your personal data</span></div></div>
+          <div class="right-card"><div class="right-icon" aria-hidden="true">📋</div><div><strong>Right to access</strong><span>Your personal data</span></div></div>
+          <div class="right-card"><div class="right-icon" aria-hidden="true">✏️</div><div><strong>Right to correct</strong><span>Inaccuracies in your personal data</span></div></div>
+          <div class="right-card"><div class="right-icon" aria-hidden="true">🗑</div><div><strong>Right to deletion</strong><span>Request the deletion of your personal data</span></div></div>
+          <div class="right-card"><div class="right-icon" aria-hidden="true">📦</div><div><strong>Right to a copy</strong><span>Of the personal data you previously shared with us</span></div></div>
+          <div class="right-card"><div class="right-icon" aria-hidden="true">⚖️</div><div><strong>Right to non-discrimination</strong><span>For exercising your rights</span></div></div>
+          <div class="right-card"><div class="right-icon" aria-hidden="true">🚫</div><div><strong>Right to opt out</strong><span>Of targeted advertising, sale of personal data, or profiling</span></div></div>
+        </div>
+        <h3>How to Exercise Your Rights</h3>
+        <p>Submit a <a href="https://app.termly.io/dsar/f62ff3e6-1ee0-4f37-99f9-1f7474ef05d1" target="_blank" rel="noopener">data subject access request</a>, or refer to the contact details in <a href="#contact">Section 13</a>.</p>
+        <h3>Request Verification</h3>
+        <p>Upon receiving your request, we will need to verify your identity. We will only use personal information provided in your request to verify your identity. We may request additional information for verification and security or fraud-prevention purposes.</p>
+        <h3>Appeals</h3>
+        <p>If we decline to take action regarding your request, you may appeal our decision by emailing us (see <a href="#contact">Section 13</a>). If your appeal is denied, you may submit a complaint to your state attorney general.</p>
+      </div>
+    </section>
+
+    <section id="policyupdates" class="content-section" aria-labelledby="s12-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">12</span><h2 id="s12-heading">Do We Make Updates to This Notice?</h2></div>
+        <div class="info-panel"><p><em><strong>In Short:</strong> Yes, we will update this notice as necessary to stay compliant with relevant laws.</em></p></div>
+        <p>We may update this Privacy Notice from time to time. The updated version will be indicated by an updated "Revised" date at the top of this Privacy Notice. If we make material changes, we may notify you either by prominently posting a notice or by directly sending you a notification. We encourage you to review this Privacy Notice frequently.</p>
+      </div>
+    </section>
+
+    <section id="contact" class="content-section tinted" aria-labelledby="s13-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">13</span><h2 id="s13-heading">How Can You Contact Us About This Notice?</h2></div>
+        <p>If you have questions or comments about this notice, you may contact us by post at:</p>
+        <div class="contact-block">
+          <p class="org-name">RetinaSafe</p>
+          <p>Bhubaneswar, Odisha</p>
+          <p>India</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="request" class="content-section" aria-labelledby="s14-heading">
+      <div class="container-narrow">
+        <div class="section-heading"><span class="section-num" aria-hidden="true">14</span><h2 id="s14-heading">How Can You Review, Update, or Delete the Data We Collect From You?</h2></div>
+        <p>You have the right to request access to the personal information we collect from you, details about how we have processed it, correct inaccuracies, or delete your personal information. These rights may be limited in some circumstances by applicable law.</p>
+        <p>To request to review, update, or delete your personal information, please fill out and submit a data subject access request:</p>
+        <div class="dsa-cta">
+          <a href="https://app.termly.io/dsar/f62ff3e6-1ee0-4f37-99f9-1f7474ef05d1" target="_blank" rel="noopener" class="btn btn-primary">Submit a Data Request</a>
+          <a href="#contact" class="btn btn-outline">Contact Us Instead</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <div class="container-narrow">
+        <span class="eyebrow">Early Detection Matters</span>
+        <h2 id="cta-heading">Protect your vision — before symptoms appear</h2>
+        <p>RetinaSafe's AI-powered screening takes minutes and could give you crucial early warning of diabetic retinopathy, glaucoma, AMD, or cataracts.</p>
+        <div class="cta-buttons">
+          <a href="screening.html" class="btn btn-white">Start Your Free Scan</a>
+          <a href="#" class="btn btn-ghost-white">Play Vision Games</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-brand"><span class="retina">Retina</span><span class="safe">Safe</span></span>
+        <nav aria-label="Footer navigation">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="screening.html">Scan</a></li>
+            <li><a href="game-collector.js">Vision Games</a></li>
+            <li><a href="/report.html">My Report</a></li>
+          </ul>
+        </nav>
+        <p class="footer-meta">© 2025 RetinaSafe · Bhubaneswar, India</p>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text-muted);margin-top:1.25rem;text-align:center;">RetinaSafe is a screening and risk stratification tool only. It is not a substitute for clinical examination or professional diagnosis. All results should be reviewed with a medical professional before acting on them. No personal data or retinal images are stored or transmitted.</p>
+      <p style="font-size:0.78rem;color:var(--text-light);margin-top:0.75rem;text-align:center;">This Privacy Policy was created using Termly's Privacy Policy Generator.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
