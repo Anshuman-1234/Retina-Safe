@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | RetinaSafe</title>
+    <style>
+        :root {
+            /* Color Tokens from Design System [cite: 140, 145] */
+            --blue-900: #1E3A5F;
+            --blue-600: #2563EB;
+            --blue-100: #DBEAFE;
+            --blue-50: #EFF6FF;
+            --page-bg: #F8FBFF;
+            --white: #FFFFFF;
+            --text-primary: #1E3A5F;
+            --text-secondary: #3D5A80;
+        }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: sans-serif; /* Per system: Typography section [cite: 115] */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--blue-100);
+        }
+
+        h1 {
+            color: var(--blue-900);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Team Grid Layout [cite: 115] */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Card Component Styling [cite: 140] */
+        .team-card {
+            background: var(--white);
+            border: 1px solid var(--blue-100);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        .team-card:hover {
+            border-color: var(--blue-600);
+            background-color: var(--blue-50);
+        }
+
+        .team-card h2 {
+            color: var(--blue-900);
+            margin-top: 0;
+            font-size: 1.25rem;
+        }
+
+        .contact-info {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .contact-link {
+            color: var(--blue-600);
+            text-decoration: none;
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Accessibility: High contrast focus [cite: 124] */
+        a:focus, button:focus {
+            outline: 3px solid var(--blue-500);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Contact Our Team</h1>
+    <p class="subtitle">Clinical support and technical assistance for your vision health.</p>
+</header>
+
+<main class="container">
+    <section class="team-grid" aria-labelledby="team-heading">
+        <div class="team-card">
+            <h2>Anshuman Barik</h2>
+            <p class="subtitle">Team Leader</p>
+            <div class="contact-info">
+                <span>📞 +91 63714 49271</span>
+                <a href="mailto:s.jenkins@retinasafe.med" class="contact-link">s.jenkins@retinasafe.med</a>
+            </div>
+        </div>
+
+        <div class="team-card">
+            <h2>G Smruti Shriya</h2>
+            <p class="subtitle">Member 1</p>
+            <div class="contact-info">
+                <span>📞 +91 7077354988</span>
+                <a href="mailto:gsmrutishriya12@gmail.com" class="contact-link">gsmrutishriya12@gmail.com</a>
+            </div>
+        </div>
+
+        <div class="team-card">
+            <h2>Nippani Meghana</h2>
+            <p class="subtitle">Member 2</p>
+            <div class="contact-info">
+                <span>📞 +91 82802 31750</span>
+                <a href="mailto:meghananippani@gmail.com" class="contact-link">meghananippani@gmail.com</a>
+            </div>
+        </div>
+
+        <div class="team-card">
+            <h2>Omkar Moharana</h2>
+            <p class="subtitle">Member 3</p>
+            <div class="contact-info">
+                <span>📞 +91 9348768538</span>
+                <a href="mailto:j.wilson@retinasafe.med" class="contact-link">moharanaomkar12@gmail.com</a>
+            </div>
+        </div>
+
+        <div class="team-card">
+            <h2>Pratik Ranjan Mahala</h2>
+            <p class="subtitle">Member 4</p>
+            <div class="contact-info">
+                <span>📞 +91 70084 39956</span>
+                <a href="mailto:pratikranjan2212@gmail.com" class="contact-link">pratikranjan2212@gmail.com</a>
+            </div>
+        </div>
+
+        <div class="team-card">
+            <h2>Prajakta Mishra</h2>
+            <p class="subtitle">Member 5</p>
+            <div class="contact-info">
+                <span>📞 +91 93375 53303</span>
+                <a href="mailto:d.prajaktamishra3@gmail.com" class="contact-link">prajaktamishra3@gmail.com</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

@@ -144,22 +144,22 @@
         --blue-50:       #0d1f3a;
         --blue-100:      #0f2a4a;
         --blue-200:      #1a3a5c;
-        --blue-300:      #234d78;
+        --blue-300:      #4a7fa5;
         --blue-500:      #58a6ff;
         --blue-600:      #79b8ff;
         --blue-700:      #a5c8ff;
         --text-primary:  #e6edf3;
-        --text-secondary:#8b949e;
-        --text-muted:    #6e7681;
-        --text-light:    #484f58;
-        --border:        rgba(240,246,252,0.1);
-        --border-med:    rgba(240,246,252,0.15);
+        --text-secondary:#adbac7;
+        --text-muted:    #8b949e;
+        --text-light:    #768390;
+        --border:        rgba(240,246,252,0.15);
+        --border-med:    rgba(240,246,252,0.22);
         --shadow-sm:     0 1px 4px rgba(0,0,0,0.4);
         --shadow-md:     0 4px 20px rgba(0,0,0,0.5);
         --shadow-lg:     0 8px 40px rgba(0,0,0,0.6);
         --warning-bg:    #271c00;
-        --warning-border:#5a3e00;
-        --warning-text:  #d4a017;
+        --warning-border:#7a5500;
+        --warning-text:  #f0b429;
         --warning-strong:#fbbf24;
       }
 
@@ -255,10 +255,47 @@
       html.dark-mode .risk-action { color: #8b949e !important; }
       html.dark-mode .ring-value { color: #e6edf3 !important; }
       html.dark-mode .ring-label { color: #8b949e !important; }
-      html.dark-mode .ring-track { stroke: rgba(240,246,252,0.1) !important; }
+      html.dark-mode .ring-track { stroke: rgba(240,246,252,0.2) !important; }
       html.dark-mode .glc-title { color: #e6edf3 !important; }
       html.dark-mode .glc-tag { color: #8b949e !important; }
-      html.dark-mode .glc-num { color: rgba(240,246,252,0.2) !important; }
+      html.dark-mode .glc-num { color: rgba(240,246,252,0.45) !important; }
+      /* Learn More button (btn-ghost-white) on dark CTA section */
+      html.dark-mode .btn-ghost-white {
+        background-color: rgba(255, 255, 255, 0.12) !important;
+        color: #e6edf3 !important;
+        border-color: rgba(255, 255, 255, 0.35) !important;
+      }
+      html.dark-mode .btn-ghost-white:hover {
+        background-color: rgba(255, 255, 255, 0.22) !important;
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.6) !important;
+      }
+
+      /* Screening step numbers and dots */
+      html.dark-mode .pstep-dot {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: rgba(88, 166, 255, 0.45) !important;
+      }
+      html.dark-mode .pstep-number {
+        color: #79b8ff !important;
+      }
+      html.dark-mode .progress-step.ps-active .pstep-dot {
+        background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+        border-color: transparent !important;
+      }
+      html.dark-mode .progress-step.ps-active .pstep-number {
+        color: #ffffff !important;
+      }
+      html.dark-mode .progress-step.ps-active .pstep-label {
+        color: #79b8ff !important;
+      }
+      html.dark-mode .pstep-label {
+        color: #adbac7 !important;
+      }
+      html.dark-mode .progress-bar-wrapper {
+        background-color: #161b22 !important;
+        border-bottom-color: rgba(240,246,252,0.1) !important;
+      }
 
       /* Transition for smooth theme switching — body excluded to not interfere with CB filter */
       .dash-card, .nav-wrapper, .footer, .game-launch-card,
@@ -350,7 +387,7 @@
         color: #6B8CAE;
         margin: 0;
       }
-      html.dark-mode .rs-panel-subtitle { color: #8b949e; }
+      html.dark-mode .rs-panel-subtitle { color: #adbac7; }
 
       .rs-panel-section {
         padding: 14px 20px;
@@ -369,7 +406,7 @@
         color: #6B8CAE;
         margin-bottom: 10px;
       }
-      html.dark-mode .rs-section-label { color: #8b949e; }
+      html.dark-mode .rs-section-label { color: #adbac7; }
 
       /* ── Dark Toggle Switch ────────────────────────────────── */
       .rs-toggle-row {
@@ -392,7 +429,7 @@
         font-size: 11px;
         color: #6B8CAE;
       }
-      html.dark-mode .rs-toggle-desc { color: #8b949e; }
+      html.dark-mode .rs-toggle-desc { color: #adbac7; }
 
       #rs-dark-toggle {
         position: relative;
@@ -494,7 +531,7 @@
         font-size: 10px;
         color: #6B8CAE;
       }
-      html.dark-mode .rs-cb-pill-desc { color: #8b949e; }
+      html.dark-mode .rs-cb-pill-desc { color: #adbac7; }
       .rs-cb-pill.rs-cb-active .rs-cb-pill-label {
         color: #1D4ED8;
       }
@@ -530,7 +567,7 @@
         padding: 10px 20px 14px;
         line-height: 1.5;
       }
-      html.dark-mode .rs-panel-note { color: #8b949e; }
+      html.dark-mode .rs-panel-note { color: #adbac7; }
     `;
     document.head.appendChild(style);
   }
