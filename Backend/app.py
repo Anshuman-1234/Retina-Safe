@@ -1,56 +1,59 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import tensorflow as tf
 import numpy as np
-from tensorflow.keras.preprocessing import image
 import os
 import io
 from PIL import Image
 
-app = Flask(__name__)
-CORS(app)  # Allow frontend to access the API
+# Use ai-edge-litert (modern TFLite successor)
+try:
+    import ai_edge_litert.interpreter as tflite
+except ImportError:
+    try:
+        import tflite_runtime.interpreter as tflite
+    except ImportError:
+        import tensorflow.lite as tflite
 
-# Model paths configuration
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 MODEL_CONFIG = {
-    'amd': os.path.join(BASE_PATH, 'AMD', 'models', 'yes_no_classifier.keras'),
-    'cataract': os.path.join(BASE_PATH, 'Cataract', 'models', 'yes_no_classifier.keras'),
-    'diabetes': os.path.join(BASE_PATH, 'Diabetes', 'models', 'yes_no_classifier.keras'),
-    'glaucoma': os.path.join(BASE_PATH, 'Glaucoma', 'models', 'yes_no_classifier.keras'),
-    'hypertensive': os.path.join(BASE_PATH, 'Hypertensive_Retinopathy', 'models', 'yes_no_classifier.keras'),
-    'normal': os.path.join(BASE_PATH, 'Normal', 'models', 'yes_no_classifier.keras')
+    'amd': os.path.join(BASE_PATH, 'AMD', 'models', 'yes_no_classifier.tflite'),
+    'cataract': os.path.join(BASE_PATH, 'Cataract', 'models', 'yes_no_classifier.tflite'),
+    'diabetes': os.path.join(BASE_PATH, 'Diabetes', 'models', 'yes_no_classifier.tflite'),
+    'glaucoma': os.path.join(BASE_PATH, 'Glaucoma', 'models', 'yes_no_classifier.tflite'),
+    'hypertensive': os.path.join(BASE_PATH, 'Hypertensive_Retinopathy', 'models', 'yes_no_classifier.tflite'),
+    'normal': os.path.join(BASE_PATH, 'Normal', 'models', 'yes_no_classifier.tflite')
 }
 
-# Pre-load models for performance
-models = {}
-print("Loading models... This may take a moment.")
+# Pre-load TFLite Interpreters
+interpreters = {}
+print("Loading TFLite models...")
 for key, path in MODEL_CONFIG.items():
     if os.path.exists(path):
         try:
-            models[key] = tf.keras.models.load_model(path)
-            print(f"Loaded {key} model from {path}")
+            interpreter = tflite.Interpreter(model_path=path)
+            interpreter.allocate_tensors()
+            interpreters[key] = {
+                'interpreter': interpreter,
+                'input_details': interpreter.get_input_details(),
+                'output_details': interpreter.get_output_details()
+            }
+            print(f"Loaded {key} TFLite model.")
         except Exception as e:
-            print(f"Error loading {key} model: {e}")
-    else:
-        print(f"Warning: Model not found for {key} at {path}")
+            print(f"Error loading {key}: {e}")
 
 def preprocess_image(img_bytes):
-    # Load image from bytes
     img = Image.open(io.BytesIO(img_bytes))
-    # Convert to RGB if necessary
     if img.mode != 'RGB':
         img = img.convert('RGB')
-    # Resize to model input size
     img = img.resize((224, 224))
-    # Convert to array
-    img_array = image.img_to_array(img)
-    # Scale to [-1, 1] as MobileNetV2 expects
-    img_array = (img_array / 127.5) - 1.0
-    # Add batch dimension
-    img_array = np.expand_dims(img_array, axis=0)
-    return img_array
+    img_array = np.array(img, dtype=np.float32)
+    img_array = (img_array / 127.5) - 1.0  # Normalize to [-1, 1]
+    return np.expand_dims(img_array, axis=0)
 
-@app.route('/predict', methods=['POST'])
+@app.route('/api/predict', methods=['POST'])
 def predict():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
@@ -59,37 +62,38 @@ def predict():
     img_bytes = file.read()
     
     try:
-        img_array = preprocess_image(img_bytes)
+        import time
+        start_time = time.time()
+        
+        input_data = preprocess_image(img_bytes)
         results = []
         
-        # Run prediction for each model
-        for key in MODEL_CONFIG.keys():
-            if key in models:
-                prediction = models[key].predict(img_array, verbose=0)
-                # For yes/no classifier, usually index 0 is high score for positive
-                score = float(prediction[0][0])
-                results.append({
-                    'id': key,
-                    'score': score
-                })
-            else:
-                results.append({
-                    'id': key,
-                    'score': 0.0,
-                    'error': 'Model not loaded'
-                })
-        
+        for key, model_info in interpreters.items():
+            m_start = time.time()
+            interpreter = model_info['interpreter']
+            input_details = model_info['input_details']
+            output_details = model_info['output_details']
+            
+            interpreter.set_tensor(input_details[0]['index'], input_data)
+            interpreter.invoke()
+            
+            prediction = interpreter.get_tensor(output_details[0]['index'])
+            score = float(prediction[0][0])
+            results.append({'id': key, 'score': score})
+            print(f"Model {key} took {time.time() - m_start:.3f}s")
+            
+        print(f"Total prediction time: {time.time() - start_time:.3f}s")
         return jsonify({'results': results})
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
 def health():
     return jsonify({
         'status': 'healthy',
-        'models_loaded': list(models.keys())
+        'models_loaded': list(interpreters.keys())
     })
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
