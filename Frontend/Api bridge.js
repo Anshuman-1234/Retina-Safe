@@ -29,6 +29,7 @@ window.RetinaSafeAPI = (function () {
   const hostname = window.location.hostname;
   const isLocal = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]' || hostname === '::1' || hostname === '';
   const BASE_URL = window.RS_API_BASE || (isLocal ? 'http://localhost:5000/api' : '/api');
+  const SERVER_ORIGIN = BASE_URL.replace('/api', '');
 
   console.log(`%c[RetinaSafe API] %cInitialized with BASE_URL: ${BASE_URL}`, "color: #3b82f6; font-weight: bold", "color: inherit");
   console.log(`[RetinaSafe API] Detected Hostname: ${hostname}`);
@@ -124,6 +125,7 @@ window.RetinaSafeAPI = (function () {
     return {
       status: 'done',
       predictions: predictions,
+      image_url: backendResults.image_url ? (SERVER_ORIGIN + backendResults.image_url) : null,
       processed_at: new Date().toISOString()
     };
   }

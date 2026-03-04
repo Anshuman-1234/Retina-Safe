@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RetinaSafe — Dashboard</title>
-  <meta name="description" content="RetinaSafe patient dashboard. View your screening history, risk scores, and game performance." />
+  <meta name="description"
+    content="RetinaSafe patient dashboard. View your screening history, risk scores, and game performance." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="dashboard.css" />
+  <script src="i18n.js"></script>
 </head>
+
 <body class="dashboard-page">
   <a href="#main" class="skip-link">Skip to main content</a>
 
@@ -22,9 +28,9 @@
       <div class="container">
         <div class="dash-hero-inner">
           <div>
-            <p class="eyebrow">Patient Dashboard</p>
+            <p class="eyebrow" data-i18n="dash_title">Patient Dashboard</p>
             <h1 class="dash-title">Welcome back</h1>
-            <p class="dash-subtitle">Last screening: <span id="last-screening-date">—</span></p>
+            <p class="dash-subtitle" data-i18n="dash_subtitle">Your eye health metrics at a glance</p>
           </div>
           <a href="screening.html" class="btn btn-primary btn-lg">+ New Screening</a>
         </div>
@@ -34,7 +40,9 @@
     <!-- Disclaimer -->
     <div class="disclaimer-banner" role="note">
       <div class="container">
-        <p><strong>⚠ Medical Disclaimer:</strong> This dashboard displays screening data for informational purposes only. All results must be reviewed with a qualified ophthalmologist before any clinical decisions are made.</p>
+        <p><strong>⚠ Medical Disclaimer:</strong> This dashboard displays screening data for informational purposes
+          only. All results must be reviewed with a qualified ophthalmologist before any clinical decisions are made.
+        </p>
       </div>
     </div>
 
@@ -48,9 +56,8 @@
             <div class="risk-score-ring" aria-label="Risk score gauge">
               <svg viewBox="0 0 120 120">
                 <circle class="ring-track" cx="60" cy="60" r="50" />
-                <circle class="ring-fill" id="risk-ring" cx="60" cy="60" r="50"
-                        stroke-dasharray="314.16"
-                        stroke-dashoffset="314.16" />
+                <circle class="ring-fill" id="risk-ring" cx="60" cy="60" r="50" stroke-dasharray="314.16"
+                  stroke-dashoffset="314.16" />
               </svg>
               <div class="ring-center">
                 <span class="ring-value" id="overall-score">—</span>
@@ -70,17 +77,18 @@
       </section>
 
       <!-- ── CONDITION BREAKDOWN ── -->
-      <section class="dash-card fade-up" aria-labelledby="conditions-dash-heading" data-delay="100">
+      <section class="dash-card breakdown-card fade-up" aria-labelledby="conditions-dash-heading" data-delay="100">
         <h2 id="conditions-dash-heading" class="card-title">Per-Condition Risk</h2>
         <p class="card-sub">Probability estimates derived from AI retinal analysis, adjusted by vision game scores.</p>
         <div class="condition-bars" id="condition-bars">
           <!-- Injected by dashboard.js -->
-          <div class="cbar-placeholder">No screening data yet. <a href="screening.html">Start your first screening →</a></div>
+          <div class="cbar-placeholder">No screening data yet. <a href="screening.html">Start your first screening →</a>
+          </div>
         </div>
       </section>
 
       <!-- ── VISION GAMES PANEL ── -->
-      <section class="dash-card fade-up" aria-labelledby="games-dash-heading" data-delay="150">
+      <section class="dash-card games-panel-card fade-up" aria-labelledby="games-dash-heading" data-delay="150">
         <div class="card-header-row">
           <div>
             <h2 id="games-dash-heading" class="card-title">Vision Games</h2>
@@ -120,7 +128,7 @@
       </section>
 
       <!-- ── SCREENING HISTORY ── -->
-      <section class="dash-card fade-up" aria-labelledby="history-heading" data-delay="200">
+      <section class="dash-card history-card fade-up" aria-labelledby="history-heading" data-delay="200">
         <div class="card-header-row">
           <div>
             <h2 id="history-heading" class="card-title">Screening History</h2>
@@ -131,8 +139,9 @@
         <div id="history-list">
           <div class="empty-state">
             <span class="empty-icon">📋</span>
-            <p>No past screenings on file.</p>
-            <a href="screening.html" class="btn btn-primary btn-sm">Start First Screening</a>
+            <p data-i18n="dash_no_history">No past screenings on file.</p>
+            <a href="screening.html" class="btn btn-primary btn-sm" data-i18n="btn_start_screening">Start First
+              Screening</a>
           </div>
         </div>
       </section>
@@ -164,8 +173,9 @@
   <footer class="footer" role="contentinfo">
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. Not a medical device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
-        <p class="footer-copyright">© 2025 RetinaSafe · Team Rusty Brain</p>
+        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. Not a medical
+          device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
+        <p class="footer-copyright">© 2026 RetinaSafe · Team Rusty Brain</p>
       </div>
     </div>
   </footer>
@@ -175,4 +185,5 @@
   <script src="dashboard.js"></script>
   <script src="theme.js"></script>
 </body>
+
 </html>

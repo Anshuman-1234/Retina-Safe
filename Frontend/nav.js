@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const linksHTML = pages.map(p => {
     const active = p.href === currentPage ? ' nav-link-active' : '';
-    return `<li><a href="${p.href}" class="nav-link${active}">${p.label}</a></li>`;
+    const i18nKey = p.label.toLowerCase() === 'home' ? 'nav_home' : (p.label.toLowerCase() === 'screening' ? 'nav_screening' : 'nav_dashboard');
+    return `<li><a href="${p.href}" class="nav-link${active}" data-i18n="${i18nKey}">${p.label}</a></li>`;
   }).join('');
 
   const navHTML = `
@@ -65,8 +66,15 @@ document.addEventListener('DOMContentLoaded', () => {
     </a>
     <ul class="nav-links" role="list">${linksHTML}</ul>
     <div class="nav-actions">
-      <span class="nav-disclaimer-pill" aria-label="Disclaimer">Screening tool only — not a diagnosis</span>
-      <a href="screening.html" class="btn btn-primary btn-sm">Start Screening</a>
+      <div class="lang-selector">
+        <select id="lang-select" class="lang-select" aria-label="Select Language">
+          <option value="en" selected>English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="or">ଓଡ଼ିଆ (Odia)</option>
+        </select>
+      </div>
+      <span class="nav-disclaimer-pill" aria-label="Disclaimer" data-i18n="nav_disclaimer">Screening tool only — not a diagnosis</span>
+      <a href="screening.html" class="btn btn-primary btn-sm" data-i18n="btn_start_screening">Start Screening</a>
     </div>
   </nav>
 </header>`;

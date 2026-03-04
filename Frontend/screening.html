@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="screening.css" />
   <!-- Correct jspdf script -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="i18n.js"></script>
   <style>
     .upload-status {
       font-size: .85rem;
@@ -110,9 +111,9 @@
         </span>
       </a>
       <ul class="nav-links" role="list">
-        <li><a href="index.html" class="nav-link">Home</a></li>
-        <li><a href="screening.html" class="nav-link nav-link-active">Screening</a></li>
-        <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+        <li><a href="index.html" class="nav-link" data-i18n="nav_home">Home</a></li>
+        <li><a href="screening.html" class="nav-link nav-link-active" data-i18n="nav_screening">Screening</a></li>
+        <li><a href="dashboard.html" class="nav-link" data-i18n="nav_dashboard">Dashboard</a></li>
       </ul>
       <div class="nav-actions">
         <div class="lang-selector">
@@ -124,7 +125,8 @@
         </div>
         <span id="backend-status-pill" class="nav-disclaimer-pill" style="background: #f3f4f6; color: #6b7280;">Checking
           AI...</span>
-        <span class="nav-disclaimer-pill" aria-label="Disclaimer">Screening tool only</span>
+        <span class="nav-disclaimer-pill" aria-label="Disclaimer" data-i18n="nav_disclaimer">Screening tool only — not a
+          diagnosis</span>
       </div>
     </nav>
   </header>
@@ -171,8 +173,9 @@
         <section class="screen-step ps-step-active" id="step-1" aria-labelledby="s1-heading">
           <div class="step-header">
             <p class="eyebrow">Step 1 of 4</p>
-            <h1 id="s1-heading" class="step-title">Medical History</h1>
-            <p class="step-desc">This information adjusts the AI model's risk weighting for your profile. All fields are
+            <h1 id="s1-heading" class="step-title" data-i18n="s1_heading">Medical History</h1>
+            <p class="step-desc" data-i18n="s1_desc">This information adjusts the AI model's risk weighting for your
+              profile. All fields are
               optional but improve accuracy.</p>
           </div>
           <form id="history-form" novalidate>
@@ -249,8 +252,9 @@
         <section class="screen-step" id="step-2" aria-labelledby="s2-heading">
           <div class="step-header">
             <p class="eyebrow">Step 2 of 4</p>
-            <h1 id="s2-heading" class="step-title">Upload Fundus Image</h1>
-            <p id="s2-desc" class="step-desc">Upload a retinal fundus photograph. This can be captured via a fundus
+            <h1 id="s2-heading" class="step-title" data-i18n="s2_heading">Upload Fundus Image</h1>
+            <p id="s2-desc" class="step-desc" data-i18n="s2_desc">Upload a retinal fundus photograph. This can be
+              captured via a fundus
               camera,
               smartphone adapter, or provided by your clinic.</p>
           </div>
@@ -259,8 +263,9 @@
           <div class="warning-alert" id="upload-warning">
             <div class="warning-alert-icon">⚠</div>
             <div class="warning-alert-content">
-              <h4 id="warn-title">Important Requirement</h4>
-              <p id="warn-text">Please upload only clear, clinically valid retinal fundus images. Providing unrelated
+              <h4 id="warn-title" data-i18n="warn_title">Important Requirement</h4>
+              <p id="warn-text" data-i18n="warn_text">Please upload only clear, clinically valid retinal fundus images.
+                Providing unrelated
                 images (faces, landscapes, or text) will lead to <strong>unexpected and invalid medical risk
                   reports</strong>. Ensure the optic disc is clearly visible.</p>
             </div>
@@ -279,7 +284,7 @@
               <p class="upload-title">Drop your fundus image here</p>
               <p class="upload-sub">or <span class="upload-link">browse to upload</span></p>
               <div class="upload-divider"><span>OR</span></div>
-              <button type="button" class="btn btn-outline btn-camera" id="open-camera">
+              <button type="button" class="btn btn-outline btn-camera" id="open-camera" data-i18n="btn_capture">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
                   <circle cx="12" cy="13" r="4" />
@@ -292,15 +297,16 @@
             <div id="camera-view" class="hidden">
               <video id="camera-feed" autoplay playsinline></video>
               <div class="camera-controls">
-                <button type="button" class="btn btn-primary" id="capture-image">Capture</button>
-                <button type="button" class="btn btn-outline btn-switch-cam" id="switch-camera">
+                <button type="button" class="btn btn-primary" id="capture-image"
+                  data-i18n="btn_capture">Capture</button>
+                <button type="button" class="btn btn-outline btn-switch-cam" id="switch-camera" data-i18n="btn_switch">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path
                       d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
                   </svg>
                   Switch Camera
                 </button>
-                <button type="button" class="btn btn-outline" id="close-camera">Cancel</button>
+                <button type="button" class="btn btn-outline" id="close-camera" data-i18n="btn_cancel">Cancel</button>
               </div>
               <canvas id="capture-canvas" class="hidden"></canvas>
             </div>
@@ -338,8 +344,9 @@
         <section class="screen-step" id="step-3" aria-labelledby="s3-heading">
           <div class="step-header">
             <p class="eyebrow">Step 3 of 4</p>
-            <h1 id="s3-heading" class="step-title">Vision Games</h1>
-            <p class="step-desc">Complete all four assessments. Each game tests a different aspect of functional vision.
+            <h1 id="s3-heading" class="step-title" data-i18n="s3_heading">Vision Games</h1>
+            <p class="step-desc" data-i18n="s3_desc">Complete all four assessments. Each game tests a different aspect
+              of functional vision.
               Click <strong>Launch Game</strong> to open it — complete it, then return here to continue.</p>
           </div>
 
@@ -363,17 +370,35 @@
         </section>
 
         <!-- STEP 4: Combined Report -->
-        <section class="screen-step" id="step-4" aria-labelledby="s4-heading">
+        <section class="screen-step" id="step-4" aria-labelledby="s4_heading">
           <div id="report-loading">
-            <div class="report-spinner" aria-hidden="true"></div>
-            <div class="report-loading-text"><strong>Generating your report…</strong><br>Combining AI model predictions
-              with your vision game results.</div>
+            <div class="evaluation-container">
+              <div class="eval-ready-view">
+                <div class="eval-hero-wrapper">
+                  <img src="assets/retina_hero.png" alt="RetinaSafe" class="eval-hero-img">
+                </div>
+                <h1 class="eval-status-title">Your Evaluation Is Ready</h1>
+              </div>
+
+              <div class="eval-linear-stack">
+                <div class="eval-card eval-data-card">
+                  <p class="eval-card-label">Neural Network Confidence Profile</p>
+                  <!-- <div id="eval-results-list" class="eval-results">
+                    <div class="eval-result-row skeleton"></div>
+                    <div class="eval-result-row skeleton"></div>
+                    <div class="eval-result-row skeleton"></div>
+                  </div> -->
+                  <p id="rs-scan-status" class="rs-scan-status">Access your report Below...</p>
+                </div>
+              </div>
+            </div>
           </div>
           <div id="report-content" hidden>
             <div class="step-header">
               <p class="eyebrow">Step 4 of 4 · Your Report</p>
-              <h1 id="s4-heading" class="step-title">Screening Complete</h1>
-              <p class="step-desc">This is a preliminary risk assessment only. Review all results with a qualified
+              <h1 id="s4_heading" class="step-title" data-i18n="s4_heading">Screening Complete</h1>
+              <p class="step-desc" data-i18n="s4_desc">This is a preliminary risk assessment only. Review all results
+                with a qualified
                 ophthalmologist before taking any action.</p>
             </div>
             <div class="report-score-card" id="report-score-card">
@@ -452,7 +477,8 @@
   <footer class="footer" role="contentinfo">
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. Not a medical
+        <p class="footer-disclaimer" role="note" data-i18n="footer_disclaimer">RetinaSafe is a screening and risk
+          stratification tool. Not a medical
           device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
         <p class="footer-copyright">© 2025 RetinaSafe · Team Rusty Brain</p>
       </div>
