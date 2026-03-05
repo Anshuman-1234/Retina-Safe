@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RetinaSafe — Eye-Focus Calibration</title>
+    <meta name="description"
+        content="An interactive eye-focus calibration tool that tracks visual latency and dynamically adjusts UI readability." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        /* ══════════════════════════════════════════════════
+       1. Design Tokens (RetinaSafe Palette)
+       ══════════════════════════════════════════════════ */
+        :root {
+            /* ── Primary Blue Palette ── */
+            --blue-900: #1E3A5F;
+            --blue-800: #1E40AF;
+            --blue-700: #1D4ED8;
+            --blue-600: #2563EB;
+            --blue-500: #3B82F6;
+            --blue-400: #60A5FA;
+            --blue-300: #93C5FD;
+            --blue-200: #BFDBFE;
+            --blue-100: #DBEAFE;
+            --blue-50: #EFF6FF;
+            --page-bg: #F8FBFF;
+            --white: #FFFFFF;
+
+            /* ── Text Colours ── */
+            --text-primary: #1E3A5F;
+            --text-secondary: #3D5A80;
+            --text-muted: #6B8CAE;
+            --text-light: #A8C0D6;
+
+            /* ── Borders & Shadows ── */
+            --border: #BFDBFE;
+            --shadow-sm: 0 1px 3px rgba(30, 58, 95, 0.06);
+            --shadow-md: 0 4px 16px rgba(30, 58, 95, 0.08);
+            --shadow-lg: 0 8px 32px rgba(30, 58, 95, 0.10);
+
+            /* ── Radius ── */
+            --radius: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+
+            /* ── Font Families ── */
+            --font-display: 'Lora', Georgia, serif;
+            --font-body: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+
+            /* ── Adjustable Properties (modified by calibration) ── */
+            --body-font-size: 18px;
+            --line-height: 1.75;
+            --body-text-color: var(--text-secondary);
+        }
+
+        /* ══════════════════════════════════════════════════
+       2. Global Reset & Base
+       ══════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: var(--body-font-size);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-body);
+            font-weight: 400;
+            color: var(--body-text-color);
+            line-height: var(--line-height);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* ══════════════════════════════════════════════════
+       3. Iris Motif Background — Retinal Depth Radial
+       ══════════════════════════════════════════════════ */
+        .iris-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 30% 30% at 50% 50%,
+                    rgba(30, 58, 95, 0.06) 0%,
+                    transparent 100%),
+                radial-gradient(ellipse 55% 55% at 50% 50%,
+                    rgba(37, 99, 235, 0.05) 0%,
+                    transparent 100%),
+                radial-gradient(ellipse 80% 80% at 50% 50%,
+                    rgba(59, 130, 246, 0.04) 0%,
+                    transparent 100%),
+                radial-gradient(ellipse 110% 110% at 50% 50%,
+                    rgba(147, 197, 253, 0.06) 0%,
+                    transparent 100%),
+                radial-gradient(ellipse 140% 140% at 50% 50%,
+                    var(--blue-50) 0%,
+                    var(--page-bg) 100%);
+        }
+
+        /* Subtle animated concentric pulse */
+        .iris-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 50% 50%,
+                    transparent 20%,
+                    rgba(37, 99, 235, 0.015) 30%,
+                    transparent 40%,
+                    rgba(37, 99, 235, 0.01) 55%,
+                    transparent 65%,
+                    rgba(37, 99, 235, 0.008) 80%,
+                    transparent 100%);
+            animation: irisPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes irisPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+        }
+
+        /* ══════════════════════════════════════════════════
+       4. Typography
+       ══════════════════════════════════════════════════ */
+        h1,
+        h2,
+        h3 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--blue-900);
+            line-height: 1.25;
+        }
+
+        /* ── Skip Link ── */
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--blue-600);
+            color: var(--white);
+            border-radius: var(--radius);
+            font-family: var(--font-body);
+            font-weight: 600;
+            text-decoration: none;
+            z-index: 500;
+            transition: top 0.2s ease;
+        }
+
+        .skip-link:focus {
+            top: 1rem;
+        }
+
+        /* ── Global Focus ── */
+        :focus-visible {
+            outline: 3px solid var(--blue-400);
+            outline-offset: 3px;
+        }
+
+        /* ══════════════════════════════════════════════════
+       5. Glassmorphism Card Base
+       ══════════════════════════════════════════════════ */
+        .glass-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(191, 219, 254, 0.5);
+            border-radius: var(--radius-xl);
+            box-shadow:
+                0 8px 32px rgba(30, 58, 95, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        /* ══════════════════════════════════════════════════
+       6. Start Screen
+       ══════════════════════════════════════════════════ */
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 90%;
+            max-width: 580px;
+            padding: 3rem 2.5rem;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .eyebrow {
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--blue-600);
+            margin-bottom: 0.4rem;
+        }
+
+        .eyebrow::before {
+            content: "—  ";
+        }
+
+        #start-screen h1 {
+            font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .start-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 480px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        /* Feature pills */
+        .feature-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 1rem;
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--blue-700);
+        }
+
+        .feature-pill svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--blue-500);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Start Button */
+        .btn-primary {
+            padding: 0.85rem 2.5rem;
+            border-radius: 100px;
+            background: var(--blue-600);
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 14px rgba(37, 99, 235, 0.30);
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-700);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ══════════════════════════════════════════════════
+       7. Calibration Arena
+       ══════════════════════════════════════════════════ */
+        #calibration-arena {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            cursor: crosshair;
+        }
+
+        #calibration-arena.active {
+            display: block;
+        }
+
+        /* The moving focus dot */
+        .focus-dot {
+            position: absolute;
+            width: clamp(18px, 3vw, 36px);
+            height: clamp(18px, 3vw, 36px);
+            border-radius: 50%;
+            background: var(--blue-600);
+            box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
+            transition: background-color 0.6s ease, box-shadow 0.6s ease;
+            pointer-events: none;
+            z-index: 15;
+            will-change: transform;
+        }
+
+        .focus-dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(37, 99, 235, 0.2);
+            animation: dotRipple 2s ease-out infinite;
+        }
+
+        @keyframes dotRipple {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(2.2);
+                opacity: 0;
+            }
+        }
+
+        .focus-dot.struggling {
+            background: var(--blue-800);
+            box-shadow: 0 0 24px rgba(30, 64, 175, 0.35);
+        }
+
+        .focus-dot.struggling::after {
+            border-color: rgba(30, 64, 175, 0.25);
+        }
+
+        /* Cursor trail */
+        .cursor-trail {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.15);
+            pointer-events: none;
+            z-index: 12;
+            transition: opacity 0.3s;
+        }
+
+        /* ══════════════════════════════════════════════════
+       8. Live Metrics Panel
+       ══════════════════════════════════════════════════ */
+        .metrics-panel {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: none;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0.75rem 1.75rem;
+            background: rgba(255, 255, 255, 0.80);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(191, 219, 254, 0.45);
+            border-radius: 100px;
+            box-shadow: 0 4px 24px rgba(30, 58, 95, 0.08);
+        }
+
+        .metrics-panel.visible {
+            display: flex;
+            animation: fadeUp 0.4s ease forwards;
+        }
+
+        .metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1rem;
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--blue-900);
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 0.62rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        .metric-divider {
+            width: 1px;
+            height: 28px;
+            background: var(--blue-200);
+        }
+
+        /* Progress bar at bottom */
+        .progress-track {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--blue-100);
+            z-index: 20;
+            display: none;
+        }
+
+        .progress-track.visible {
+            display: block;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--blue-400), var(--blue-600));
+            border-radius: 0 2px 2px 0;
+            transition: width 0.3s linear;
+        }
+
+        /* Status indicator (struggle state) */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.4s ease;
+        }
+
+        .status-badge.optimal {
+            background: var(--blue-50);
+            color: var(--blue-600);
+            border: 1px solid var(--blue-200);
+        }
+
+        .status-badge.struggling {
+            background: rgba(30, 64, 175, 0.08);
+            color: var(--blue-800);
+            border: 1px solid rgba(30, 64, 175, 0.2);
+        }
+
+        .status-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-badge.optimal .status-indicator {
+            animation: gentlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes gentlePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        /* ══════════════════════════════════════════════════
+       9. Results Screen
+       ══════════════════════════════════════════════════ */
+        #results-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 90%;
+            max-width: 520px;
+            padding: 24px 32px 18px;
+            margin: 16px auto;
+            z-index: 2;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+
+        #results-screen.visible {
+            display: flex;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        #results-screen .eyebrow {
+            margin-bottom: 4px;
+        }
+
+        #results-screen h2 {
+            font-size: 22px;
+            margin-bottom: 2px;
+        }
+
+        .results-subtitle {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        /* Metric cards row */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 14px;
+        }
+
+        .result-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 10px 6px;
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: var(--radius-lg);
+        }
+
+        .result-card-value {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--blue-600);
+            line-height: 1;
+        }
+
+        .result-card-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+
+        /* Adjustments summary */
+        .adjustments-list {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 12px;
+        }
+
+        .adjustments-list h3 {
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: var(--blue-900);
+        }
+
+        .adjustment-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: var(--blue-50);
+            border: 1px solid var(--blue-200);
+            border-radius: var(--radius);
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .adjustment-item svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: var(--blue-500);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .adjustment-item.inactive {
+            opacity: 0.5;
+            background: transparent;
+            border-color: var(--blue-100);
+        }
+
+        .adjustment-item .check-icon {
+            display: none;
+        }
+
+        .adjustment-item .dash-icon {
+            display: block;
+        }
+
+        .adjustment-item.applied .check-icon {
+            display: block;
+        }
+
+        .adjustment-item.applied .dash-icon {
+            display: none;
+        }
+
+        .btn-outline {
+            padding: 8px 28px;
+            border-radius: 100px;
+            background: transparent;
+            border: 2px solid var(--blue-300);
+            color: var(--blue-600);
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-outline:hover {
+            background: var(--blue-50);
+            border-color: var(--blue-600);
+            transform: translateY(-1px);
+        }
+
+        /* ══════════════════════════════════════════════════
+       10. Countdown Overlay
+       ══════════════════════════════════════════════════ */
+        .countdown-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(248, 251, 255, 0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        .countdown-overlay.active {
+            display: flex;
+        }
+
+        .countdown-number {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(4rem, 12vw, 8rem);
+            color: var(--blue-600);
+            animation: countPop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes countPop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ══════════════════════════════════════════════════
+       11. Screen-reader Only
+       ══════════════════════════════════════════════════ */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* ══════════════════════════════════════════════════
+       12. Reduced Motion
+       ══════════════════════════════════════════════════ */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ══════════════════════════════════════════════════
+       13. Responsive
+       ══════════════════════════════════════════════════ */
+        @media (max-width: 640px) {
+
+            #start-screen,
+            #results-screen {
+                padding: 2rem 1.5rem;
+                border-radius: var(--radius-lg);
+                margin: 0.5rem;
+            }
+
+            .metrics-panel {
+                gap: 0.8rem;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .metric-value {
+                font-size: 0.95rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .result-card {
+                flex-direction: row;
+                justify-content: center;
+                gap: 0.6rem;
+                padding: 0.85rem 1rem;
+            }
+
+            .feature-row {
+                gap: 0.4rem;
+            }
+
+            .feature-pill {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.7rem;
+            }
+        }
+
+        /* ══════════════════════════════════════════════════
+       14. Medical Disclaimer
+       ══════════════════════════════════════════════════ */
+        .disclaimer {
+            position: relative;
+            z-index: 5;
+            font-size: 10px;
+            color: var(--text-light);
+            text-align: center;
+            max-width: 380px;
+            line-height: 1.35;
+            padding: 8px 8px 0;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Iris Motif Background -->
+    <div class="iris-bg" aria-hidden="true"></div>
+
+    <main id="main">
+
+        <!-- ═══════ Start Screen ═══════ -->
+        <section id="start-screen" class="glass-card" aria-labelledby="start-title">
+            <p class="eyebrow">RetinaSafe Calibration</p>
+            <h1 id="start-title">Eye-Focus Calibration</h1>
+            <p class="start-subtitle">
+                Follow a moving dot with your cursor or finger. This tool measures your
+                visual tracking latency and auto-adjusts readability settings for you.
+            </p>
+
+            <div class="feature-row">
+                <span class="feature-pill">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8z" />
+                    </svg>
+                    Latency Tracking
+                </span>
+                <span class="feature-pill">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                    </svg>
+                    Auto Font Resize
+                </span>
+                <span class="feature-pill">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 6v6l4 2" />
+                    </svg>
+                    30s Session
+                </span>
+            </div>
+
+            <button class="btn-primary" id="btn-begin" type="button">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="1" />
+                    <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8z" />
+                </svg>
+                Begin Calibration
+            </button>
+
+            <p class="disclaimer">
+                This tool is for informational purposes only and does not constitute a medical
+                assessment. Consult an eye-care professional for clinical evaluations.
+            </p>
+        </section>
+
+        <!-- ═══════ Results Screen ═══════ -->
+        <section id="results-screen" class="glass-card" aria-labelledby="results-title">
+            <p class="eyebrow">Calibration Complete</p>
+            <h2 id="results-title">Your Results</h2>
+            <p class="results-subtitle">Below is a summary of your tracking performance and any adjustments applied.</p>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <span class="result-card-value" id="res-avg-latency">—</span>
+                    <span class="result-card-label">Avg Latency</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-card-value" id="res-accuracy">—</span>
+                    <span class="result-card-label">Accuracy</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-card-value" id="res-struggle">—</span>
+                    <span class="result-card-label">Struggle %</span>
+                </div>
+            </div>
+
+            <div class="adjustments-list">
+                <h3>UI Adjustments</h3>
+                <div class="adjustment-item inactive" id="adj-fontsize">
+                    <svg class="check-icon" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <svg class="dash-icon" viewBox="0 0 24 24">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span>Font size increased to <strong>20px</strong></span>
+                </div>
+                <div class="adjustment-item inactive" id="adj-lineheight">
+                    <svg class="check-icon" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <svg class="dash-icon" viewBox="0 0 24 24">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span>Line height increased to <strong>2.0</strong></span>
+                </div>
+                <div class="adjustment-item inactive" id="adj-contrast">
+                    <svg class="check-icon" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <svg class="dash-icon" viewBox="0 0 24 24">
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span>Contrast boosted to <strong>--text-primary</strong></span>
+                </div>
+            </div>
+
+            <button class="btn-outline" id="btn-restart" type="button">Recalibrate</button>
+
+            <p class="disclaimer">
+                This tool is for informational purposes only and does not constitute a medical
+                assessment. Consult an eye-care professional for clinical evaluations.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- ═══════ Calibration Arena ═══════ -->
+    <div id="calibration-arena" role="application" aria-label="Eye focus calibration area">
+        <div class="iris-bg" aria-hidden="true"></div>
+        <div class="focus-dot" id="focus-dot"></div>
+        <div class="cursor-trail" id="cursor-trail"></div>
+    </div>
+
+    <!-- ═══════ Metrics Panel ═══════ -->
+    <div class="metrics-panel" id="metrics-panel" aria-live="polite">
+        <div class="metric">
+            <span class="metric-value" id="metric-latency">0 px</span>
+            <span class="metric-label">Distance</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric">
+            <span class="metric-value" id="metric-time">30s</span>
+            <span class="metric-label">Remaining</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="status-badge optimal" id="status-badge">
+            <span class="status-indicator"></span>
+            <span id="status-text">Optimal</span>
+        </div>
+    </div>
+
+    <!-- ═══════ Progress Bar ═══════ -->
+    <div class="progress-track" id="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <!-- ═══════ Countdown Overlay ═══════ -->
+    <div class="countdown-overlay" id="countdown-overlay">
+        <span class="countdown-number" id="countdown-number">3</span>
+    </div>
+
+    <!-- Screen reader announcer -->
+    <div aria-live="polite" class="sr-only" id="announcer"></div>
+
+    <script>
+        (() => {
+            'use strict';
+
+            /* ══════════════════════════════════════════════════
+               Configuration
+               ══════════════════════════════════════════════════ */
+            const CALIBRATION_DURATION_S = 30;
+            const STRUGGLE_THRESHOLD_PX = 120;
+            const ROLLING_WINDOW = 20;
+            const SPEED_MIN = 0.6;
+            const SPEED_MAX = 1.4;
+
+            /* ══════════════════════════════════════════════════
+               DOM References
+               ══════════════════════════════════════════════════ */
+            const startScreen = document.getElementById('start-screen');
+            const resultsScreen = document.getElementById('results-screen');
+            const btnBegin = document.getElementById('btn-begin');
+            const btnRestart = document.getElementById('btn-restart');
+            const arena = document.getElementById('calibration-arena');
+            const focusDot = document.getElementById('focus-dot');
+            const cursorTrail = document.getElementById('cursor-trail');
+            const metricsPanel = document.getElementById('metrics-panel');
+            const metricLatency = document.getElementById('metric-latency');
+            const metricTime = document.getElementById('metric-time');
+            const statusBadge = document.getElementById('status-badge');
+            const statusText = document.getElementById('status-text');
+            const progressTrack = document.getElementById('progress-track');
+            const progressFill = document.getElementById('progress-fill');
+            const countdownOverlay = document.getElementById('countdown-overlay');
+            const countdownNumber = document.getElementById('countdown-number');
+            const announcer = document.getElementById('announcer');
+            const resAvgLatency = document.getElementById('res-avg-latency');
+            const resAccuracy = document.getElementById('res-accuracy');
+            const resStruggle = document.getElementById('res-struggle');
+            const adjFontsize = document.getElementById('adj-fontsize');
+            const adjLineheight = document.getElementById('adj-lineheight');
+            const adjContrast = document.getElementById('adj-contrast');
+
+            const root = document.documentElement;
+
+            /* ══════════════════════════════════════════════════
+               State
+               ══════════════════════════════════════════════════ */
+            let calibrating = false;
+            let startTime = 0;
+            let rafId = null;
+            let cursorX = 0;
+            let cursorY = 0;
+            let dotX = 0;
+            let dotY = 0;
+            let distanceSamples = [];
+            let allDistances = [];
+            let isStruggling = false;
+            let struggleSamples = 0;
+            let totalSamples = 0;
+            let adjustmentsApplied = { fontSize: false, lineHeight: false, contrast: false };
+
+            /* ══════════════════════════════════════════════════
+               Lissajous Path Parameters
+               ══════════════════════════════════════════════════ */
+            const LIS_A = 3;    // frequency ratio X
+            const LIS_B = 2;    // frequency ratio Y
+            const PHASE = Math.PI / 4;  // phase offset
+
+            /* ══════════════════════════════════════════════════
+               Helpers
+               ══════════════════════════════════════════════════ */
+            function euclidean(x1, y1, x2, y2) {
+                return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+            }
+
+            function rollingAvg(arr) {
+                if (arr.length === 0) return 0;
+                return arr.reduce((a, b) => a + b, 0) / arr.length;
+            }
+
+            function lerp(a, b, t) {
+                return a + (b - a) * t;
+            }
+
+            /* ══════════════════════════════════════════════════
+               Countdown (3-2-1)
+               ══════════════════════════════════════════════════ */
+            function startCountdown() {
+                startScreen.style.display = 'none';
+                countdownOverlay.classList.add('active');
+
+                let count = 3;
+                countdownNumber.textContent = count;
+                countdownNumber.style.animation = 'none';
+                void countdownNumber.offsetWidth;
+                countdownNumber.style.animation = '';
+
+                announcer.textContent = 'Calibration starting in 3 seconds.';
+
+                const interval = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        countdownNumber.textContent = count;
+                        countdownNumber.style.animation = 'none';
+                        void countdownNumber.offsetWidth;
+                        countdownNumber.style.animation = '';
+                    } else {
+                        clearInterval(interval);
+                        countdownOverlay.classList.remove('active');
+                        beginCalibration();
+                    }
+                }, 800);
+            }
+
+            /* ══════════════════════════════════════════════════
+               Calibration Start
+               ══════════════════════════════════════════════════ */
+            function beginCalibration() {
+                calibrating = true;
+                startTime = performance.now();
+                distanceSamples = [];
+                allDistances = [];
+                struggleSamples = 0;
+                totalSamples = 0;
+                isStruggling = false;
+                adjustmentsApplied = { fontSize: false, lineHeight: false, contrast: false };
+
+                // Reset dot position to center
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                dotX = w / 2;
+                dotY = h / 2;
+                cursorX = w / 2;
+                cursorY = h / 2;
+
+                // Show arena and metrics
+                arena.classList.add('active');
+                metricsPanel.classList.add('visible');
+                progressTrack.classList.add('visible');
+                progressFill.style.width = '0%';
+
+                // Reset status
+                statusBadge.className = 'status-badge optimal';
+                statusText.textContent = 'Optimal';
+                focusDot.classList.remove('struggling');
+
+                announcer.textContent = 'Calibration started. Follow the blue dot with your cursor.';
+
+                // Begin animation loop
+                rafId = requestAnimationFrame(tick);
+            }
+
+            /* ══════════════════════════════════════════════════
+               Main Animation Loop
+               ══════════════════════════════════════════════════ */
+            function tick(now) {
+                if (!calibrating) return;
+
+                const elapsed = (now - startTime) / 1000;
+                const remaining = Math.max(0, CALIBRATION_DURATION_S - elapsed);
+                const progress = elapsed / CALIBRATION_DURATION_S;
+
+                // End condition
+                if (elapsed >= CALIBRATION_DURATION_S) {
+                    endCalibration();
+                    return;
+                }
+
+                // Speed ramp: lerp from SPEED_MIN to SPEED_MAX over the duration
+                const speed = lerp(SPEED_MIN, SPEED_MAX, progress);
+
+                // Lissajous position
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                const padX = w * 0.12;
+                const padY = h * 0.15;
+                const areaW = w - padX * 2;
+                const areaH = h - padY * 2;
+
+                const t = elapsed * speed;
+                dotX = padX + (areaW / 2) * (1 + Math.sin(LIS_A * t + PHASE));
+                dotY = padY + (areaH / 2) * (1 + Math.sin(LIS_B * t));
+
+                // Position dot
+                focusDot.style.transform = `translate(${dotX - focusDot.offsetWidth / 2}px, ${dotY - focusDot.offsetHeight / 2}px)`;
+
+                // Position cursor trail
+                cursorTrail.style.transform = `translate(${cursorX - 5}px, ${cursorY - 5}px)`;
+
+                // Calculate distance
+                const dist = euclidean(cursorX, cursorY, dotX, dotY);
+                distanceSamples.push(dist);
+                allDistances.push(dist);
+                totalSamples++;
+
+                // Rolling window
+                if (distanceSamples.length > ROLLING_WINDOW) {
+                    distanceSamples.shift();
+                }
+
+                const avgDist = rollingAvg(distanceSamples);
+
+                // Check struggle
+                const wasStruggling = isStruggling;
+                isStruggling = avgDist > STRUGGLE_THRESHOLD_PX;
+
+                if (isStruggling) {
+                    struggleSamples++;
+                }
+
+                // Update dot + badge appearance
+                if (isStruggling && !wasStruggling) {
+                    focusDot.classList.add('struggling');
+                    statusBadge.className = 'status-badge struggling';
+                    statusText.textContent = 'Struggling';
+                    applyAdjustments();
+                } else if (!isStruggling && wasStruggling) {
+                    focusDot.classList.remove('struggling');
+                    statusBadge.className = 'status-badge optimal';
+                    statusText.textContent = 'Optimal';
+                }
+
+                // Update metrics
+                metricLatency.textContent = `${Math.round(avgDist)} px`;
+                metricTime.textContent = `${Math.ceil(remaining)}s`;
+                progressFill.style.width = `${progress * 100}%`;
+
+                rafId = requestAnimationFrame(tick);
+            }
+
+            /* ══════════════════════════════════════════════════
+               Struggle → Auto-Adjustment
+               ══════════════════════════════════════════════════ */
+            function applyAdjustments() {
+                // Font size: 18px → 20px
+                if (!adjustmentsApplied.fontSize) {
+                    root.style.setProperty('--body-font-size', '20px');
+                    adjustmentsApplied.fontSize = true;
+                    announcer.textContent = 'Struggle detected. Font size increased to 20px.';
+                }
+
+                // Line height: 1.75 → 2.0
+                if (!adjustmentsApplied.lineHeight) {
+                    root.style.setProperty('--line-height', '2.0');
+                    adjustmentsApplied.lineHeight = true;
+                }
+
+                // Contrast boost: text-secondary → text-primary
+                if (!adjustmentsApplied.contrast) {
+                    root.style.setProperty('--body-text-color', 'var(--text-primary)');
+                    adjustmentsApplied.contrast = true;
+                }
+            }
+
+            /* ══════════════════════════════════════════════════
+               End Calibration
+               ══════════════════════════════════════════════════ */
+            function endCalibration() {
+                calibrating = false;
+                cancelAnimationFrame(rafId);
+
+                // Hide arena
+                arena.classList.remove('active');
+                metricsPanel.classList.remove('visible');
+                progressTrack.classList.remove('visible');
+
+                // Calculate results
+                const avgDist = allDistances.length > 0
+                    ? allDistances.reduce((a, b) => a + b, 0) / allDistances.length
+                    : 0;
+                const strugglePct = totalSamples > 0
+                    ? (struggleSamples / totalSamples) * 100
+                    : 0;
+                const accuracy = Math.max(0, Math.min(100, 100 - (avgDist / 3)));
+
+                // Populate results
+                resAvgLatency.textContent = `${Math.round(avgDist)}px`;
+                resAccuracy.textContent = `${Math.round(accuracy)}%`;
+                resStruggle.textContent = `${Math.round(strugglePct)}%`;
+
+                // Highlight applied adjustments
+                if (adjustmentsApplied.fontSize) {
+                    adjFontsize.classList.add('applied');
+                    adjFontsize.classList.remove('inactive');
+                } else {
+                    adjFontsize.classList.remove('applied');
+                    adjFontsize.classList.add('inactive');
+                }
+
+                if (adjustmentsApplied.lineHeight) {
+                    adjLineheight.classList.add('applied');
+                    adjLineheight.classList.remove('inactive');
+                } else {
+                    adjLineheight.classList.remove('applied');
+                    adjLineheight.classList.add('inactive');
+                }
+
+                if (adjustmentsApplied.contrast) {
+                    adjContrast.classList.add('applied');
+                    adjContrast.classList.remove('inactive');
+                } else {
+                    adjContrast.classList.remove('applied');
+                    adjContrast.classList.add('inactive');
+                }
+
+                // Show results
+                resultsScreen.classList.add('visible');
+
+                announcer.textContent = 'Calibration complete. Results are displayed.';
+            }
+
+            /* ══════════════════════════════════════════════════
+               Reset / Restart
+               ══════════════════════════════════════════════════ */
+            function resetToStart() {
+                resultsScreen.classList.remove('visible');
+
+                // Reset CSS custom properties to defaults
+                root.style.setProperty('--body-font-size', '18px');
+                root.style.setProperty('--line-height', '1.75');
+                root.style.setProperty('--body-text-color', 'var(--text-secondary)');
+
+                // Show start screen
+                startScreen.style.display = '';
+                startScreen.style.animation = 'none';
+                void startScreen.offsetWidth;
+                startScreen.style.animation = '';
+            }
+
+            /* ══════════════════════════════════════════════════
+               Input Tracking
+               ══════════════════════════════════════════════════ */
+            function onPointerMove(e) {
+                if (!calibrating) return;
+                cursorX = e.clientX;
+                cursorY = e.clientY;
+            }
+
+            function onTouchMove(e) {
+                if (!calibrating) return;
+                const touch = e.touches[0];
+                if (touch) {
+                    cursorX = touch.clientX;
+                    cursorY = touch.clientY;
+                }
+            }
+
+            /* ══════════════════════════════════════════════════
+               Event Listeners
+               ══════════════════════════════════════════════════ */
+            btnBegin.addEventListener('click', startCountdown);
+            btnRestart.addEventListener('click', resetToStart);
+
+            document.addEventListener('mousemove', onPointerMove);
+            document.addEventListener('touchmove', onTouchMove, { passive: true });
+
+            // Keyboard shortcut: Space to start
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && !calibrating && startScreen.style.display !== 'none') {
+                    e.preventDefault();
+                    startCountdown();
+                }
+            });
+
+        })();
+    </script>
+</body>
+
+</html>

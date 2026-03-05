@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RetinaSafe — Calming Stillness</title>
+    <meta name="description"
+        content="A visual and respiratory pacing exercise utilizing RetinaSafe calming stillness animations." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Core Styles and Animation Library -->
+    <link rel="stylesheet" href="calming-stillness.css" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <!-- Accessibility Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Background Iris Motif -->
+    <div class="iris-bg" aria-hidden="true"></div>
+
+    <main id="main-content">
+        <!-- ══════════════════════════════════════════════════
+             Screen 1: Start / Introduction
+             ══════════════════════════════════════════════════ -->
+        <section id="start-screen" class="glass-card rs-fade-up active-screen">
+            <span class="eyebrow rs-fade-up rs-delay-1">RetinaSafe Protocol</span>
+            <h1 class="rs-fade-up rs-delay-2">Calming Stillness</h1>
+            <p class="start-subtitle rs-fade-up rs-delay-3">
+                Synchronize your focus and breath. This exercise uses gentle, composited pacing rings to help lower
+                visual and cognitive fatigue without overwhelming motion.
+            </p>
+
+            <div class="feature-row rs-fade-up rs-delay-4">
+                <span class="feature-pill">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                    Smooth Transitions
+                </span>
+                <span class="feature-pill">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    Zero Layout Thrashing
+                </span>
+                <span class="feature-pill">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    Reduced Motion Safe
+                </span>
+            </div>
+
+            <!-- Start Button using .btn-soft -->
+            <button id="btn-start" class="btn-primary btn-soft rs-fade-up rs-delay-5"
+                aria-label="Begin Calming Stillness Exercise">
+                Begin Exercise
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </button>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════════════
+             Screen 2: The Exercise Arena
+             ══════════════════════════════════════════════════ -->
+        <section id="exercise-screen" class="exercise-arena rs-hidden" aria-hidden="true">
+            <!-- Top Controls (Hidden initially, faded in) -->
+            <div class="top-controls rs-fade-down rs-delay-2">
+                <button id="btn-end-early" class="btn-outline btn-soft" aria-label="End Exercise Early">
+                    End Session
+                </button>
+                <div class="timer-display" aria-live="polite">
+                    <span id="time-remaining">03:00</span>
+                </div>
+            </div>
+
+            <!-- The breathing rings -->
+            <div class="pacing-container rs-fade-in rs-delay-3">
+                <!-- Outer ring rotating CCW 30s -->
+                <div class="pacing-ring ring-outer rs-iris-30s-ccw"></div>
+                <!-- Inner ring rotating CW 22s -->
+                <div class="pacing-ring ring-inner rs-iris-22s"></div>
+                <!-- Center breathing dot -->
+                <div id="breath-orb" class="breath-orb rs-breathe"></div>
+                <!-- Instructional text -->
+                <div class="breath-instruction rs-pulse-soft">
+                    <span id="breath-text">Inhale...</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ══════════════════════════════════════════════════
+             Screen 3: Results / Completion
+             ══════════════════════════════════════════════════ -->
+        <section id="results-screen" class="glass-card rs-hidden" aria-hidden="true">
+            <span class="eyebrow rs-fade-up rs-delay-1">Session Complete</span>
+            <h2 class="rs-fade-up rs-delay-2">Stillness Achieved</h2>
+            <p class="results-subtitle rs-fade-up rs-delay-3">
+                You have successfully completed the visual pacing exercise. Your eyes and mind should feel more rested.
+            </p>
+
+            <div class="results-grid rs-fade-up rs-delay-4">
+                <div class="result-card">
+                    <span class="result-card-value" id="res-time">03:00</span>
+                    <span class="result-card-label">Duration</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-card-value" id="res-cycles">18</span>
+                    <span class="result-card-label">Breath Cycles</span>
+                </div>
+                <div class="result-card">
+                    <span class="result-card-value">100%</span>
+                    <span class="result-card-label">Focus Maintained</span>
+                </div>
+            </div>
+
+            <button id="btn-restart" class="btn-primary btn-soft rs-fade-up rs-delay-5" aria-label="Return to Start">
+                Done
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </button>
+        </section>
+    </main>
+
+    <!-- Medical Disclaimer -->
+    <div class="medical-disclaimer" role="contentinfo">
+        <p><strong>Medical Disclaimer:</strong> This tool is for visual comfort and relaxation pacing only. It is not
+            intended to diagnose, treat, or prevent any medical condition.</p>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="script.js"></script>
+</body>
+
+</html>

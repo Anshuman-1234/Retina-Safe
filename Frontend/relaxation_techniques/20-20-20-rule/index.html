@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RetinaSafe — 20-20-20 Eye Care</title>
+  <meta name="description" content="Protect your eyes with the 20-20-20 rule. Every 20 minutes, take a 20-second break and focus on something 20 feet away." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════════════════
+       1. Design Tokens (RetinaSafe Palette)
+       ══════════════════════════════════════════════════ */
+    :root {
+      /* ── Primary Blue Palette ── */
+      --blue-900: #1E3A5F;
+      --blue-800: #1E40AF;
+      --blue-700: #1D4ED8;
+      --blue-600: #2563EB;
+      --blue-500: #3B82F6;
+      --blue-400: #60A5FA;
+      --blue-300: #93C5FD;
+      --blue-200: #BFDBFE;
+      --blue-100: #DBEAFE;
+      --blue-50:  #EFF6FF;
+      --page-bg:  #F8FBFF;
+      --white:    #FFFFFF;
+
+      /* ── Text Colours ── */
+      --text-primary:   #1E3A5F;
+      --text-secondary: #3D5A80;
+      --text-muted:     #6B8CAE;
+      --text-light:     #A8C0D6;
+
+      /* ── Borders & Shadows ── */
+      --border:    #BFDBFE;
+      --shadow-sm: 0 1px 3px rgba(30,58,95,0.06);
+      --shadow-md: 0 4px 16px rgba(30,58,95,0.08);
+      --shadow-lg: 0 8px 32px rgba(30,58,95,0.10);
+
+      /* ── Radius ── */
+      --radius:    10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      /* ── Font Families ── */
+      --font-display: 'Lora', Georgia, serif;
+      --font-body:    'Source Sans 3', 'Helvetica Neue', sans-serif;
+
+      /* ── Greens for Soft Greenery motif ── */
+      --green-soft:  #A7D8A0;
+      --green-light: #C8E6C3;
+      --green-pale:  #E0F0DD;
+    }
+
+    /* ══════════════════════════════════════════════════
+       2. Global Reset & Base
+       ══════════════════════════════════════════════════ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--page-bg);
+      font-family: var(--font-body);
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow: hidden;
+    }
+
+    /* ── Skip Link ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--blue-600);
+      color: var(--white);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-weight: 600;
+      text-decoration: none;
+      z-index: 500;
+      transition: top 0.2s ease;
+    }
+    .skip-link:focus { top: 1rem; }
+
+    /* ── Global Focus ── */
+    :focus-visible {
+      outline: 3px solid var(--blue-400);
+      outline-offset: 3px;
+    }
+
+    /* ══════════════════════════════════════════════════
+       3. Typography
+       ══════════════════════════════════════════════════ */
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--blue-900);
+      line-height: 1.25;
+    }
+
+    /* ══════════════════════════════════════════════════
+       4. Landing Page
+       ══════════════════════════════════════════════════ */
+    #landing {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      max-width: 640px;
+      padding: 2.5rem;
+      background: var(--white);
+      border: 1px solid var(--blue-200);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    @keyframes fadeUp {
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .landing-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--blue-600);
+      margin-bottom: 0.6rem;
+    }
+    .landing-eyebrow::before { content: "—  "; }
+
+    #landing h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .landing-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.7;
+    }
+
+    /* Rule cards */
+    .rule-cards {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      width: 100%;
+    }
+
+    .rule-card {
+      flex: 1;
+      background: var(--blue-50);
+      border: 1px solid var(--blue-200);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .rule-card-number {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--blue-600);
+      line-height: 1;
+    }
+
+    .rule-card-unit {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--blue-500);
+    }
+
+    .rule-card-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Start button */
+    .btn-start {
+      padding: 0.85rem 2.5rem;
+      border-radius: 100px;
+      background: var(--blue-600);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 14px rgba(37,99,235,0.30);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-start:hover {
+      background: var(--blue-700);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.35);
+    }
+    .btn-start:active { transform: translateY(0); }
+
+    .btn-start svg {
+      width: 20px; height: 20px;
+      fill: none; stroke: currentColor; stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ══════════════════════════════════════════════════
+       5. Session Active Screen
+       ══════════════════════════════════════════════════ */
+    #session {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      max-width: 560px;
+      padding: 3rem 2.5rem;
+      background: var(--white);
+      border: 1px solid var(--blue-200);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+    #session.visible {
+      display: flex;
+      animation: fadeUp 0.5s ease forwards;
+    }
+
+    .session-eyebrow {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--blue-600);
+      margin-bottom: 1rem;
+    }
+    .session-eyebrow::before { content: "—  "; }
+
+    /* Circular countdown to next break */
+    .next-break-ring {
+      position: relative;
+      width: 180px; height: 180px;
+      margin-bottom: 1.5rem;
+    }
+    .next-break-ring svg {
+      width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .next-break-ring .ring-bg {
+      fill: none;
+      stroke: var(--blue-100);
+      stroke-width: 6;
+    }
+    .next-break-ring .ring-progress {
+      fill: none;
+      stroke: var(--blue-500);
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 502.65;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .next-break-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .next-break-time {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .next-break-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .session-hint {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      max-width: 380px;
+      margin-bottom: 1.5rem;
+      line-height: 1.65;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-session {
+      padding: 0.65rem 1.5rem;
+      border-radius: 100px;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--blue-300);
+      background: transparent;
+      color: var(--blue-600);
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-session:hover {
+      background: var(--blue-50);
+      border-color: var(--blue-600);
+      transform: translateY(-1px);
+    }
+    .btn-session.danger {
+      border-color: #FCA5A5;
+      color: #DC2626;
+    }
+    .btn-session.danger:hover {
+      background: #FEF2F2;
+      border-color: #DC2626;
+    }
+
+    .btn-session svg {
+      width: 16px; height: 16px;
+      fill: none; stroke: currentColor; stroke-width: 2.5;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ══════════════════════════════════════════════════
+       6. Blink Reminder Dot
+       ══════════════════════════════════════════════════ */
+    #blink-dot {
+      display: none;
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 100;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    #blink-dot.visible { display: block; }
+
+    .blink-dot-circle {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--blue-500);
+      position: relative;
+      box-shadow: 0 0 0 0 rgba(59,130,246,0.45);
+      animation: blinkPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes blinkPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(59,130,246,0.45);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(59,130,246,0);
+        transform: scale(1.15);
+      }
+    }
+
+    /* Blink tooltip */
+    .blink-tooltip {
+      position: absolute;
+      bottom: calc(100% + 12px);
+      right: 0;
+      background: var(--blue-50);
+      border: 1px solid var(--blue-200);
+      border-radius: var(--radius-lg);
+      padding: 0.85rem 1.15rem;
+      min-width: 200px;
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      color: var(--blue-900);
+      text-align: left;
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .blink-tooltip.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .blink-tooltip-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 0.25rem;
+      color: var(--blue-900);
+    }
+    .blink-tooltip p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .blink-tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      right: 4px;
+      width: 12px; height: 12px;
+      background: var(--blue-50);
+      border-right: 1px solid var(--blue-200);
+      border-bottom: 1px solid var(--blue-200);
+      transform: rotate(45deg);
+    }
+
+    /* ══════════════════════════════════════════════════
+       7. Break Modal Overlay
+       ══════════════════════════════════════════════════ */
+    #break-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.5s ease, visibility 0.5s;
+    }
+    #break-overlay.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* ── Relaxation View Background ── */
+    .relaxation-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 50%, var(--blue-100), var(--blue-50)),
+        var(--page-bg);
+      overflow: hidden;
+    }
+
+    /* CSS "Soft Greenery" motif — layered blurred shapes */
+    .greenery-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.35;
+      animation: greeneryFloat 12s ease-in-out infinite alternate;
+    }
+    .greenery-shape:nth-child(1) {
+      width: 350px; height: 350px;
+      background: var(--green-soft);
+      bottom: -60px; left: -40px;
+      animation-delay: 0s;
+    }
+    .greenery-shape:nth-child(2) {
+      width: 280px; height: 280px;
+      background: var(--green-light);
+      top: -40px; right: 10%;
+      animation-delay: -3s;
+    }
+    .greenery-shape:nth-child(3) {
+      width: 200px; height: 200px;
+      background: var(--green-pale);
+      bottom: 20%; left: 25%;
+      animation-delay: -6s;
+    }
+    .greenery-shape:nth-child(4) {
+      width: 160px; height: 220px;
+      background: var(--green-soft);
+      top: 15%; right: 30%;
+      animation-delay: -9s;
+      border-radius: 60% 40% 50% 50%;
+    }
+    .greenery-shape:nth-child(5) {
+      width: 240px; height: 180px;
+      background: var(--green-light);
+      bottom: 10%; right: -30px;
+      animation-delay: -4s;
+      border-radius: 40% 60% 50% 50%;
+    }
+
+    @keyframes greeneryFloat {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(15px, -20px) scale(1.08); }
+    }
+
+    /* ── Break Card ── */
+    .break-card {
+      position: relative;
+      z-index: 10;
+      background: var(--blue-50);
+      border: 1px solid var(--blue-200);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem 2.75rem;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(30px) scale(0.96);
+      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    #break-overlay.visible .break-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .break-card h2 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--blue-900);
+      margin-bottom: 0.75rem;
+    }
+
+    .break-card p {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      color: var(--blue-900);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Circular 20-sec countdown */
+    .break-timer-ring {
+      position: relative;
+      width: 130px; height: 130px;
+      margin: 0 auto 1.25rem;
+    }
+    .break-timer-ring svg {
+      width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .break-timer-ring .timer-bg {
+      fill: none;
+      stroke: var(--blue-200);
+      stroke-width: 5;
+    }
+    .break-timer-ring .timer-progress {
+      fill: none;
+      stroke: var(--blue-500);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 376.99;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.3s ease;
+    }
+    .break-timer-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .break-timer-value {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--blue-900);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .break-timer-unit {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .break-instruction {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-dismiss {
+      padding: 0.6rem 1.5rem;
+      border-radius: 100px;
+      background: transparent;
+      border: 2px solid var(--blue-300);
+      color: var(--blue-600);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .btn-dismiss:hover {
+      background: var(--blue-100);
+      border-color: var(--blue-600);
+    }
+
+    /* Screen-reader only */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ══════════════════════════════════════════════════
+       8. Reduced Motion
+       ══════════════════════════════════════════════════ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════
+       9. Responsive
+       ══════════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+      html { font-size: 16px; }
+
+      #landing, #session {
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+      }
+
+      .rule-cards {
+        flex-direction: column;
+        gap: 0.65rem;
+      }
+
+      .rule-card { padding: 0.85rem; }
+
+      .break-card {
+        padding: 1.75rem 1.25rem;
+        max-width: calc(100% - 2rem);
+      }
+
+      .next-break-ring { width: 140px; height: 140px; }
+      .next-break-time { font-size: 1.8rem; }
+
+      .btn-group { flex-direction: column; width: 100%; }
+      .btn-session { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <main id="main">
+
+    <!-- ═══════ Landing Page ═══════ -->
+    <section id="landing" aria-labelledby="landing-title">
+      <p class="landing-eyebrow">RetinaSafe Eye Care</p>
+      <h1 id="landing-title">The 20-20-20 Rule</h1>
+      <p class="landing-subtitle">
+        A gentle, evidence-based technique to reduce digital eye strain.
+        Every twenty minutes, rest your eyes for twenty seconds by looking at
+        something twenty feet away.
+      </p>
+
+      <div class="rule-cards" role="list">
+        <div class="rule-card" role="listitem">
+          <span class="rule-card-number">20</span>
+          <span class="rule-card-unit">Minutes</span>
+          <span class="rule-card-label">Screen time interval</span>
+        </div>
+        <div class="rule-card" role="listitem">
+          <span class="rule-card-number">20</span>
+          <span class="rule-card-unit">Seconds</span>
+          <span class="rule-card-label">Rest your eyes</span>
+        </div>
+        <div class="rule-card" role="listitem">
+          <span class="rule-card-number">20</span>
+          <span class="rule-card-unit">Feet</span>
+          <span class="rule-card-label">Focus on something distant</span>
+        </div>
+      </div>
+
+      <button class="btn-start" id="btn-start" type="button">
+        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Start Session
+      </button>
+    </section>
+
+    <!-- ═══════ Session Active ═══════ -->
+    <section id="session" aria-labelledby="session-title">
+      <p class="session-eyebrow">Session Active</p>
+      <h2 id="session-title" class="sr-only">Eye care session in progress</h2>
+
+      <div class="next-break-ring" role="timer" aria-label="Time until next eye break">
+        <svg viewBox="0 0 180 180">
+          <circle class="ring-bg" cx="90" cy="90" r="80"></circle>
+          <circle class="ring-progress" id="session-ring" cx="90" cy="90" r="80"></circle>
+        </svg>
+        <div class="next-break-inner">
+          <span class="next-break-time" id="session-countdown">20:00</span>
+          <span class="next-break-label">Until break</span>
+        </div>
+      </div>
+
+      <p class="session-hint">
+        Continue working comfortably. A gentle reminder will appear when it
+        is time for your twenty-second eye break.
+      </p>
+
+      <div class="btn-group">
+        <button class="btn-session" id="btn-pause" type="button">
+          <svg viewBox="0 0 24 24" id="pause-icon"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+          <svg viewBox="0 0 24 24" id="play-icon" style="display:none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span id="pause-label">Pause</span>
+        </button>
+        <button class="btn-session danger" id="btn-end" type="button">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
+          End Session
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════ Blink Reminder Dot ═══════ -->
+  <button id="blink-dot" aria-label="Blink reminder" type="button">
+    <div class="blink-dot-circle"></div>
+    <div class="blink-tooltip" id="blink-tooltip" role="status">
+      <div class="blink-tooltip-title">Blink Reminder</div>
+      <p>Remember to blink slowly and fully. This helps keep your eyes lubricated and comfortable.</p>
+    </div>
+  </button>
+
+  <!-- ═══════ Break Overlay ═══════ -->
+  <div id="break-overlay" role="dialog" aria-modal="true" aria-labelledby="break-title">
+    <!-- Relaxation View Background -->
+    <div class="relaxation-bg" aria-hidden="true">
+      <div class="greenery-shape"></div>
+      <div class="greenery-shape"></div>
+      <div class="greenery-shape"></div>
+      <div class="greenery-shape"></div>
+      <div class="greenery-shape"></div>
+    </div>
+
+    <div class="break-card">
+      <h2 id="break-title">Time for an Eye Break</h2>
+      <p>It is time for a twenty-second eye break. Please focus on a distant object.</p>
+
+      <div class="break-timer-ring" role="timer" aria-label="Break countdown">
+        <svg viewBox="0 0 130 130">
+          <circle class="timer-bg" cx="65" cy="65" r="60"></circle>
+          <circle class="timer-progress" id="break-ring" cx="65" cy="65" r="60"></circle>
+        </svg>
+        <div class="break-timer-inner">
+          <span class="break-timer-value" id="break-countdown">20</span>
+          <span class="break-timer-unit">Seconds</span>
+        </div>
+      </div>
+
+      <p class="break-instruction">
+        Allow your eye muscles to relax. Blink gently a few times.
+      </p>
+
+      <div aria-live="polite" class="sr-only" id="break-announcer"></div>
+
+      <button class="btn-dismiss" id="btn-dismiss" type="button">Skip Break</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* ── Configuration ── */
+      const BREAK_INTERVAL_MS = 20 * 60 * 1000;  // 20 minutes
+      const BREAK_DURATION_S  = 20;               // 20 seconds
+      const SESSION_RING_CIRCUMFERENCE = 2 * Math.PI * 80;  // r=80
+      const BREAK_RING_CIRCUMFERENCE   = 2 * Math.PI * 60;  // r=60
+
+      /* ── DOM References ── */
+      const landing        = document.getElementById('landing');
+      const session        = document.getElementById('session');
+      const btnStart       = document.getElementById('btn-start');
+      const btnPause       = document.getElementById('btn-pause');
+      const btnEnd         = document.getElementById('btn-end');
+      const sessionCountEl = document.getElementById('session-countdown');
+      const sessionRing    = document.getElementById('session-ring');
+      const blinkDot       = document.getElementById('blink-dot');
+      const blinkTooltip   = document.getElementById('blink-tooltip');
+      const breakOverlay   = document.getElementById('break-overlay');
+      const breakCountEl   = document.getElementById('break-countdown');
+      const breakRing      = document.getElementById('break-ring');
+      const breakAnnouncer = document.getElementById('break-announcer');
+      const btnDismiss     = document.getElementById('btn-dismiss');
+      const pauseIcon      = document.getElementById('pause-icon');
+      const playIcon       = document.getElementById('play-icon');
+      const pauseLabel     = document.getElementById('pause-label');
+
+      /* ── State ── */
+      let sessionActive       = false;
+      let sessionPaused       = false;
+      let sessionStartTime    = 0;
+      let sessionElapsed      = 0;
+      let sessionRAF          = null;
+      let breakTimeout        = null;
+      let breakActive         = false;
+      let breakStartTime      = 0;
+      let breakRAF            = null;
+      let blinkTooltipTimeout = null;
+      let previousFocus       = null;
+
+      /* ── Helpers ── */
+      function formatTime(ms) {
+        const totalSec = Math.max(0, Math.ceil(ms / 1000));
+        const m = Math.floor(totalSec / 60);
+        const s = totalSec % 60;
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+
+      /* ── Session Logic ── */
+      function startSession() {
+        sessionActive    = true;
+        sessionPaused    = false;
+        sessionElapsed   = 0;
+        sessionStartTime = performance.now();
+
+        landing.style.display = 'none';
+        session.classList.add('visible');
+        blinkDot.classList.add('visible');
+
+        // Reset ring
+        sessionRing.style.strokeDashoffset = '0';
+
+        scheduleBreak();
+        tickSession();
+      }
+
+      function tickSession() {
+        if (!sessionActive) return;
+
+        if (!sessionPaused) {
+          const now = performance.now();
+          const delta = now - sessionStartTime;
+          sessionStartTime = now;
+          sessionElapsed += delta;
+        }
+
+        const remaining = BREAK_INTERVAL_MS - (sessionElapsed % BREAK_INTERVAL_MS);
+        sessionCountEl.textContent = formatTime(remaining);
+
+        // Update ring
+        const progress = (sessionElapsed % BREAK_INTERVAL_MS) / BREAK_INTERVAL_MS;
+        sessionRing.style.strokeDashoffset = `${SESSION_RING_CIRCUMFERENCE * (1 - progress)}`;
+
+        sessionRAF = requestAnimationFrame(tickSession);
+      }
+
+      function scheduleBreak() {
+        clearTimeout(breakTimeout);
+        const remaining = BREAK_INTERVAL_MS - (sessionElapsed % BREAK_INTERVAL_MS);
+        breakTimeout = setTimeout(() => {
+          if (sessionActive && !sessionPaused) {
+            openBreak();
+          }
+        }, remaining);
+      }
+
+      function pauseSession() {
+        sessionPaused = !sessionPaused;
+        if (sessionPaused) {
+          pauseIcon.style.display = 'none';
+          playIcon.style.display  = 'block';
+          pauseLabel.textContent  = 'Resume';
+          clearTimeout(breakTimeout);
+        } else {
+          pauseIcon.style.display = 'block';
+          playIcon.style.display  = 'none';
+          pauseLabel.textContent  = 'Pause';
+          sessionStartTime = performance.now();
+          scheduleBreak();
+        }
+      }
+
+      function endSession() {
+        sessionActive = false;
+        sessionPaused = false;
+        cancelAnimationFrame(sessionRAF);
+        clearTimeout(breakTimeout);
+
+        session.classList.remove('visible');
+        blinkDot.classList.remove('visible');
+        landing.style.display = '';
+        landing.style.animation = 'none';
+        requestAnimationFrame(() => {
+          landing.style.animation = '';
+        });
+
+        // Reset pause button
+        pauseIcon.style.display = 'block';
+        playIcon.style.display  = 'none';
+        pauseLabel.textContent  = 'Pause';
+
+        if (breakActive) closeBreak();
+      }
+
+      /* ── Break (20-sec) Logic ── */
+      function openBreak() {
+        breakActive    = true;
+        breakStartTime = performance.now();
+        previousFocus  = document.activeElement;
+
+        // Reset UI
+        breakCountEl.textContent = String(BREAK_DURATION_S);
+        breakRing.style.strokeDashoffset = '0';
+
+        breakOverlay.classList.add('visible');
+        breakAnnouncer.textContent = 'Eye break started. Please look at a distant object for twenty seconds.';
+
+        // Focus trap — focus dismiss button
+        requestAnimationFrame(() => btnDismiss.focus());
+
+        tickBreak();
+      }
+
+      function tickBreak() {
+        if (!breakActive) return;
+
+        const elapsed  = (performance.now() - breakStartTime) / 1000;
+        const remaining = Math.max(0, BREAK_DURATION_S - elapsed);
+
+        breakCountEl.textContent = String(Math.ceil(remaining));
+
+        const progress = elapsed / BREAK_DURATION_S;
+        breakRing.style.strokeDashoffset = `${BREAK_RING_CIRCUMFERENCE * progress}`;
+
+        // Announce at intervals
+        const sec = Math.ceil(remaining);
+        if (sec === 10 || sec === 5) {
+          breakAnnouncer.textContent = `${sec} seconds remaining.`;
+        }
+
+        if (remaining <= 0) {
+          closeBreak();
+          return;
+        }
+
+        breakRAF = requestAnimationFrame(tickBreak);
+      }
+
+      function closeBreak() {
+        breakActive = false;
+        cancelAnimationFrame(breakRAF);
+        breakOverlay.classList.remove('visible');
+        breakAnnouncer.textContent = 'Eye break complete. Session resumed.';
+
+        // Reset elapsed to start fresh interval
+        sessionElapsed = 0;
+        sessionStartTime = performance.now();
+        sessionRing.style.strokeDashoffset = '0';
+
+        if (sessionActive && !sessionPaused) scheduleBreak();
+        if (previousFocus) previousFocus.focus();
+      }
+
+      /* ── Blink Dot ── */
+      function toggleBlinkTooltip() {
+        clearTimeout(blinkTooltipTimeout);
+        blinkTooltip.classList.add('show');
+        blinkTooltipTimeout = setTimeout(() => {
+          blinkTooltip.classList.remove('show');
+        }, 4000);
+      }
+
+      /* ── Focus Trap for Break Modal ── */
+      function trapFocus(e) {
+        if (!breakActive) return;
+        if (e.key === 'Tab') {
+          // Only one focusable element (dismiss button)
+          e.preventDefault();
+          btnDismiss.focus();
+        }
+        if (e.key === 'Escape') {
+          closeBreak();
+        }
+      }
+
+      /* ── Event Listeners ── */
+      btnStart.addEventListener('click', startSession);
+      btnPause.addEventListener('click', pauseSession);
+      btnEnd.addEventListener('click', endSession);
+      btnDismiss.addEventListener('click', closeBreak);
+      blinkDot.addEventListener('click', toggleBlinkTooltip);
+      document.addEventListener('keydown', trapFocus);
+
+      // Close blink tooltip on outside click
+      document.addEventListener('click', (e) => {
+        if (!blinkDot.contains(e.target)) {
+          blinkTooltip.classList.remove('show');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

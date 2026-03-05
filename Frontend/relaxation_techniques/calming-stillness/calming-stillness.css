@@ -1,0 +1,349 @@
+/* ═══════════════════════════════════════════════════════════════════
+   RetinaSafe Animation Library — "Calming Stillness"
+   v1.0.0
+   ───────────────────────────────────────────────────────────────────
+   Performance  : transform + opacity ONLY (zero layout thrashing)
+   Accessibility: every animation gated by prefers-reduced-motion
+   Tone         : no flashing · no strobing · no aggressive movement
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════
+   0. Design Tokens — Timing & Easing
+   ══════════════════════════════════════════════════ */
+:root {
+  /* ── Duration Scale ── */
+  --rs-dur-press:     0.4s;       /* soft button press              */
+  --rs-dur-soft:      0.8s;       /* lower bound for soft motions   */
+  --rs-dur-calm:      1.0s;       /* default calm transition        */
+  --rs-dur-gentle:    1.2s;       /* upper bound for gentle motions */
+
+  /* ── Easing Curves ── */
+  --rs-ease-breathe:  cubic-bezier(0.45, 0.0, 0.15, 1.0);  /* inhale–exhale */
+  --rs-ease-settle:   cubic-bezier(0.16, 1, 0.3, 1);       /* spring settle  */
+  --rs-ease-silk:     cubic-bezier(0.25, 0.1, 0.25, 1.0);  /* smooth silk    */
+
+  /* ── Fade-Up Offsets ── */
+  --rs-fade-y:        24px;   /* vertical travel for fade-up        */
+  --rs-fade-y-sm:     12px;   /* smaller vertical travel variant    */
+
+  /* ── Iris Rotation Durations ── */
+  --rs-iris-slow:     22s;
+  --rs-iris-slower:   30s;
+}
+
+
+/* ══════════════════════════════════════════════════
+   1. Keyframe Definitions
+   ══════════════════════════════════════════════════
+   All keyframes use ONLY transform and opacity.
+   They are defined unconditionally but applied
+   only inside the reduced-motion media query.
+   ══════════════════════════════════════════════════ */
+
+/* ── Page / Section Fade-Up ── */
+@keyframes rs-fade-up {
+  0% {
+    transform: translateY(var(--rs-fade-y));
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rs-fade-up-sm {
+  0% {
+    transform: translateY(var(--rs-fade-y-sm));
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ── Fade-In (opacity only, no spatial movement) ── */
+@keyframes rs-fade-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ── Iris Rotation — Slow Clockwise ── */
+@keyframes rs-iris-rotate-cw {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Iris Rotation — Slow Counter-Clockwise ── */
+@keyframes rs-iris-rotate-ccw {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+/* ── Gentle Breathing Scale (hero accents) ── */
+@keyframes rs-breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* ── Subtle Pulse (status indicators) ── */
+@keyframes rs-pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+/* ── Gentle Float (decorative elements) ── */
+@keyframes rs-float {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════
+   2. Static / Reduced-Motion Fallbacks
+   ══════════════════════════════════════════════════
+   Elements that use animation classes start in
+   their final visible state so content is never
+   hidden if animations are disabled.
+   ══════════════════════════════════════════════════ */
+
+/* Fade-up targets are visible by default. */
+.rs-fade-up,
+.rs-fade-up-sm,
+.rs-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Button press needs no fallback — just remove the scale. */
+.btn-soft {
+  transform: scale(1);
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Iris rings: no rotation when motion is reduced. */
+.rs-iris-22s,
+.rs-iris-30s,
+.rs-iris-cw,
+.rs-iris-ccw {
+  transform: rotate(0deg);
+}
+
+
+/* ══════════════════════════════════════════════════
+   3. Animated Utilities
+   ══════════════════════════════════════════════════
+   ALL animation application lives inside the
+   prefers-reduced-motion: no-preference gate.
+   ══════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* ────────────────────────────────────
+     3-A  Soft Button Press  (.btn-soft)
+     ──────────────────────────────────── */
+  .btn-soft {
+    transition: transform var(--rs-dur-press) var(--rs-ease-silk),
+                opacity  var(--rs-dur-press) var(--rs-ease-silk);
+  }
+
+  .btn-soft:active {
+    transform: scale(0.98);
+  }
+
+  /* Optional hover lift (composited — transform only) */
+  .btn-soft:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-soft:hover:active {
+    transform: scale(0.98);
+  }
+
+
+  /* ────────────────────────────────────
+     3-B  Page / Section Fade-Up
+     ──────────────────────────────────── */
+
+  /*  Standard fade-up  (24 px travel, 1.0s breathe curve)  */
+  .rs-fade-up {
+    opacity: 0;
+    transform: translateY(var(--rs-fade-y));
+    animation: rs-fade-up var(--rs-dur-calm) var(--rs-ease-breathe) forwards;
+  }
+
+  /*  Smaller fade-up   (12 px travel, 0.8s)  */
+  .rs-fade-up-sm {
+    opacity: 0;
+    transform: translateY(var(--rs-fade-y-sm));
+    animation: rs-fade-up-sm var(--rs-dur-soft) var(--rs-ease-breathe) forwards;
+  }
+
+  /*  Fade-in (no translation, 1.0s)  */
+  .rs-fade-in {
+    opacity: 0;
+    animation: rs-fade-in var(--rs-dur-calm) var(--rs-ease-breathe) forwards;
+  }
+
+  /*  Gentle fade-up    (larger travel, 1.2s — most relaxed) */
+  .rs-fade-up-gentle {
+    opacity: 0;
+    transform: translateY(var(--rs-fade-y));
+    animation: rs-fade-up var(--rs-dur-gentle) var(--rs-ease-breathe) forwards;
+  }
+
+
+  /* ── Stagger Delays ──
+     Apply these alongside any rs-fade-* class
+     to create sequential section reveals.         */
+  .rs-delay-1 { animation-delay: 0.10s; }
+  .rs-delay-2 { animation-delay: 0.20s; }
+  .rs-delay-3 { animation-delay: 0.30s; }
+  .rs-delay-4 { animation-delay: 0.45s; }
+  .rs-delay-5 { animation-delay: 0.60s; }
+  .rs-delay-6 { animation-delay: 0.80s; }
+  .rs-delay-7 { animation-delay: 1.00s; }
+  .rs-delay-8 { animation-delay: 1.25s; }
+
+
+  /* ────────────────────────────────────
+     3-C  Iris Rotation
+     ──────────────────────────────────── */
+
+  /*  22-second infinite clockwise rotation  */
+  .rs-iris-22s {
+    animation: rs-iris-rotate-cw var(--rs-iris-slow) linear infinite;
+    will-change: transform;
+  }
+
+  /*  30-second infinite clockwise rotation  */
+  .rs-iris-30s {
+    animation: rs-iris-rotate-cw var(--rs-iris-slower) linear infinite;
+    will-change: transform;
+  }
+
+  /*  Generic directional helpers  */
+  .rs-iris-cw {
+    animation: rs-iris-rotate-cw var(--rs-iris-slow) linear infinite;
+    will-change: transform;
+  }
+
+  .rs-iris-ccw {
+    animation: rs-iris-rotate-ccw var(--rs-iris-slow) linear infinite;
+    will-change: transform;
+  }
+
+  /*  Counter-clockwise variants at each speed  */
+  .rs-iris-22s-ccw {
+    animation: rs-iris-rotate-ccw var(--rs-iris-slow) linear infinite;
+    will-change: transform;
+  }
+
+  .rs-iris-30s-ccw {
+    animation: rs-iris-rotate-ccw var(--rs-iris-slower) linear infinite;
+    will-change: transform;
+  }
+
+
+  /* ────────────────────────────────────
+     3-D  Breathing & Ambient Motion
+     ──────────────────────────────────── */
+
+  /*  Gentle breathing scale (8s cycle, for hero accents)  */
+  .rs-breathe {
+    animation: rs-breathe 8s var(--rs-ease-breathe) infinite;
+    will-change: transform, opacity;
+  }
+
+  /*  Slow breathing variant (12s cycle)  */
+  .rs-breathe-slow {
+    animation: rs-breathe 12s var(--rs-ease-breathe) infinite;
+    will-change: transform, opacity;
+  }
+
+  /*  Soft pulse (status dots, 2s)  */
+  .rs-pulse {
+    animation: rs-pulse-soft 2s ease-in-out infinite;
+    will-change: opacity;
+  }
+
+  /*  Gentle float (decorative, 6s)  */
+  .rs-float {
+    animation: rs-float 6s var(--rs-ease-breathe) infinite;
+    will-change: transform, opacity;
+  }
+
+  .rs-float-slow {
+    animation: rs-float 10s var(--rs-ease-breathe) infinite;
+    will-change: transform, opacity;
+  }
+
+
+  /* ────────────────────────────────────
+     3-E  Transition Utilities
+     ──────────────────────────────────── */
+
+  /*  Composited transition presets (transform + opacity only)  */
+  .rs-transition-soft {
+    transition: transform var(--rs-dur-soft) var(--rs-ease-breathe),
+                opacity  var(--rs-dur-soft) var(--rs-ease-breathe);
+  }
+
+  .rs-transition-calm {
+    transition: transform var(--rs-dur-calm) var(--rs-ease-breathe),
+                opacity  var(--rs-dur-calm) var(--rs-ease-breathe);
+  }
+
+  .rs-transition-gentle {
+    transition: transform var(--rs-dur-gentle) var(--rs-ease-breathe),
+                opacity  var(--rs-dur-gentle) var(--rs-ease-breathe);
+  }
+
+  /*  Settle easing variant (spring-like)  */
+  .rs-transition-settle {
+    transition: transform var(--rs-dur-calm) var(--rs-ease-settle),
+                opacity  var(--rs-dur-calm) var(--rs-ease-settle);
+  }
+}
+
+
+/* ══════════════════════════════════════════════════
+   4. Composability Helpers
+   ══════════════════════════════════════════════════
+   Combine these with animation classes for
+   visibility-driven patterns (e.g. IntersectionObserver).
+   ══════════════════════════════════════════════════ */
+
+/*  Hidden state   — apply by default, remove to trigger animation  */
+.rs-hidden   { opacity: 0; transform: translateY(var(--rs-fade-y)); }
+.rs-hidden-sm{ opacity: 0; transform: translateY(var(--rs-fade-y-sm)); }
+
+/*  Visible state  — override the hidden state  */
+.rs-visible  { opacity: 1 !important; transform: translateY(0) !important; }
+
+
+/* ══════════════════════════════════════════════════
+   5. Print — Strip All Motion
+   ══════════════════════════════════════════════════ */
+@media print {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
