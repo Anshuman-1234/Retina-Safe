@@ -34,6 +34,16 @@ function showToast(msg) {
 // Global reveal for i18n.js usage
 window.showToast = showToast;
 
+function updateLanguage(lang) {
+  if (window.RetinaSafeI18N) {
+    RetinaSafeI18N.changeLang(lang);
+  } else {
+    state.currentLang = lang;
+    if (state.currentStep === 3) renderGamesStep();
+  }
+}
+window.updateLanguage = updateLanguage;
+
 // ── GAME DEFINITIONS ───────────────────────────────────────────
 const GAMES = [
   {
@@ -299,7 +309,7 @@ function initStep2() {
 
   step2Next?.addEventListener('click', () => {
     const session = RetinaSafeSession.get();
-    const t = TRANSLATIONS[state.currentLang];
+    const t = window.RetinaSafeI18N ? RetinaSafeI18N.getTranslations() : null;
     if (!session || !session.imageUploaded) {
       showToast(t?.err_step_upload || "Please upload an image first.");
       return;
@@ -479,17 +489,28 @@ async function buildReport() {
   if (loadingDiv) loadingDiv.hidden = false;
   if (contentDiv) contentDiv.hidden = true;
 
+  // 0. Update Hero Image with uploaded preview
+  const heroImg = qs('.eval-hero-img');
+  if (heroImg) {
+    if (session?.imageMeta?.server_image_url) {
+      heroImg.src = session.imageMeta.server_image_url;
+    } else if (state.lastUploadedImage) {
+      heroImg.src = state.lastUploadedImage;
+    }
+  }
+
   // 1. Populate Confidence Scores immediately (below animation)
   if (evalList && session?.modelOutput?.predictions) {
     const preds = session.modelOutput.predictions;
+    const t = window.RetinaSafeI18N ? RetinaSafeI18N.getTranslations() : null;
     let html = '';
     const names = {
-      diabetic_retinopathy: 'Diabetic Retinopathy',
-      macular_degeneration: 'Macular Degeneration',
-      glaucoma: 'Glaucoma',
-      cataract: 'Cataract',
-      hypertensive_retinopathy: 'Hypertensive Retinopathy',
-      normal: 'Normal (Healthy Retina)'
+      diabetic_retinopathy: t?.cond_dr_title || 'Diabetic Retinopathy',
+      macular_degeneration: t?.cond_amd_title || 'Macular Degeneration',
+      glaucoma: t?.cond_glauc_title || 'Glaucoma',
+      cataract: t?.cond_cat_title || 'Cataract',
+      hypertensive_retinopathy: t?.cond_hr_title || 'Hypertensive Retinopathy',
+      normal: t?.cond_normal_title || 'Normal (Healthy Retina)'
     };
 
     evalList.innerHTML = ''; // Clear skeletons
@@ -671,7 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
   step3Next?.addEventListener('click', () => {
     const allDone = window.RetinaSafeSession && RetinaSafeSession.allGamesDone();
     console.log('View Full Report clicked, allDone =', allDone);
-    const t = TRANSLATIONS[state.currentLang];
+    const t = window.RetinaSafeI18N ? RetinaSafeI18N.getTranslations() : null;
     if (!allDone) {
       showToast(t?.err_step_games || "Please complete all 4 vision games first.");
       return;
