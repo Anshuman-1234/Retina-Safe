@@ -5,20 +5,19 @@ import os
 import io
 from PIL import Image
 
-import tensorflow as tf
-from tensorflow.keras.models import load_model
+from ai_edge_litert.interpreter import Interpreter
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 MODEL_CONFIG = {
-    'amd': os.path.join(BASE_PATH, 'AMD', 'models', 'yes_no_classifier.keras'),
-    'cataract': os.path.join(BASE_PATH, 'Cataract', 'models', 'yes_no_classifier.keras'),
-    'diabetes': os.path.join(BASE_PATH, 'Diabetes', 'models', 'yes_no_classifier.keras'),
-    'glaucoma': os.path.join(BASE_PATH, 'Glaucoma', 'models', 'yes_no_classifier.keras'),
-    'hypertensive': os.path.join(BASE_PATH, 'Hypertensive_Retinopathy', 'models', 'yes_no_classifier.keras'),
-    'normal': os.path.join(BASE_PATH, 'Normal', 'models', 'yes_no_classifier.keras')
+    'amd': os.path.join(BASE_PATH, 'AMD', 'models', 'yes_no_classifier.tflite'),
+    'cataract': os.path.join(BASE_PATH, 'Cataract', 'models', 'yes_no_classifier.tflite'),
+    'diabetes': os.path.join(BASE_PATH, 'Diabetes', 'models', 'yes_no_classifier.tflite'),
+    'glaucoma': os.path.join(BASE_PATH, 'Glaucoma', 'models', 'yes_no_classifier.tflite'),
+    'hypertensive': os.path.join(BASE_PATH, 'Hypertensive_Retinopathy', 'models', 'yes_no_classifier.tflite'),
+    'normal': os.path.join(BASE_PATH, 'Normal', 'models', 'yes_no_classifier.tflite')
 }
 
 # Create uploads directory and cleanup old files
@@ -36,15 +35,24 @@ def cleanup_old_uploads():
                 os.remove(f_path)
             except: pass
 
-# Pre-load Keras Models
+# Pre-load TFLite Models
 models = {}
-print("Loading Keras models...")
+print("Loading TFLite models...")
 for key, path in MODEL_CONFIG.items():
     if os.path.exists(path):
         try:
-            model = load_model(path)
-            models[key] = model
-            print(f"Loaded {key} Keras model.")
+            interpreter = Interpreter(model_path=path)
+            interpreter.allocate_tensors()
+            
+            input_details = interpreter.get_input_details()
+            output_details = interpreter.get_output_details()
+            
+            models[key] = {
+                'interpreter': interpreter,
+                'input_index': input_details[0]['index'],
+                'output_index': output_details[0]['index']
+            }
+            print(f"Loaded {key} TFLite model.")
         except Exception as e:
             print(f"Error loading {key} from {path}: {e}")
     else:
@@ -83,11 +91,15 @@ def predict():
         input_data = preprocess_image(img_bytes)
         results = []
         
-        for key, model in models.items():
+        for key, model_info in models.items():
             m_start = time.time()
             
-            # Using Keras model.predict
-            prediction = model.predict(input_data, verbose=0)
+            # Using TFLite Interpreter
+            interpreter = model_info['interpreter']
+            interpreter.set_tensor(model_info['input_index'], input_data)
+            interpreter.invoke()
+            prediction = interpreter.get_tensor(model_info['output_index'])
+            
             score = float(prediction[0][0])
             results.append({'id': key, 'score': score})
             print(f"Model {key} took {time.time() - m_start:.3f}s")

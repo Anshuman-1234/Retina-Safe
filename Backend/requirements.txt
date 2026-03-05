@@ -1,5 +1,5 @@
-flask
-flask-cors
+Flask
+Flask-Cors
+Pillow
 ai-edge-litert
 numpy
-pillow
