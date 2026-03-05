@@ -458,7 +458,7 @@ function updateGamesProgress() {
   const next = qs('#step3-next');
   if (bar) bar.style.width = `${(done / total) * 100}%`;
   if (label) label.textContent = `${done} of ${total} games completed`;
-  if (next) next.disabled = done < total;
+  if (next) next.disabled = !(window.RetinaSafeSession && RetinaSafeSession.allGamesDone());
 }
 
 // ── STEP 4: REPORT ─────────────────────────────────────────────
@@ -663,9 +663,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const step3Next = qs('#step3-next');
   step3Next?.addEventListener('click', () => {
-    const done = GAMES.filter(g => window.RetinaSafeSession && RetinaSafeSession.isGameDone(g.game_name)).length;
+    const allDone = window.RetinaSafeSession && RetinaSafeSession.allGamesDone();
     const t = TRANSLATIONS[state.currentLang];
-    if (done < 4) {
+    if (!allDone) {
       showToast(t?.err_step_games || "Please complete all 4 vision games first.");
       return;
     }
