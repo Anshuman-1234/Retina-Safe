@@ -20,20 +20,8 @@ MODEL_CONFIG = {
     'normal': os.path.join(BASE_PATH, 'Normal', 'models', 'yes_no_classifier.tflite')
 }
 
-# Create uploads directory and cleanup old files
-UPLOAD_FOLDER = os.path.join(BASE_PATH, 'uploads')
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+# (Uploads directory logic removed for Vercel serverless compatibility)
 
-def cleanup_old_uploads():
-    import time
-    now = time.time()
-    for f in os.listdir(UPLOAD_FOLDER):
-        f_path = os.path.join(UPLOAD_FOLDER, f)
-        if os.stat(f_path).st_mtime < now - 3600: # 1 hour
-            try:
-                os.remove(f_path)
-            except: pass
 
 # Pre-load TFLite Models
 models = {}
@@ -69,20 +57,11 @@ def preprocess_image(img_bytes):
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
-    cleanup_old_uploads()
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
     
     file = request.files['image']
-    
-    # Save image with a unique name
-    import uuid
-    filename = f"{uuid.uuid4()}.jpg"
-    filepath = os.path.join(UPLOAD_FOLDER, filename)
-    
     img_bytes = file.read()
-    with open(filepath, 'wb') as f:
-        f.write(img_bytes)
     
     try:
         import time
@@ -107,7 +86,7 @@ def predict():
         print(f"Total prediction time: {time.time() - start_time:.3f}s")
         return jsonify({
             'results': results,
-            'image_url': f"/api/uploads/{filename}"
+            'image_url': None
         })
     
     except Exception as e:
@@ -120,10 +99,6 @@ def health():
         'models_loaded': list(models.keys())
     })
 
-@app.route('/api/uploads/<filename>', methods=['GET'])
-def serve_upload(filename):
-    from flask import send_from_directory
-    return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
