@@ -453,12 +453,18 @@ window.addEventListener('storage', e => {
 function updateGamesProgress() {
   const done = GAMES.filter(g => window.RetinaSafeSession && RetinaSafeSession.isGameDone(g.game_name)).length;
   const total = GAMES.length;
+  console.log('updateGamesProgress: done', done, 'of', total);
   const bar = qs('#gpr-bar');
   const label = qs('#gpr-label');
   const next = qs('#step3-next');
   if (bar) bar.style.width = `${(done / total) * 100}%`;
   if (label) label.textContent = `${done} of ${total} games completed`;
-  if (next) next.disabled = !(window.RetinaSafeSession && RetinaSafeSession.allGamesDone());
+  const allDone = window.RetinaSafeSession && RetinaSafeSession.allGamesDone();
+  if (next) {
+    next.disabled = !allDone;
+    if (allDone) next.removeAttribute('disabled');
+    console.log('step3-next disabled set to', next.disabled);
+  }
 }
 
 // ── STEP 4: REPORT ─────────────────────────────────────────────
@@ -664,6 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const step3Next = qs('#step3-next');
   step3Next?.addEventListener('click', () => {
     const allDone = window.RetinaSafeSession && RetinaSafeSession.allGamesDone();
+    console.log('View Full Report clicked, allDone =', allDone);
     const t = TRANSLATIONS[state.currentLang];
     if (!allDone) {
       showToast(t?.err_step_games || "Please complete all 4 vision games first.");
