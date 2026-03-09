@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RetinaSafe — AI-Powered Retinal Screening</title>
-  <meta name="description"
-    content="RetinaSafe uses AI-powered retinal image analysis combined with gamified vision assessments to detect early eye health risks before symptoms appear." />
+  <meta name="description" content="RetinaSafe uses AI-powered retinal image analysis combined with gamified vision assessments to detect early eye health risks before symptoms appear." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <script src="i18n.js"></script>
 </head>
-
 <body>
 
-  <!-- Just a comment line to check the pr change -->
+<!-- Just a comment line to check the pr change -->
   <!-- Skip link for accessibility -->
   <a href="#main" class="skip-link">Skip to main content</a>
 
@@ -34,21 +28,14 @@
         <span class="nav-name"><span class="nav-name-dark">Retina</span><span class="nav-name-blue">Safe</span></span>
       </a>
       <ul class="nav-links" role="list">
-        <li><a href="#how-it-works" class="nav-link" data-i18n="nav_home">Home</a></li>
-        <li><a href="#how-it-works" class="nav-link" data-i18n="nav_how_it_works">How It Works</a></li>
-        <li><a href="dashboard.html" class="nav-link" data-i18n="nav_dashboard">Dashboard</a></li>
+        <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+        <li><a href="#conditions" class="nav-link">Conditions</a></li>
+        <li><a href="#games" class="nav-link">Vision Games</a></li>
+        <li><a href="#about" class="nav-link">About</a></li>
       </ul>
       <div class="nav-actions">
-        <div class="lang-selector">
-          <select id="lang-select" class="lang-select" aria-label="Select Language">
-            <option value="en" selected>English</option>
-            <option value="hi">हिन्दी (Hindi)</option>
-            <option value="or">ଓଡ଼ିଆ (Odia)</option>
-          </select>
-        </div>
-        <span class="nav-disclaimer-pill" aria-label="Disclaimer" data-i18n="nav_disclaimer">Screening tool only — not a
-          diagnosis</span>
-        <a href="screening.html" class="btn btn-primary btn-sm" data-i18n="btn_start_screening">Start Screening</a>
+        <span class="nav-disclaimer-pill" aria-label="Disclaimer">Screening tool only — not a diagnosis</span>
+        <a href="screening.html" class="btn btn-primary btn-sm">Start Screening</a>
       </div>
     </nav>
   </header>
@@ -61,19 +48,17 @@
     <section class="section hero-section" id="hero" aria-labelledby="hero-heading">
       <div class="container hero-grid">
         <div class="hero-content fade-up">
-          <p class="eyebrow" data-i18n="hero_eyebrow">AI-Powered Retinal Screening</p>
-          <h1 id="hero-heading" class="hero-heading" data-i18n="hero_heading">
+          <p class="eyebrow">AI-Powered Retinal Screening</p>
+          <h1 id="hero-heading" class="hero-heading">
             See the risks<br />
             <em>before they see you</em>
           </h1>
-          <p class="hero-description" data-i18n="hero_desc">
-            RetinaSafe combines deep learning retinal image analysis with scientifically designed vision games to detect
-            early signs of diabetic retinopathy, glaucoma, AMD, and cataracts — before symptoms appear.
+          <p class="hero-description">
+            RetinaSafe combines deep learning retinal image analysis with scientifically designed vision games to detect early signs of diabetic retinopathy, glaucoma, AMD, and cataracts — before symptoms appear.
           </p>
           <div class="hero-cta-group">
-            <a href="screening.html" class="btn btn-primary btn-lg" id="start" data-i18n="btn_begin_free">Begin Free
-              Screening</a>
-            <a href="#how-it-works" class="btn btn-outline btn-lg" data-i18n="btn_how_it_works">See How It Works</a>
+            <a href="screening.html" class="btn btn-primary btn-lg" id="start">Begin Free Screening</a>
+            <a href="#how-it-works" class="btn btn-outline btn-lg">See How It Works</a>
           </div>
           <div class="hero-trust-row" aria-label="Trust indicators">
             <div class="trust-item">
@@ -126,9 +111,7 @@
     <div class="disclaimer-banner" role="note" aria-label="Medical disclaimer">
       <div class="container">
         <p>
-          <strong>⚠ Medical Disclaimer:</strong> RetinaSafe is a screening and risk stratification tool only. It is not
-          a substitute for clinical examination or professional diagnosis. All results should be reviewed with a
-          qualified ophthalmologist before acting on them. No personal data or retinal images are stored or transmitted.
+          <strong>⚠ Medical Disclaimer:</strong> RetinaSafe is a screening and risk stratification tool only. It is not a substitute for clinical examination or professional diagnosis. All results should be reviewed with a qualified ophthalmologist before acting on them. No personal data or retinal images are stored or transmitted.
         </p>
       </div>
     </div>
@@ -140,9 +123,7 @@
         <div class="section-header">
           <p class="eyebrow">What We Detect</p>
           <h2 id="conditions-heading">Four conditions. One platform.</h2>
-          <p class="section-sub">Retinal diseases progress silently — most are only detected after irreversible damage.
-            RetinaSafe screens for the four most common retinal and ocular conditions using AI analysis and functional
-            vision testing.</p>
+          <p class="section-sub">Retinal diseases progress silently — most are only detected after irreversible damage. RetinaSafe screens for the four most common retinal and ocular conditions using AI analysis and functional vision testing.</p>
         </div>
 
 
@@ -155,9 +136,7 @@
               <span class="card-icon" aria-hidden="true">💧</span>
             </div>
             <h3 class="card-title">Diabetic Retinopathy</h3>
-            <p class="card-description">Damage to retinal blood vessels caused by diabetes. Detectable through
-              microaneurysms, haemorrhages, and exudates — and through contrast sensitivity loss measured by our
-              Contrast Discrimination Game.</p>
+            <p class="card-description">Damage to retinal blood vessels caused by diabetes. Detectable through microaneurysms, haemorrhages, and exudates — and through contrast sensitivity loss measured by our Contrast Discrimination Game.</p>
             <div class="card-tag-row">
               <span class="card-tag">Contrast Game</span>
               <span class="card-tag">CNN Analysis</span>
@@ -165,16 +144,13 @@
           </article>
 
 
-          <article class="condition-card card-amd fade-up" role="listitem" style="--accent: var(--amd-color)"
-            data-delay="100">
+          <article class="condition-card card-amd fade-up" role="listitem" style="--accent: var(--amd-color)" data-delay="100">
             <div class="card-stripe"></div>
             <div class="card-icon-wrap" style="--icon-bg: rgba(139,92,246,0.10)">
               <span class="card-icon" aria-hidden="true">🎯</span>
             </div>
             <h3 class="card-title">Macular Degeneration</h3>
-            <p class="card-description">Degeneration of the macula — the central retina responsible for fine detail
-              vision. Our Dynamic Amsler Grid detects metamorphopsia (wavy vision) validated against clinical-grade
-              paper tests.</p>
+            <p class="card-description">Degeneration of the macula — the central retina responsible for fine detail vision. Our Dynamic Amsler Grid detects metamorphopsia (wavy vision) validated against clinical-grade paper tests.</p>
             <div class="card-tag-row">
               <span class="card-tag">Amsler Grid</span>
               <span class="card-tag">Drusen Detection</span>
@@ -182,16 +158,13 @@
           </article>
 
 
-          <article class="condition-card card-glauc fade-up" role="listitem" style="--accent: var(--glauc-color)"
-            data-delay="200">
+          <article class="condition-card card-glauc fade-up" role="listitem" style="--accent: var(--glauc-color)" data-delay="200">
             <div class="card-stripe"></div>
             <div class="card-icon-wrap" style="--icon-bg: rgba(16,185,129,0.10)">
               <span class="card-icon" aria-hidden="true">👁️</span>
             </div>
             <h3 class="card-title">Glaucoma</h3>
-            <p class="card-description">Progressive optic nerve damage that destroys peripheral vision in arcuate
-              patterns. Our Peripheral Reaction Tester maps 8 visual field zones with 32 calibrated flashes — modelled
-              on Humphrey perimetry.</p>
+            <p class="card-description">Progressive optic nerve damage that destroys peripheral vision in arcuate patterns. Our Peripheral Reaction Tester maps 8 visual field zones with 32 calibrated flashes — modelled on Humphrey perimetry.</p>
             <div class="card-tag-row">
               <span class="card-tag">Perimetry Game</span>
               <span class="card-tag">Field Mapping</span>
@@ -199,16 +172,13 @@
           </article>
 
 
-          <article class="condition-card card-cat fade-up" role="listitem" style="--accent: var(--cat-color)"
-            data-delay="300">
+          <article class="condition-card card-cat fade-up" role="listitem" style="--accent: var(--cat-color)" data-delay="300">
             <div class="card-stripe"></div>
             <div class="card-icon-wrap" style="--icon-bg: rgba(245,158,11,0.10)">
               <span class="card-icon" aria-hidden="true">🌈</span>
             </div>
             <h3 class="card-title">Cataract</h3>
-            <p class="card-description">Yellowing and opacification of the crystalline lens causes characteristic
-              blue-yellow colour discrimination loss. Our Hue Sorting Game isolates tritan axis deficiency with 10 timed
-              rounds across increasing difficulty.</p>
+            <p class="card-description">Yellowing and opacification of the crystalline lens causes characteristic blue-yellow colour discrimination loss. Our Hue Sorting Game isolates tritan axis deficiency with 10 timed rounds across increasing difficulty.</p>
             <div class="card-tag-row">
               <span class="card-tag">Hue Sorting</span>
               <span class="card-tag">Tritan Axis</span>
@@ -227,8 +197,7 @@
         <div class="section-header">
           <p class="eyebrow">How It Works</p>
           <h2 id="pipeline-heading">From image to insight in minutes</h2>
-          <p class="section-sub">A seamless four-step process combining structural retinal imaging with functional
-            vision assessment — generating a clinically structured risk report.</p>
+          <p class="section-sub">A seamless four-step process combining structural retinal imaging with functional vision assessment — generating a clinically structured risk report.</p>
         </div>
 
 
@@ -239,8 +208,7 @@
             <div class="step-badge" aria-hidden="true">1</div>
             <div class="step-connector step-connector-right" aria-hidden="true"></div>
             <h3 class="step-title">Capture Fundus Image</h3>
-            <p class="step-description">Upload a retinal fundus photograph captured via a fundus camera, smartphone
-              adapter, or clinic equipment. Our preprocessing pipeline handles normalization and quality validation.</p>
+            <p class="step-description">Upload a retinal fundus photograph captured via a fundus camera, smartphone adapter, or clinic equipment. Our preprocessing pipeline handles normalization and quality validation.</p>
             <div class="step-meta">
               <span class="step-tag">📷 Camera / Adapter</span>
               <span class="step-time">~1 min</span>
@@ -252,9 +220,7 @@
             <div class="step-badge" aria-hidden="true">2</div>
             <div class="step-connector step-connector-right" aria-hidden="true"></div>
             <h3 class="step-title">AI Retinal Analysis</h3>
-            <p class="step-description">Our CNN model analyses the fundus image for microaneurysms, haemorrhages,
-              exudates, optic disc abnormalities, and vessel irregularities — generating probability-based risk
-              indicators per disease class.</p>
+            <p class="step-description">Our CNN model analyses the fundus image for microaneurysms, haemorrhages, exudates, optic disc abnormalities, and vessel irregularities — generating probability-based risk indicators per disease class.</p>
             <div class="step-meta">
               <span class="step-tag">🧠 CNN Model</span>
               <span class="step-time">~30 sec</span>
@@ -266,9 +232,7 @@
             <div class="step-badge" aria-hidden="true">3</div>
             <div class="step-connector step-connector-right" aria-hidden="true"></div>
             <h3 class="step-title">Vision Game Assessment</h3>
-            <p class="step-description">Four scientifically designed games assess functional retinal performance:
-              contrast sensitivity, central distortion, peripheral field, and colour discrimination. Each score adjusts
-              AI model confidence.</p>
+            <p class="step-description">Four scientifically designed games assess functional retinal performance: contrast sensitivity, central distortion, peripheral field, and colour discrimination. Each score adjusts AI model confidence.</p>
             <div class="step-meta">
               <span class="step-tag">🎮 4 Games</span>
               <span class="step-time">~6 min</span>
@@ -279,8 +243,7 @@
           <div class="pipeline-step fade-up" role="listitem" data-delay="300">
             <div class="step-badge" aria-hidden="true">4</div>
             <h3 class="step-title">Risk Report & Referral</h3>
-            <p class="step-description">A structured risk report with Low / Moderate / High classification, annotated
-              findings, recommended next steps, and nearby ophthalmologist listings. Downloadable for your doctor.</p>
+            <p class="step-description">A structured risk report with Low / Moderate / High classification, annotated findings, recommended next steps, and nearby ophthalmologist listings. Downloadable for your doctor.</p>
             <div class="step-meta">
               <span class="step-tag">📋 PDF Report</span>
               <span class="step-time">Instant</span>
@@ -299,8 +262,7 @@
         <div class="section-header">
           <p class="eyebrow">Gamified Vision Testing</p>
           <h2 id="games-heading">Science disguised as play</h2>
-          <p class="section-sub">Each mini-game is grounded in validated psychophysical testing protocols. Gamification
-            improves engagement, encourages repeat screening, and enables longitudinal data collection over time.</p>
+          <p class="section-sub">Each mini-game is grounded in validated psychophysical testing protocols. Gamification improves engagement, encourages repeat screening, and enables longitudinal data collection over time.</p>
         </div>
 
 
@@ -314,9 +276,7 @@
             </div>
             <h3 class="game-title">Contrast Discrimination</h3>
             <p class="game-subtitle">Detects Diabetic Retinopathy</p>
-            <p class="game-description">Identify a subtly different object against a grey background across 10
-              difficulty levels — from 19.6% contrast down to 1.6%. Modelled on the Pelli-Robson Contrast Sensitivity
-              Chart. Minimum 30 trials for statistical reliability.</p>
+            <p class="game-description">Identify a subtly different object against a grey background across 10 difficulty levels — from 19.6% contrast down to 1.6%. Modelled on the Pelli-Robson Contrast Sensitivity Chart. Minimum 30 trials for statistical reliability.</p>
             <div class="game-spec-row">
               <span class="game-spec"><strong>10</strong> levels</span>
               <span class="game-spec"><strong>30+</strong> trials</span>
@@ -332,9 +292,7 @@
             </div>
             <h3 class="game-title">Dynamic Amsler Grid</h3>
             <p class="game-subtitle">Detects Macular Degeneration</p>
-            <p class="game-description">Monocular grid test: mark any lines that appear wavy, missing, or distorted.
-              Canvas uses weighted zones — central foveal markings carry 4× the weight of peripheral. Validated against
-              paper Amsler with 0.9+ correlation.</p>
+            <p class="game-description">Monocular grid test: mark any lines that appear wavy, missing, or distorted. Canvas uses weighted zones — central foveal markings carry 4× the weight of peripheral. Validated against paper Amsler with 0.9+ correlation.</p>
             <div class="game-spec-row">
               <span class="game-spec"><strong>2</strong> eyes tested</span>
               <span class="game-spec"><strong>4</strong> weight zones</span>
@@ -350,9 +308,7 @@
             </div>
             <h3 class="game-title">Peripheral Reaction Tester</h3>
             <p class="game-subtitle">Detects Glaucoma</p>
-            <p class="game-description">Fixate on the centre while peripheral dots flash for 200ms across 8 visual field
-              zones — NW, N, NE, E, SE, S, SW, W. 4 flashes per zone. Consistent misses in a zone indicate probable
-              scotoma. Modelled on Humphrey perimetry.</p>
+            <p class="game-description">Fixate on the centre while peripheral dots flash for 200ms across 8 visual field zones — NW, N, NE, E, SE, S, SW, W. 4 flashes per zone. Consistent misses in a zone indicate probable scotoma. Modelled on Humphrey perimetry.</p>
             <div class="game-spec-row">
               <span class="game-spec"><strong>8</strong> zones</span>
               <span class="game-spec"><strong>32</strong> flashes</span>
@@ -368,9 +324,7 @@
             </div>
             <h3 class="game-title">Color Hue Sorting</h3>
             <p class="game-subtitle">Detects Cataract</p>
-            <p class="game-description">Find the tile with a subtly different hue — shifting along the blue-yellow
-              tritan axis that cataract selectively impairs. 10 timed rounds, starting at +18° hue shift down to +1.5°.
-              Modelled on the Farnsworth D-15 Dichotomous Test.</p>
+            <p class="game-description">Find the tile with a subtly different hue — shifting along the blue-yellow tritan axis that cataract selectively impairs. 10 timed rounds, starting at +18° hue shift down to +1.5°. Modelled on the Farnsworth D-15 Dichotomous Test.</p>
             <div class="game-spec-row">
               <span class="game-spec"><strong>10</strong> rounds</span>
               <span class="game-spec"><strong>30s</strong> limit</span>
@@ -391,12 +345,8 @@
           <div class="why-content fade-up">
             <p class="eyebrow">Why It Matters</p>
             <h2 id="why-heading">Preventable blindness is a solvable problem</h2>
-            <p class="why-body">Vision impairment due to retinal diseases is one of the leading causes of preventable
-              blindness worldwide. Most retinal disorders progress silently — detected only after irreversible damage
-              has occurred.</p>
-            <p class="why-body">RetinaSafe acts as a first-line screening system, enabling early intervention especially
-              in underserved regions where specialist access is limited, equipment costs are prohibitive, and awareness
-              is low.</p>
+            <p class="why-body">Vision impairment due to retinal diseases is one of the leading causes of preventable blindness worldwide. Most retinal disorders progress silently — detected only after irreversible damage has occurred.</p>
+            <p class="why-body">RetinaSafe acts as a first-line screening system, enabling early intervention especially in underserved regions where specialist access is limited, equipment costs are prohibitive, and awareness is low.</p>
             <a href="screening.html" class="btn btn-primary">Start Your Screening</a>
           </div>
 
@@ -420,18 +370,12 @@
           <div class="checklist-panel fade-up" data-delay="100">
             <h4 class="checklist-header">RetinaSafe is designed for</h4>
             <ul class="checklist" role="list">
-              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>People with diabetes or
-                hypertension</li>
-              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Adults over 50 with no recent
-                eye exam</li>
-              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Anyone with a family history of
-                eye disease</li>
-              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Rural and underserved
-                communities</li>
-              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Corporate employee wellness
-                programs</li>
-              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Clinics seeking scalable triage
-                tools</li>
+              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>People with diabetes or hypertension</li>
+              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Adults over 50 with no recent eye exam</li>
+              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Anyone with a family history of eye disease</li>
+              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Rural and underserved communities</li>
+              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Corporate employee wellness programs</li>
+              <li class="checklist-item"><span class="check" aria-hidden="true">✓</span>Clinics seeking scalable triage tools</li>
             </ul>
           </div>
         </div>
@@ -445,8 +389,7 @@
       <div class="container container-narrow cta-content fade-up">
         <p class="eyebrow eyebrow-light">Get Started Today</p>
         <h2 id="cta-heading" class="cta-heading">Your eyes deserve early attention</h2>
-        <p class="cta-description">RetinaSafe is free to use and takes less than 10 minutes. No specialist required. No
-          costly equipment. Just a camera, a screen, and a few minutes of your time.</p>
+        <p class="cta-description">RetinaSafe is free to use and takes less than 10 minutes. No specialist required. No costly equipment. Just a camera, a screen, and a few minutes of your time.</p>
         <div class="cta-btn-group">
           <a href="screening.html" class="btn btn-white btn-lg">Begin Free Screening</a>
           <a href="#how-it-works" class="btn btn-ghost-white btn-lg">Learn More</a>
@@ -488,11 +431,9 @@
       <div class="footer-links-col">
         <h4 class="footer-col-heading">Conditions</h4>
         <ul class="footer-links" role="list">
-          <li><a href="https://en.wikipedia.org/wiki/Diabetic_retinopathy" class="footer-link" target="_blank">Diabetic
-              Retinopathy</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Macular_degeneration" class="footer-link" target="_blank">Macular
-              Degeneration</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Glaucoma" class="footer-link" target="_blank">Glaucoma</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Diabetic_retinopathy" class="footer-link" target="_blank">Diabetic Retinopathy</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Macular_degeneration" class="footer-link" target="_blank">Macular Degeneration</a></li>
+          <li><a href="https://en.wikipedia.org/wiki/Glaucoma" class="footer-link" target="_blank" >Glaucoma</a></li>
           <li><a href="https://en.wikipedia.org/wiki/Cataract" class="footer-link" target="_blank">Cataract</a></li>
         </ul>
       </div>
@@ -512,9 +453,7 @@
 
     <div class="footer-bottom">
       <div class="container footer-bottom-inner">
-        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. It is not a
-          medical device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.
-        </p>
+        <p class="footer-disclaimer" role="note">RetinaSafe is a screening and risk stratification tool. It is not a medical device or diagnostic replacement. All results must be reviewed by a qualified healthcare professional.</p>
         <p class="footer-copyright">© 2025 RetinaSafe · Team Rusty Brain</p>
       </div>
     </div>
@@ -524,5 +463,5 @@
   <script src="main.js"></script>
   <script src="theme.js"></script>
 </body>
-
 </html>
+
