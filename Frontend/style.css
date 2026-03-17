@@ -517,6 +517,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
 
@@ -619,9 +620,14 @@ img { display: block; max-width: 100%; }
 }
 
 
-.chip-top-right  { top: 12%;  right: 0;  animation-delay: 0s; }
-.chip-bottom-left{ bottom: 14%; left: 0; animation-delay: 1.5s; }
-.chip-mid-right  { top: 52%;  right: -5%; animation-delay: 0.8s; }
+.chip-top-right  { top: -18px;   right: -10px;  animation-delay: 0s; }
+.chip-bottom-left{ bottom: -18px; left: -10px;  animation-delay: 1.5s; }
+.chip-mid-right  { top: 50%;     right: -16px;  transform: translateY(-50%); animation: chip-float-mid 4s ease-in-out infinite; animation-delay: 0.8s; }
+
+@keyframes chip-float-mid {
+  0%, 100% { transform: translateY(calc(-50% + 0px)); }
+  50%       { transform: translateY(calc(-50% - 6px)); }
+}
 
 
 .chip-dot {
