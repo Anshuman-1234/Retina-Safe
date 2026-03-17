@@ -16,11 +16,100 @@ const qsa = (s, ctx = document) => [...ctx.querySelectorAll(s)];
 const state = { currentStep: 1, modelPolling: null, reportData: null, currentLang: 'en', cameraFacing: 'environment' };
 
 // ── TRANSLATIONS ───────────────────────────────────────────────
-// Managed by i18n.js. Update dynamic components on language change.
-window.addEventListener('rsLanguageChanged', (e) => {
-  state.currentLang = e.detail.lang;
-  if (state.currentStep === 3) renderGamesStep();
-});
+const TRANSLATIONS = {
+  en: {
+    s1_heading: "Patient Information",
+    s1_desc: "Enter your medical background to calibrate the diagnostic weights.",
+    s2_heading: "Upload Fundus Image",
+    s2_desc: "Upload a retinal fundus photograph. This can be captured via a fundus camera, smartphone adapter, or provided by your clinic.",
+    s3_heading: "Vision Challenges",
+    s3_desc: "Complete all 4 screening games to measure functional vision performance across different retinal zones.",
+    s4_heading: "Clinical Analysis Report",
+    s4_desc: "Your screening results have been generated using professional-grade TFLite AI models.",
+    warn_title: "Important Requirement",
+    warn_text: "Please upload only clear, clinically valid retinal fundus images. Providing unrelated images will lead to unexpected results.",
+    btn_next: "Next Step",
+    btn_prev: "Previous",
+    btn_capture: "Capture",
+    btn_switch: "Switch Camera",
+    btn_cancel: "Cancel",
+    btn_upload: "Select File",
+    err_step_upload: "You must upload a valid retinal image before proceeding.",
+    err_step_games: "Please complete all 4 vision games before generating your report.",
+    toast_welcome: "RetinaSafe: Multilingual support activated."
+  },
+  hi: {
+    s1_heading: "रोगी की जानकारी",
+    s1_desc: "डायग्नोस्टिक वेट्स को कैलिब्रेट करने के लिए अपनी चिकित्सा पृष्ठभूमि दर्ज करें।",
+    s2_heading: "फंडस इमेज अपलोड करें",
+    s2_desc: "रेटिनल फंडस फोटोग्राफ अपलोड करें। इसे फंडस कैमरा या स्मार्टफोन एडाप्टर के माध्यम से लिया जा सकता है।",
+    s3_heading: "दृष्टि चुनौतियाँ",
+    s3_desc: "विभिन्न रेटिनल ज़ोन में दृष्टि प्रदर्शन को मापने के लिए सभी 4 स्क्रीनिंग गेम पूरे करें।",
+    s4_heading: "नैदानिक विश्लेषण रिपोर्ट",
+    s4_desc: "आपकी स्क्रीनिंग के परिणाम पेशेवर TFLite AI मॉडल का उपयोग करके तैयार किए गए हैं।",
+    warn_title: "महत्वपूर्ण आवश्यकता",
+    warn_text: "कृपया केवल स्पष्ट और मान्य रेटिनल फंडस छवियां अपलोड करें। असंबंधित चित्र गलत परिणाम देंगे।",
+    btn_next: "अगला कदम",
+    btn_prev: "पिछला",
+    btn_capture: "फोटो लें",
+    btn_switch: "कैमरा बदलें",
+    btn_cancel: "रद्द करें",
+    btn_upload: "फाइल चुनें",
+    err_step_upload: "आगे बढ़ने से पहले आपको एक रेटिनल छवि अपलोड करनी होगी।",
+    err_step_games: "रिपोर्ट तैयार करने से पहले कृपया सभी 4 विजन गेम पूरे करें।",
+    toast_welcome: "रेटीनासेफ: बहुभाषी समर्थन सक्रिय।"
+  },
+  or: {
+    s1_heading: "ରୋଗୀ ସୂଚନା",
+    s1_desc: "ଡାଇଗ୍ନୋଷ୍ଟିକ୍ ଓଜନକୁ କାଲିବ୍ରେଟ୍ କରିବା ପାଇଁ ଆପଣଙ୍କର ଚିକିତ୍ସା ପୃଷ୍ଠଭୂମି ପ୍ରବେଶ କରନ୍ତୁ |",
+    s2_heading: "ଫଣ୍ଡସ୍ ଚିତ୍ର ଅପଲୋଡ୍ କରନ୍ତୁ",
+    s2_desc: "ଏକ ରେଟିନାଲ୍ ଫଣ୍ଡସ୍ ଆଲୋକଚିତ୍ର ଅପଲୋଡ୍ କରନ୍ତୁ | ଏହା ଏକ କ୍ୟାମେରା କିମ୍ବା ସ୍ମାର୍ଟଫୋନ୍ ମାଧ୍ୟମରେ ନିଆଯାଇପାରେ |",
+    s3_heading: "ଦୃଷ୍ଟି ଆହ୍ୱାନ",
+    s3_desc: "ଦୃଷ୍ଟି ପ୍ରଦର୍ଶନ ମାପିବା ପାଇଁ ସମସ୍ତ 4 ଟି ସ୍କ୍ରିନିଂ ଗେମ୍ ସମାପ୍ତ କରନ୍ତୁ |",
+    s4_heading: "କ୍ଲିନିକାଲ୍ ବିଶ୍ଳେଷଣ ରିପୋର୍ଟ",
+    s4_desc: "ଆପଣଙ୍କର ସ୍କ୍ରିନିଂ ଫଳାଫଳ ପ୍ରଫେସନାଲ୍ TFLite AI ମଡେଲ୍ ବ୍ୟବହାର କରି ପ୍ରସ୍ତୁତ କରାଯାଇଛି |",
+    warn_title: "ଗୁରୁତ୍ୱପୂର୍ଣ୍ଣ ଆବଶ୍ୟକତା",
+    warn_text: "ଦୟାକରି କେବଳ ସ୍ପଷ୍ଟ ଏବଂ ବୈଧ ରେଟିନାଲ୍ ଚିତ୍ର ଅପଲୋଡ୍ କରନ୍ତୁ | ଅସମ୍ବନ୍ଧିତ ଚିତ୍ରଗୁଡ଼ିକ ଭୁଲ ଫଳାଫଳ ଦେବ |",
+    btn_next: "ପରବର୍ତ୍ତୀ ପଦକ୍ଷେପ",
+    btn_prev: "ପୂର୍ବବର୍ତ୍ତୀ",
+    btn_capture: "ଫଟୋ ଉଠାନ୍ତୁ",
+    btn_switch: "କ୍ୟାମେରା ବଦଳାନ୍ତୁ",
+    btn_cancel: "ବାତିଲ୍ କରନ୍ତୁ",
+    btn_upload: "ଫାଇଲ୍ ବାଛନ୍ତୁ",
+    err_step_upload: "ଆଗକୁ ବଢିବା ପାଇଁ ଆପଣଙ୍କୁ ଏକ ରେଟିନାଲ୍ ଚିତ୍ର ଅପଲୋଡ୍ କରିବାକୁ ପଡିବ |",
+    err_step_games: "ରିପୋର୍ଟ ପ୍ରସ୍ତୁତ କରିବା ପୂର୍ବରୁ ଦୟାକରି ସମସ୍ତ 4 ଟି ଭିଜନ ଗେମ୍ ସମାପ୍ତ କରନ୍ତୁ |",
+    toast_welcome: "ରେଟିନାସେଫ୍: ବହୁଭାଷୀ ସମର୍ଥନ ସକ୍ରିୟ |"
+  }
+};
+
+function updateLanguage(lang) {
+  state.currentLang = lang;
+  const t = TRANSLATIONS[lang];
+  if (!t) return;
+
+  const map = {
+    '#s1-heading': t.s1_heading, '#s1-desc': t.s1_desc,
+    '#s2-heading': t.s2_heading, '#s2-desc': t.s2_desc,
+    '#s3-heading': t.s3_heading, '#s3-desc': t.s3_desc,
+    '#s4-heading': t.s4_heading, '#s4-desc': t.s4_desc,
+    '#warn-title': t.warn_title, '#warn-text': t.warn_text,
+    '#capture-image': t.btn_capture, '#switch-camera': t.btn_switch, '#close-camera': t.btn_cancel,
+    '#upload-link-text': t.btn_upload
+  };
+
+  Object.entries(map).forEach(([sel, val]) => {
+    const el = qs(sel);
+    if (el) {
+      if (el.tagName === 'INPUT' || el.tagName === 'SELECT') el.placeholder = val;
+      else el.innerHTML = val;
+    }
+  });
+
+  qsa('.btn-next-step').forEach(btn => btn.textContent = t.btn_next);
+  qsa('.btn-prev-step').forEach(btn => btn.textContent = t.btn_prev);
+
+  showToast(t.toast_welcome);
+}
 
 function showToast(msg) {
   const toast = qs('#rs-toast');
@@ -30,19 +119,6 @@ function showToast(msg) {
   toast.classList.add('visible');
   setTimeout(() => toast.classList.remove('visible'), 3000);
 }
-
-// Global reveal for i18n.js usage
-window.showToast = showToast;
-
-function updateLanguage(lang) {
-  if (window.RetinaSafeI18N) {
-    RetinaSafeI18N.changeLang(lang);
-  } else {
-    state.currentLang = lang;
-    if (state.currentStep === 3) renderGamesStep();
-  }
-}
-window.updateLanguage = updateLanguage;
 
 // ── GAME DEFINITIONS ───────────────────────────────────────────
 const GAMES = [
@@ -81,13 +157,14 @@ function goToStep(n) {
   if (n < 1 || n > 4) return;
 
   const session = window.RetinaSafeSession ? RetinaSafeSession.get() : null;
+  const t = TRANSLATIONS[state.currentLang];
 
   // STRICT VALIDATION
   if (n === 2 && !session) return;
 
   if (n === 3) {
     if (!session || !session.imageUploaded) {
-      showToast(window.RetinaSafeI18N ? RetinaSafeI18N.get('err_step_upload') : "Please upload an image first.");
+      showToast(t?.err_step_upload || "Please upload an image first.");
       return;
     }
   }
@@ -95,7 +172,7 @@ function goToStep(n) {
   if (n === 4) {
     const done = Object.keys(RetinaSafeSession.getGameResults()).length;
     if (done < 4) {
-      showToast(window.RetinaSafeI18N ? RetinaSafeI18N.get('err_step_games') : "Please complete all 4 games first.");
+      showToast(t?.err_step_games || "Please complete all 4 games first.");
       return;
     }
   }
@@ -188,29 +265,20 @@ function initStep2() {
 
     // Preview
     const reader = new FileReader();
-    const readerPromise = new Promise(resolve => {
-      reader.onload = e => {
-        const dataUrl = e.target.result;
-        if (previewImg) previewImg.src = dataUrl;
-        if (previewName) previewName.textContent = file.name;
-        if (previewSize) previewSize.textContent = fmtBytes(file.size);
-
-        // Store preview for later steps
-        state.lastUploadedImage = dataUrl;
-
-        uploadIdle?.classList.add('hidden');
-        camView?.classList.add('hidden');
-        uploadPrev?.classList.remove('hidden');
-        resolve();
-      };
-    });
+    reader.onload = e => {
+      if (previewImg) previewImg.src = e.target.result;
+      if (previewName) previewName.textContent = file.name;
+      if (previewSize) previewSize.textContent = fmtBytes(file.size);
+      uploadIdle?.classList.add('hidden');
+      camView?.classList.add('hidden'); // Ensure camera view is hidden if shown
+      uploadPrev?.classList.remove('hidden');
+    };
     reader.readAsDataURL(file);
 
     showStatus('Analyzing image with AI... This may take a minute.', 'info');
     if (step2Next) step2Next.disabled = true;
 
     try {
-      await readerPromise; // Wait for preview to be ready
       const session = window.RetinaSafeSession ? RetinaSafeSession.get() : RetinaSafeSession.init();
       if (!window.RetinaSafeAPI) throw new Error("API Bridge not loaded");
 
@@ -218,12 +286,7 @@ function initStep2() {
       const res = RetinaSafeAPI.mapBackendToPredictions(rawRes);
 
       if (window.RetinaSafeSession) {
-        RetinaSafeSession.setImageUploaded({
-          filename: file.name,
-          size: file.size,
-          serverSessionId: session.sessionId,
-          server_image_url: res.image_url // Store the URL from server
-        });
+        RetinaSafeSession.setImageUploaded({ filename: file.name, size: file.size, serverSessionId: session.sessionId });
         RetinaSafeSession.setModelOutput(res);
       }
 
@@ -309,7 +372,7 @@ function initStep2() {
 
   step2Next?.addEventListener('click', () => {
     const session = RetinaSafeSession.get();
-    const t = window.RetinaSafeI18N ? RetinaSafeI18N.getTranslations() : null;
+    const t = TRANSLATIONS[state.currentLang];
     if (!session || !session.imageUploaded) {
       showToast(t?.err_step_upload || "Please upload an image first.");
       return;
@@ -368,15 +431,6 @@ function renderGamesStep() {
   grid.innerHTML = GAMES.map(g => {
     const done = window.RetinaSafeSession ? RetinaSafeSession.isGameDone(g.game_name) : false;
     const results = done && window.RetinaSafeSession ? RetinaSafeSession.getGameResults()[g.game_name] : null;
-
-    // Localized strings
-    const i18n = window.RetinaSafeI18N;
-    const title = i18n ? i18n.get(`game_${g.id}_title`) : g.label;
-    const desc = i18n ? i18n.get(`game_${g.id}_desc`) : g.description;
-    const detects = i18n ? i18n.get(`game_${g.id}_detects`) : g.detects;
-    const badgeText = done ? (i18n ? i18n.get('game_complete') : 'Complete') : (i18n ? i18n.get('game_not_started') : 'Not started');
-    const btnText = done ? (i18n ? i18n.get('btn_redo') : 'Redo') : (i18n ? i18n.get('btn_launch') : 'Launch Game');
-
     const score = results
       ? (results.dr_contrast_score ?? results.amd_amsler_score ?? results.glaucoma_peripheral_score ?? results.cataract_hue_score ?? results.score ?? '—')
       : null;
@@ -391,20 +445,20 @@ function renderGamesStep() {
               <span class="gc-emoji" aria-hidden="true">${g.emoji}</span>
             </div>
             ${done
-        ? `<span class="gc-done-badge">✓ ${badgeText}</span>`
-        : `<span class="gc-pending-badge">${badgeText}</span>`}
+        ? `<span class="gc-done-badge">✓ Complete</span>`
+        : `<span class="gc-pending-badge">Not started</span>`}
           </div>
-          <h3 class="gc-title">${title}</h3>
-          <span class="gc-detects-tag">Detects: ${detects}</span>
-          <p class="gc-desc">${desc}</p>
+          <h3 class="gc-title">${g.label}</h3>
+          <span class="gc-detects-tag">Detects: ${g.detects}</span>
+          <p class="gc-desc">${g.description}</p>
           <div class="gc-specs">${g.specs.map(s => `<span class="gc-spec">${s}</span>`).join('')}</div>
         </div>
         <div class="gc-card-footer">
           ${done
         ? `<span class="gc-score-label">Score: <span class="gc-score-value">${score}/100</span></span>
-               <button class="btn btn-outline btn-sm" data-launch="${g.id}">${btnText}</button>`
+               <button class="btn btn-outline btn-sm" data-launch="${g.id}">↺ Redo</button>`
         : `<span class="gc-score-label">Ready to begin</span>
-               <button class="btn btn-primary btn-sm" data-launch="${g.id}">${btnText}</button>`}
+               <button class="btn btn-primary btn-sm" data-launch="${g.id}">▶ Launch Game</button>`}
         </div>
       </div>`;
   }).join('');
@@ -463,18 +517,12 @@ window.addEventListener('storage', e => {
 function updateGamesProgress() {
   const done = GAMES.filter(g => window.RetinaSafeSession && RetinaSafeSession.isGameDone(g.game_name)).length;
   const total = GAMES.length;
-  console.log('updateGamesProgress: done', done, 'of', total);
   const bar = qs('#gpr-bar');
   const label = qs('#gpr-label');
   const next = qs('#step3-next');
   if (bar) bar.style.width = `${(done / total) * 100}%`;
   if (label) label.textContent = `${done} of ${total} games completed`;
-  const allDone = window.RetinaSafeSession && RetinaSafeSession.allGamesDone();
-  if (next) {
-    next.disabled = !allDone;
-    if (allDone) next.removeAttribute('disabled');
-    console.log('step3-next disabled set to', next.disabled);
-  }
+  if (next) next.disabled = done < total;
 }
 
 // ── STEP 4: REPORT ─────────────────────────────────────────────
@@ -482,75 +530,20 @@ async function buildReport() {
   const session = window.RetinaSafeSession ? RetinaSafeSession.get() : null;
   const loadingDiv = qs('#report-loading');
   const contentDiv = qs('#report-content');
-  const statusEl = qs('#rs-scan-status');
-  const evalList = qs('#eval-results-list');
 
-  // Show Step 4 Loading/Scanner View
+  // Show loading state immediately
   if (loadingDiv) loadingDiv.hidden = false;
   if (contentDiv) contentDiv.hidden = true;
 
-  // 0. Update Hero Image with uploaded preview
-  const heroImg = qs('.eval-hero-img');
-  if (heroImg) {
-    if (session?.imageMeta?.server_image_url) {
-      heroImg.src = session.imageMeta.server_image_url;
-    } else if (state.lastUploadedImage) {
-      heroImg.src = state.lastUploadedImage;
-    }
-  }
-
-  // 1. Populate Confidence Scores immediately (below animation)
-  if (evalList && session?.modelOutput?.predictions) {
-    const preds = session.modelOutput.predictions;
-    const t = window.RetinaSafeI18N ? RetinaSafeI18N.getTranslations() : null;
-    let html = '';
-    const names = {
-      diabetic_retinopathy: t?.cond_dr_title || 'Diabetic Retinopathy',
-      macular_degeneration: t?.cond_amd_title || 'Macular Degeneration',
-      glaucoma: t?.cond_glauc_title || 'Glaucoma',
-      cataract: t?.cond_cat_title || 'Cataract',
-      hypertensive_retinopathy: t?.cond_hr_title || 'Hypertensive Retinopathy',
-      normal: t?.cond_normal_title || 'Normal (Healthy Retina)'
-    };
-
-    evalList.innerHTML = ''; // Clear skeletons
-    Object.entries(preds).forEach(([key, data]) => {
-      const confidence = (data.probability * 100).toFixed(1);
-      const displayName = names[key] || key.replace(/_/g, ' ');
-      html += `
-        <div class="eval-result-row">
-          <span class="eval-res-id">${displayName}</span>
-          <span class="eval-res-score">${confidence}%</span>
-        </div>`;
-    });
-    evalList.innerHTML = html;
-  }
-
-  // 2. Simple status updates
-  const messages = [
-    "Analyzing vision game results...",
-    "Finalizing diagnostic report...",
-    "Preparing your screening summary..."
-  ];
-
-  let msgIdx = 0;
-  statusEl && (statusEl.textContent = messages[0]);
-  const interval = setInterval(() => {
-    if (statusEl && msgIdx < messages.length) {
-      statusEl.textContent = messages[msgIdx++];
-    }
-  }, 1000);
-
-  // 3. Process Final Fusion & Report
   try {
-    if (!window.RetinaSafeAPI) {
-      clearInterval(interval);
-      throw new Error("Connection Bridge (API) is missing.");
+    if (!window.RetinaSafeAPI) throw new Error("Connection Bridge (API) is missing. Please refresh.");
+
+    // Validate we have AI results
+    if (!session || !session.modelOutput) {
+      console.warn("No AI results found. Using baseline vision data.");
     }
 
-    // Shorter processing window for simple animation
-    await new Promise(r => setTimeout(r, 3500));
-
+    // Compute result (fusing game results and AI output)
     const r = await RetinaSafeAPI.computeReport(
       session?.sessionId || 'new-session',
       RetinaSafeSession.getGameResults(),
@@ -558,11 +551,10 @@ async function buildReport() {
       session?.medicalHistory
     );
 
-    clearInterval(interval);
     state.reportData = r;
     if (window.RetinaSafeSession) RetinaSafeSession.setReportReady(true);
 
-    // Transition to Final Content
+    // Transition UI
     if (loadingDiv) loadingDiv.hidden = true;
     if (contentDiv) {
       contentDiv.hidden = false;
@@ -570,15 +562,14 @@ async function buildReport() {
       console.info("[RetinaSafe] Report generated successfully.");
     }
   } catch (err) {
-    clearInterval(interval);
-    console.error('[RetinaSafe] Report generation failed:', err);
+    console.error('[RetinaSafe] Report failed:', err);
     if (loadingDiv) loadingDiv.hidden = true;
     if (contentDiv) {
       contentDiv.hidden = false;
       contentDiv.innerHTML = `
-        <div class="report-disclaimer" style="border-left: 4px solid #ef4444; background: #fee2e2;">
+        <div class="report-disclaimer" style="border-left: 4px solid #ef4444;">
           <p><strong>⚠ Report Generation Error:</strong> ${err.message}</p>
-          <button class="btn btn-primary btn-sm" onclick="window.location.reload()">Retry Selection</button>
+          <button class="btn btn-outline btn-sm" onclick="window.location.reload()">Refresh Page</button>
         </div>
       `;
     }
@@ -690,10 +681,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const step3Next = qs('#step3-next');
   step3Next?.addEventListener('click', () => {
-    const allDone = window.RetinaSafeSession && RetinaSafeSession.allGamesDone();
-    console.log('View Full Report clicked, allDone =', allDone);
-    const t = window.RetinaSafeI18N ? RetinaSafeI18N.getTranslations() : null;
-    if (!allDone) {
+    const done = GAMES.filter(g => window.RetinaSafeSession && RetinaSafeSession.isGameDone(g.game_name)).length;
+    const t = TRANSLATIONS[state.currentLang];
+    if (done < 4) {
       showToast(t?.err_step_games || "Please complete all 4 vision games first.");
       return;
     }

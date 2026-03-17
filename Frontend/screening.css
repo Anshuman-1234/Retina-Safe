@@ -35,15 +35,13 @@
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
-  flex: 1;
-  /* Changed from min-width: 90px to allow even distribution */
-  padding-inline: 4px;
-  position: relative;
+  min-width: 90px;
+  flex-shrink: 0;
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .progress-step:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .pstep-dot {
@@ -105,11 +103,9 @@
   flex: 1;
   height: 2px;
   background-color: var(--blue-200);
-  margin-top: -18px;
-  /* Adjusted based on dot height */
-  margin-inline: -1rem;
-  /* Overlap with flex items */
-  z-index: 0;
+  min-width: 2rem;
+  max-width: 5rem;
+  margin-top: 0;
   transition: background-color 0.3s;
 }
 
@@ -118,42 +114,18 @@
 }
 
 
-@media (max-width: 1024px) {
-  .screening-page .nav-disclaimer-pill[data-i18n="nav_disclaimer"] {
-    display: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .pstep-label {
-    font-size: 0.6rem;
-    white-space: normal;
-    text-align: center;
-    max-width: 60px;
-  }
-}
-
-@media (max-width: 440px) {
+@media (max-width: 600px) {
   .pstep-label {
     display: none;
   }
 
   .progress-step {
-    padding-inline: 0;
-  }
-
-  .pstep-dot {
-    width: 32px;
-    height: 32px;
-    border-radius: 10px;
-  }
-
-  .pstep-number {
-    font-size: 0.85rem;
+    min-width: 36px;
   }
 
   .progress-connector {
-    margin-top: -15px;
+    min-width: 1rem;
+    max-width: 3rem;
   }
 }
 
@@ -164,7 +136,7 @@
 }
 
 .screening-container {
-  max-width: 1100px;
+  max-width: 760px;
 }
 
 
@@ -206,10 +178,9 @@
 
 
 .step-desc {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--text-secondary);
-  max-width: 680px;
-  line-height: 1.6;
+  max-width: 580px;
   margin-bottom: 0;
 }
 
@@ -365,8 +336,7 @@
   border: 2px dashed var(--blue-300);
   border-radius: var(--radius-lg);
   background-color: var(--white);
-  padding: 1.75rem 1rem;
-  /* Reduced padding on mobile */
+  padding: 2.5rem;
   text-align: center;
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
@@ -1263,9 +1233,9 @@
 
 .game-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 1.75rem;
-  margin-bottom: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 /* Individual game card */
@@ -1626,90 +1596,5 @@
 
   .gc-card {
     transition: none;
-  }
-}
-
-/* ── EVALUATION READY VIEW (Step 4 Loading) ── */
-.evaluation-container {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 3rem 2rem;
-  margin-top: 1rem;
-  box-shadow: var(--shadow-sm);
-  max-width: 640px;
-  margin-inline: auto;
-  text-align: center;
-}
-
-.eval-ready-view {
-  margin-bottom: 2.5rem;
-}
-
-.eval-hero-wrapper {
-  width: 140px;
-  height: 140px;
-  margin: 0 auto 1.5rem;
-  animation: hero-pulse 2.5s ease-in-out infinite;
-}
-
-.eval-hero-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.eval-status-title {
-  font-size: clamp(1.6rem, 4vw, 2rem);
-  font-weight: 800;
-  color: var(--blue-900);
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
-}
-
-.eval-linear-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-@keyframes hero-pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 0px var(--blue-200));
-  }
-
-  50% {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 15px var(--blue-100));
-  }
-}
-
-.rs-scan-status {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--blue-400);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 1.25rem;
-}
-
-.skeleton {
-  height: 54px;
-  background: linear-gradient(90deg, #f0f4f8 25%, #f8fafc 50%, #f0f4f8 75%);
-  background-size: 200% 100%;
-  animation: skeleton-shimmer 1.5s infinite;
-  border-color: transparent;
-}
-
-@keyframes skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-
-  100% {
-    background-position: -200% 0;
   }
 }

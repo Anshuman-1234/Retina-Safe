@@ -9,27 +9,25 @@
 
 // 1. SCROLL-TRIGGERED FADE-UP ANIMATIONS
 // ============================================================
-(function initFadeUp() {
-  const elements = document.querySelectorAll('.fade-up');
+// Exposed so theme.js can re-trigger after DOM restructure.
+// Moving nodes via ensureContentWrapper() detaches IntersectionObserver
+// targets — elements stay at opacity:0 and sections appear to crash together.
+function initFadeUp() {
+  const elements = document.querySelectorAll('.fade-up:not(.is-visible)');
   if (!elements.length) return;
-
 
   // Respect reduced motion preference
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
-    elements.forEach(el => {
-      el.classList.add('is-visible');
-    });
+    elements.forEach(el => el.classList.add('is-visible'));
     return;
   }
-
 
   const observerOptions = {
     root: null,
     rootMargin: '0px 0px -60px 0px',
     threshold: 0.1,
   };
-
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -40,9 +38,14 @@
     });
   }, observerOptions);
 
-
   elements.forEach(el => observer.observe(el));
-})();
+}
+initFadeUp();
+
+// Re-observe after theme.js restructures the DOM
+document.addEventListener('rs-dom-wrapped', () => {
+  requestAnimationFrame(initFadeUp);
+});
 
 
 

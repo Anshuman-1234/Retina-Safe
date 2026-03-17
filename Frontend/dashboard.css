@@ -21,7 +21,7 @@ Dashboard page styles — matches main design system
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.25rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -51,7 +51,7 @@ Dashboard page styles — matches main design system
   background-color: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: clamp(1.25rem, 5vw, 2rem);
+  padding: 2rem;
   box-shadow: var(--shadow-sm);
 }
 
@@ -89,8 +89,8 @@ Dashboard page styles — matches main design system
   margin-bottom: 0;
 }
 
-.card-header-row+.games-launch-grid,
-.card-header-row+#history-list {
+.card-header-row + .games-launch-grid,
+.card-header-row + #history-list {
   margin-top: 1.5rem;
 }
 
@@ -98,7 +98,7 @@ Dashboard page styles — matches main design system
 .risk-card-inner {
   display: flex;
   align-items: center;
-  gap: clamp(1.5rem, 6vw, 3rem);
+  gap: 3rem;
   flex-wrap: wrap;
 }
 
@@ -191,32 +191,16 @@ Dashboard page styles — matches main design system
 }
 
 /* Risk tier color overrides */
-.risk-low .ring-fill {
-  stroke: var(--risk-low);
-}
+.risk-low    .ring-fill { stroke: var(--risk-low); }
+.risk-mod    .ring-fill { stroke: var(--risk-moderate); }
+.risk-high   .ring-fill { stroke: var(--risk-high); }
 
-.risk-mod .ring-fill {
-  stroke: var(--risk-moderate);
-}
-
-.risk-high .ring-fill {
-  stroke: var(--risk-high);
-}
-
-.risk-low .ring-value,
-.risk-low .risk-tier-label {
-  color: #059669;
-}
-
-.risk-mod .ring-value,
-.risk-mod .risk-tier-label {
-  color: #B45309;
-}
-
-.risk-high .ring-value,
-.risk-high .risk-tier-label {
-  color: var(--risk-high);
-}
+.risk-low    .ring-value,
+.risk-low    .risk-tier-label { color: #059669; }
+.risk-mod    .ring-value,
+.risk-mod    .risk-tier-label { color: #B45309; }
+.risk-high   .ring-value,
+.risk-high   .risk-tier-label { color: var(--risk-high); }
 
 /* ── CONDITION BARS ── */
 .condition-bars {
@@ -263,20 +247,9 @@ Dashboard page styles — matches main design system
   border-radius: 100px;
 }
 
-.level-low {
-  color: #065F46;
-  background: rgba(52, 211, 153, 0.12);
-}
-
-.level-moderate {
-  color: #92400E;
-  background: rgba(245, 158, 11, 0.12);
-}
-
-.level-high {
-  color: #991B1B;
-  background: rgba(239, 68, 68, 0.12);
-}
+.level-low      { color: #065F46; background: rgba(52,211,153,0.12); }
+.level-moderate { color: #92400E; background: rgba(245,158,11,0.12); }
+.level-high     { color: #991B1B; background: rgba(239,68,68,0.12); }
 
 .cbar-track {
   height: 8px;
@@ -300,9 +273,7 @@ Dashboard page styles — matches main design system
 }
 
 @media (max-width: 600px) {
-  .games-launch-grid {
-    grid-template-columns: 1fr;
-  }
+  .games-launch-grid { grid-template-columns: 1fr; }
 }
 
 .game-launch-card {
@@ -433,15 +404,7 @@ Dashboard page styles — matches main design system
 }
 
 @media (max-width: 680px) {
-  .dash-stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 440px) {
-  .dash-stats-row {
-    grid-template-columns: 1fr;
-  }
+  .dash-stats-row { grid-template-columns: 1fr 1fr; }
 }
 
 .dash-stat-card {
@@ -513,28 +476,12 @@ Dashboard page styles — matches main design system
 @media (max-width: 720px) {
   .risk-card-inner {
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
     gap: 1.5rem;
   }
 
   .dash-hero-inner {
     flex-direction: column;
     align-items: flex-start;
-  }
-}
-@media (max-width: 480px) {
-  .card-header-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .card-header-row .btn {
-    width: 100%;
-    margin-top: 1rem;
-  }
-  .dash-hero-inner .btn {
-    width: 100%;
-    margin-top: 1rem;
   }
 }
