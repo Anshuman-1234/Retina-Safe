@@ -1490,7 +1490,7 @@
 
 .game-modal-header {
   width: 100%;
-  max-width: 960px;
+  max-width: 1100px; /* matched max-width with body */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1554,7 +1554,9 @@
   /* Increased to use more space */
   background: var(--white);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  overflow: hidden;
+  overflow-y: auto;          /* Make it full scrollable inside */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS devices */
   box-shadow: var(--shadow-lg);
   display: flex;
   /* Ensure iframe fills it properly */
@@ -1572,19 +1574,21 @@
 
 @media (max-width: 600px) {
   .game-modal {
-    padding: 0.5rem;
-    /* Slightly more padding */
+    padding: 0;           /* Completely full screen */
+  }
+
+  .game-modal-header {
+    border-radius: 0;     /* Remove curved border adjustments for full screen */
   }
 
   .game-modal-body {
-    max-height: 92vh;
-    /* Use almost full height on mobile */
-    border-radius: 0 0 var(--radius) var(--radius);
+    max-height: none;     /* Allow full vertical space */
+    height: 100%; 
+    border-radius: 0;     /* Remove curve */
   }
 
   .game-iframe {
-    min-height: 350px;
-    /* Significantly reduced for small phones */
+    min-height: 100vh;
     height: 100%;
   }
 }
