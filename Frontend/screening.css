@@ -148,6 +148,12 @@
 .screen-step.ps-step-active {
   display: block;
   animation: step-in 0.35s ease forwards;
+  /* Allow the step to grow to natural height so the page (not a clipped
+     container) handles scrolling. Without this, the game cards grid can
+     overflow a fixed/clipped context and lose scrollability. */
+  overflow: visible;
+  height: auto;
+  min-height: 0;
 }
 
 
@@ -1236,6 +1242,8 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
+  /* Ensure the grid never clips its own scroll context */
+  overflow: visible;
 }
 
 /* Individual game card */
