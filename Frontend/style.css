@@ -1,6 +1,6 @@
 /* /* ============================================================
    RetinaSafe — style.css
-   Design System v1.0 · 2025
+   Design System v1.0 · 2026
    ============================================================ */
 
 
@@ -77,6 +77,9 @@ html {
   font-size: 18px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip; /* clip instead of hidden — prevents horizontal scroll without
+                       creating a new block formatting context that breaks overflow-y
+                       on the body/children (the "overflow-x: hidden on body" bug) */
 }
 
 
@@ -86,7 +89,10 @@ body {
   color: var(--text-primary);
   background-color: var(--page-bg);
   line-height: 1.75;
-  overflow-x: hidden;
+  /* overflow-x: hidden removed from body — setting it here in addition to html
+     causes browsers to treat the body as the scroll container and can suppress
+     overflow-y scrollability on child sections (including the game cards grid).
+     overflow-x: clip on html above handles horizontal containment safely. */
 }
 
 
@@ -1310,4 +1316,3 @@ img { display: block; max-width: 100%; }
     transition: none;
   }
 }
-
