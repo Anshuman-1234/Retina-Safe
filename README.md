@@ -1,21 +1,21 @@
-# 👁️ RetinaSafe — AI-Powered Retinal Screening & Risk Stratification
+#  RetinaSafe — AI-Powered Retinal Screening & Risk Stratification
 
 **RetinaSafe** is a premium, end-to-end medical screening platform designed to detect and stratify the risk of major retinal diseases. By fusing **Deep Learning (Computer Vision)** with **Specialized Vision Games**, it provides a unique "Objective + Functional" assessment of eye health.
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
-- **🧠 Multi-Disease AI Hub**: Simultaneous analysis for **AMD, Cataract, Diabetic Retinopathy, Glaucoma, and Hypertensive Retinopathy** using MobileNetV2-based Keras models.
-- **🎮 Functional Vision Testing**: Four interactive games designed to detect clinical visual biomarkers:
+- **Multi-Disease AI Hub**: Simultaneous analysis for **AMD, Cataract, Diabetic Retinopathy, Glaucoma, and Hypertensive Retinopathy** using MobileNetV2-based Keras models.
+- **Functional Vision Testing**: Four interactive games designed to detect clinical visual biomarkers:
   - Central field distortion (Amsler Grid)
   - Contrast sensitivity (Contrast Discrimination)
   - Peripheral awareness (Peripheral Reaction)
   - Blue-yellow color discrimination (Hue Sorting)
-- **📊 Risk Fusion Engine**: Proprietary logic that adjusts AI predictions based on real-time vision performance.
-- **📄 Clinical Report Generation**: Professional PDF reports generated via `jsPDF`, including risk levels and recommended actions.
-- **� Healthcare Connectivity**: One-click redirection to find the nearest Eye Hospitals via Google Maps integration.
-- **🎨 Premium Experience**: A high-end user interface featuring **Glassmorphism**, smooth micro-animations, and a fully responsive design.
+- **Risk Fusion Engine**: Proprietary logic that adjusts AI predictions based on real-time vision performance.
+- **Clinical Report Generation**: Professional PDF reports generated via `jsPDF`, including risk levels and recommended actions.
+- **Healthcare Connectivity**: One-click redirection to find the nearest Eye Hospitals via Google Maps integration.
+- **Premium Experience**: A high-end user interface featuring **Glassmorphism**, smooth micro-animations, and a fully responsive design.
 
 ---
 
@@ -39,7 +39,7 @@ Retina_Safe/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### **1. Setup the Backend (AI Inference Server)**
 ```powershell
@@ -59,7 +59,7 @@ python -m http.server 8080
 
 ---
 
-## 🌩️ Deployment to Vercel
+## Deployment to Vercel
 
 RetinaSafe is configured for seamless monorepo deployment on **Vercel**:
 
@@ -69,7 +69,7 @@ RetinaSafe is configured for seamless monorepo deployment on **Vercel**:
     -   All other routes serve the static `Frontend` directory.
 3.  **Automatic Builds**: Vercel will install the Python dependencies from `Backend/requirements.txt` and serve the site globally.
 
-## 🔬 The 4-Step Screening Workflow
+## The 4-Step Screening Workflow
 
 1.  **Medical History**: Patient provides baseline information (age, gender, existing conditions).
 2.  **Fundus Analysis**: High-resolution retinal image upload. Your AI models analyze the image for objective disease markers.
@@ -78,7 +78,7 @@ RetinaSafe is configured for seamless monorepo deployment on **Vercel**:
 
 ---
 
-## 🧬 Scoring & Risk Calculation
+## Scoring & Risk Calculation
 
 RetinaSafe uses a **Multi-Modal Risk Stratification** approach:
 
@@ -92,7 +92,7 @@ $$Risk_{final} = P_{model} \times \left( 1.3 - \frac{\text{Game Score}}{100} \ti
 
 ---
 
-## 🏥 Actionable Insights
+## Actionable Insights
 After screening, the system provides:
 - **Risk Score (0-100)**: A unified "Eye Health Index".
 - **Dynamic Recommendations**: From "Routine Screening" to "Urgent Consultation".
@@ -100,7 +100,7 @@ After screening, the system provides:
 
 ---
 
-## ⚠️ Medical Disclaimer
+## Medical Disclaimer
 
 > [!WARNING]
 > RetinaSafe is a **screening and risk stratification tool**. It is NOT a medical device or a diagnostic replacement. All results are preliminary and MUST be reviewed by a qualified ophthalmologist before any clinical action is taken.
