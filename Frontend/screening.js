@@ -585,6 +585,45 @@ function getRiskInfo(s) {
 }
 
 function renderReport(r) {
+  const session = window.RetinaSafeSession?.get();
+  const rawImgEl = qs('#report-raw-img');
+  const rawMetaEl = qs('#report-raw-meta');
+  const rawScoresEl = qs('#report-raw-scores');
+
+  if (rawImgEl) {
+    const prevImg = qs('#preview-img');
+    if (prevImg && prevImg.src) rawImgEl.src = prevImg.src;
+  }
+  if (rawMetaEl && session && session.imageMeta) {
+    rawMetaEl.textContent = `${session.imageMeta.filename} (${(session.imageMeta.size / 1048576).toFixed(2)} MB)`;
+  } else if (rawMetaEl) {
+    rawMetaEl.textContent = "Fundus Analysis";
+  }
+
+  if (rawScoresEl && session && session.modelOutput && session.modelOutput.predictions) {
+    let scoresHtml = '';
+    const preds = session.modelOutput.predictions;
+    const diseaseIcons = {
+      'diabetic_retinopathy': '🩸 Diabetic Retinopathy',
+      'macular_degeneration': '⊞ Macular Degeneration',
+      'glaucoma': '✦ Glaucoma',
+      'cataract': '🎨 Cataract',
+      'hypertensive_retinopathy': '⚖️ Hypertensive Retinopathy',
+      'normal': '✅ Normal'
+    };
+    for (const [key, data] of Object.entries(preds)) {
+      const pct = (data.probability * 100).toFixed(1);
+      const color = data.probability > 0.65 ? 'var(--risk-high)' : data.probability > 0.35 ? '#d97706' : '#059669';
+      scoresHtml += `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: var(--blue-50); border-radius: var(--radius); border: 1px solid var(--blue-100);">
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">${diseaseIcons[key] || key.replace('_', ' ')}</span>
+          <span style="font-size: 0.9rem; font-weight: 800; color: ${color};">${pct}%</span>
+        </div>
+      `;
+    }
+    rawScoresEl.innerHTML = scoresHtml;
+  }
+
   const { label, cls, action, urgency } = getRiskInfo(r.overall_risk_score);
   const se = qs('#rsc-score'), be = qs('#rsc-badge'), ae = qs('#rsc-action'), ue = qs('#rsc-urgency');
   if (se) se.textContent = r.overall_risk_score;

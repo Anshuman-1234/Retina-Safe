@@ -377,6 +377,21 @@
               <p class="step-desc">This is a preliminary risk assessment only. Review all results with a qualified
                 ophthalmologist before taking any action.</p>
             </div>
+            
+            <div id="report-raw-model-section" class="form-grid" style="margin-bottom: 2.5rem; gap: 1.5rem;">
+              <div style="background: var(--white); border: 1.5px solid var(--blue-200); border-radius: var(--radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <h3 style="font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1rem;">Analyzed Fundus Image</h3>
+                <img id="report-raw-img" src="" alt="Analyzed Fundus" style="max-width: 100%; border-radius: var(--radius); border: 1px solid var(--blue-200); object-fit: contain; max-height: 220px; box-shadow: var(--shadow-sm);">
+                <p id="report-raw-meta" style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem; text-align: center; word-break: break-all;"></p>
+              </div>
+              <div style="background: var(--white); border: 1.5px solid var(--blue-200); border-radius: var(--radius-lg); padding: 1.25rem; display: flex; flex-direction: column; justify-content: flex-start;">
+                <h3 style="font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin-bottom: 1.25rem; border-bottom: 1px solid var(--blue-100); padding-bottom: 0.5rem;">Raw Model Probabilities</h3>
+                <div id="report-raw-scores" style="display: flex; flex-direction: column; gap: 0.85rem; width: 100%;">
+                  <!-- injected by JS -->
+                </div>
+              </div>
+            </div>
+
             <div class="report-score-card" id="report-score-card">
               <div class="rsc-left">
                 <p class="rsc-label">Overall Risk Score</p>
