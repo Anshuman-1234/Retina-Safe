@@ -540,9 +540,13 @@ body {
   }
 
   .hud-pill {
-    padding: 0.4rem 0.6rem;
-    font-size: 0.8rem;
-    gap: 0.3rem;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.95rem;
+    gap: 0.45rem;
+  }
+
+  .hud-pill .icon {
+    font-size: 1.25rem;
   }
 
   .game-ui {

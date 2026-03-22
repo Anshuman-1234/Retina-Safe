@@ -1,21 +1,31 @@
-#  RetinaSafe — AI-Powered Retinal Screening & Risk Stratification
+# 👁️ RetinaSafe — AI-Powered Retinal Screening & Risk Stratification
 
 **RetinaSafe** is a premium, end-to-end medical screening platform designed to detect and stratify the risk of major retinal diseases. By fusing **Deep Learning (Computer Vision)** with **Specialized Vision Games**, it provides a unique "Objective + Functional" assessment of eye health.
 
 ---
 
-##  Key Features
+## 🚀 Key Features
 
-- **Multi-Disease AI Hub**: Simultaneous analysis for **AMD, Cataract, Diabetic Retinopathy, Glaucoma, and Hypertensive Retinopathy** using MobileNetV2-based Keras models.
-- **Functional Vision Testing**: Four interactive games designed to detect clinical visual biomarkers:
-  - Central field distortion (Amsler Grid)
-  - Contrast sensitivity (Contrast Discrimination)
-  - Peripheral awareness (Peripheral Reaction)
-  - Blue-yellow color discrimination (Hue Sorting)
-- **Risk Fusion Engine**: Proprietary logic that adjusts AI predictions based on real-time vision performance.
-- **Clinical Report Generation**: Professional PDF reports generated via `jsPDF`, including risk levels and recommended actions.
-- **Healthcare Connectivity**: One-click redirection to find the nearest Eye Hospitals via Google Maps integration.
-- **Premium Experience**: A high-end user interface featuring **Glassmorphism**, smooth micro-animations, and a fully responsive design.
+### 🧠 Multi-Disease AI Hub
+Simultaneous analysis for **AMD, Cataract, Diabetic Retinopathy, Glaucoma, and Hypertensive Retinopathy** using optimized MobileNetV2-based Keras models.
+
+### 🎮 Functional Vision Testing
+Four interactive games designed to detect clinical visual biomarkers:
+- **Central Field Distortion**: A dynamic Amsler Grid for AMD/Macular monitoring.
+- **Contrast Sensitivity**: A low-contrast discrimination challenge.
+- **Peripheral Awareness**: Reaction speed testing across the visual field (Glaucoma markers).
+- **Hue Sorting**: Blue-yellow color discrimination (Tritanomaly assessment).
+
+### 🌓 Advanced Theme & Accessibility
+- **Dark Mode**: Integrated system-wide for reduced eye strain.
+- **Colorblind Simulation**: Real-time SVG-filtered views for Protanopia, Deuteranopia, Tritanopia, and Achromatopsia to assist clinicians and patients.
+
+### 📱 Full Mobile Optimization
+- **Responsive Audit**: All game modules and the core dashboard have been audited and optimized for mobile devices (375px+).
+- **Touch Interaction**: Precision-calibrated input for mobile web browsers.
+
+### 📊 Clinical Fusion Engine
+Proprietary logic that adjusts AI predictions based on real-time functional performance, generating professional **PDF Reports** with **Risk Stratification** (Low → Critical).
 
 ---
 
@@ -30,16 +40,16 @@ Retina_Safe/
 └── Frontend/
     ├── screening.html          # Core 4-step workflow UI
     ├── dashboard.html          # Patient health tracking dashboard
+    ├── theme.js                # Global theme & accessibility engine
     ├── Api bridge.js           # API Connector & Fusion Logic
-    ├── session.js              # State management & LocalStorage persistence
+    ├── session.js              # State management & LocalStorage
     ├── screening.js            # Workflow controller
-    ├── Game collector.js       # Global result collector for vision games
-    └── [Game_Modules].html/js  # Specialized vision assessment games
+    └── [Game_Modules].html/.js # Specialized vision assessment games
 ```
 
 ---
 
-## Getting Started
+## 🛠️ Getting Started
 
 ### **1. Setup the Backend (AI Inference Server)**
 ```powershell
@@ -59,51 +69,30 @@ python -m http.server 8080
 
 ---
 
-## Deployment to Vercel
+## ☁️ Deployment
 
-RetinaSafe is configured for seamless monorepo deployment on **Vercel**:
-
-1.  **Project Settings**: Connect your repository to Vercel.
-2.  **Configuration**: The root `vercel.json` handles routing:
-    -   `/api/*` targets the Python/Flask backend.
-    -   All other routes serve the static `Frontend` directory.
-3.  **Automatic Builds**: Vercel will install the Python dependencies from `Backend/requirements.txt` and serve the site globally.
-
-## The 4-Step Screening Workflow
-
-1.  **Medical History**: Patient provides baseline information (age, gender, existing conditions).
-2.  **Fundus Analysis**: High-resolution retinal image upload. Your AI models analyze the image for objective disease markers.
-3.  **Vision Games**: Four specialized games test how the patient *actually sees*. Results are collected and scored out of 100.
-4.  **Integrated Report**: The system fuses AI probabilities with game scores to generate a final risk classification (Low → Critical).
+RetinaSafe is configured for monorepo deployment on **Vercel**:
+-   `/api/*` targets the Python/Flask backend.
+-   Static routes serve the `Frontend` directory.
+-   Automatic builds handle Python dependencies via `requirements.txt`.
 
 ---
 
-## Scoring & Risk Calculation
+## 🧪 Scoring & Risk Calculation
 
-RetinaSafe uses a **Multi-Modal Risk Stratification** approach:
-
-### **Fusion Algorithm**
-The AI's raw probability ($P_{model}$) is adjusted by the patient's functional vision performance:
+The AI's raw probability ($P_{model}$) is adjusted by functional vision performance:
 
 $$Risk_{final} = P_{model} \times \left( 1.3 - \frac{\text{Game Score}}{100} \times 0.5 \right)$$
 
-- **Positive Reinforcement**: A perfect game score (100) reduces AI risk prediction by **20%**.
-- **Clinical Buffer**: Poor game performance (0 score) increases AI risk prediction by **30%**, acting as a confirmation of high risk.
+- **Positive Reinforcement**: High game scores reduce AI risk prediction by up to 20%.
+- **Clinical Buffer**: Poor performance acts as a confirmation of high risk, increasing the score by up to 30%.
 
 ---
 
-## Actionable Insights
-After screening, the system provides:
-- **Risk Score (0-100)**: A unified "Eye Health Index".
-- **Dynamic Recommendations**: From "Routine Screening" to "Urgent Consultation".
-- **Nearby Care**: Integrated Google Maps link for Govt Eye Hospitals.
-
----
-
-## Medical Disclaimer
+## ⚠️ Medical Disclaimer
 
 > [!WARNING]
-> RetinaSafe is a **screening and risk stratification tool**. It is NOT a medical device or a diagnostic replacement. All results are preliminary and MUST be reviewed by a qualified ophthalmologist before any clinical action is taken.
+> RetinaSafe is a **screening and risk stratification tool**. It is NOT a medical device or a diagnostic replacement. All results are preliminary and MUST be reviewed by a qualified ophthalmologist.
 
 ---
 

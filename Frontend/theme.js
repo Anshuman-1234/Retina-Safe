@@ -1043,6 +1043,24 @@
         color: #6e7681 !important;
       }
 
+      /* ── Responsive FAB ────────────────────────────────────── */
+      @media (max-width: 600px) {
+        #rs-theme-fab {
+          bottom: 12px;
+          right: 12px;
+          width: 46px;
+          height: 46px;
+          box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+        }
+        .rs-fab-icon { font-size: 18px; }
+        #rs-theme-panel {
+          bottom: 66px;
+          right: 12px;
+          width: calc(100vw - 24px);
+          max-width: 300px;
+        }
+      }
+
       /* ── Smooth transition for game page backgrounds ──────────────── */
       body, #game-container, #game-area, #hud,
       .glass-panel, .hud-pill, .modal-box, .modal-card,
